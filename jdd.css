@@ -20,6 +20,8 @@ pre .line-number {
   margin:0 1em 0 -1em;
   border-right:1px solid;
   text-align:right;
+  width: 3em;
+  line-height: 15px;
 }
 
 pre .line-number span {

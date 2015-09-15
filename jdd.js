@@ -301,16 +301,23 @@ var jdd = {
     },
 
     formatPRETags: function() {
-        var pre = document.getElementsByTagName('pre'), pl = pre.length;
+        _.each($('pre'), function(pre) {
+            var codeBlock = $('<pre class="codeBlock"></pre>');
+            _.each($(pre).text().split('\n'), function(line, index) {
+                var div = $('<div class="codeLine line' + (index + 1) + '"></div>')
+                div.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
-        for (var i = 0; i < pl; i++) {
-            pre[i].innerHTML = '<span class="line-number"></span>' + pre[i].innerHTML + '<span class="cl"></span>';
-            var num = pre[i].innerHTML.split(/\n/).length;
-            for (var j = 0; j <= num; j++) {
-                var line_num = pre[i].getElementsByTagName('span')[0];
-                line_num.innerHTML += '<span>' + (j + 1) + '</span>';
-            }
-        }
+                var span = $('<span></span');
+                span.text(line);
+                div.append(span);
+
+                codeBlock.append(div);
+            });
+
+            codeBlock.addClass($(pre).attr('class'));
+
+            $(pre).replaceWith(codeBlock);
+        });
     }
 };
 
