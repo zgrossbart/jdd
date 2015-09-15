@@ -8,7 +8,7 @@ pre {
 }
 
 pre code,
-pre .line-number {
+pre .line-number, canvas {
   /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */
   font:normal normal 12px/14px "Courier New",Courier,Monospace;
   color:black;
@@ -27,6 +27,12 @@ pre .line-number {
   text-align:right;
   width: 3em;
   line-height: 15px;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  
+  -o-user-select: none;
+  user-select: none;
 }
 
 pre .line-number span {
@@ -46,6 +52,7 @@ div.container {
 
 pre.left {
     width: 35em;
+    z-index: 2;
 }
 
 pre.right {
@@ -53,4 +60,17 @@ pre.right {
     top: 0em;
     right: 0px;
     width: 35em;
+    z-index: 2;
+}
+
+div.codeLine span.eq {
+    background: wheat;
+}
+
+div.codeLine span.type {
+    background: cyan;
+}
+
+div.codeLine span.missing {
+    background: yellow;
 }

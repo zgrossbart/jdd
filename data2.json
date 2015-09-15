@@ -28,4 +28,9 @@ var DATA2 = {
         "Generation Kill",
         "True Blood"
     ],
+    "Alice Farmer": [
+        "The Corner",
+        "Oz",
+        "The Wire"
+    ]
 };

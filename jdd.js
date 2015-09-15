@@ -2,6 +2,10 @@
 
 var jdd = {
 
+    EQUALITY: 'eq',
+    TYPE: 'type',
+    MISSING: 'missing',
+
     diffs: [],
 
     findDiffs: function(/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
@@ -16,7 +20,7 @@ var jdd = {
                if (!data1.hasOwnProperty(key)) {
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                    config2, jdd.generatePath(config2, '/' + key),
-                                                   'Wrong number of items'));
+                                                   'Wrong number of items', jdd.MISSING));
                }
            });
        }
@@ -37,7 +41,7 @@ var jdd = {
                console.log('config2.currentPath: ' + jdd.generatePath(config2));
                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                config2, jdd.generatePath(config2),
-                                               'Missing property (' + key + ') from right side'));
+                                               'Missing property (' + key + ') from right side', jdd.MISSING));
             } else {
                 config2.currentPath.push(key);
             
@@ -58,7 +62,7 @@ var jdd = {
            if (!data1.hasOwnProperty(key)) {
                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                config2, jdd.generatePath(config2, key),
-                                               'Missing property (' + key + ') from left side'));
+                                               'Missing property (' + key + ') from left side', jdd.MISSING));
            }
 
        });
@@ -71,7 +75,7 @@ var jdd = {
             if (!_.isArray(val2)) {
                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                config2, jdd.generatePath(config2),
-                                               'Both types should be arrays'));
+                                               'Both types should be arrays', jdd.TYPE));
             }
             _.each(val1, function(arrayVal, index) {
                 config1.currentPath.push('/[' + index + ']');
@@ -84,7 +88,7 @@ var jdd = {
             if (!_.isObject(val2)) {
                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                config2, jdd.generatePath(config2),
-                                               'Both types should be objects'));
+                                               'Both types should be objects', jdd.TYPE));
             }
 
             jdd.findDiffs(config1, val1, config2, val2);
@@ -92,31 +96,31 @@ var jdd = {
             if (!_.isString(val2)) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                               'Both types should be objects'));
+                                               'Both types should be strings', jdd.TYPE));
             } else if (val1 !== val2) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                               'Both sides should be equal strings'));
+                                               'Both sides should be equal strings', jdd.EQUALITY));
             }
         } else if (_.isNumber(val1)) {
             if (!_.isNumber(val2)) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                               'Both types should be numbers'));
+                                               'Both types should be numbers', jdd.TYPE));
             } else if (val1 !== val2) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                               'Both sides should be equal numbers'));
+                                               'Both sides should be equal numbers', jdd.EQUALITY));
             }
         } else if (_.isBoolean(val1)) {
             if (!_.isBoolean(val2)) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                                'Both types should be booleans'));
+                                                'Both types should be booleans', jdd.TYPE));
             } else if (val1 !== val2) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
-                                                'Both sides should be equal booleans'));
+                                                'Both sides should be equal booleans', jdd.EQUALITY));
             }
         } 
     },
@@ -248,7 +252,7 @@ var jdd = {
         return props;
     },
 
-    generateDiff: function(config1, path1, config2, path2, /*String*/ msg) {
+    generateDiff: function(config1, path1, config2, path2, /*String*/ msg, type) {
         var pathObj1 = _.find(config1.paths, function(path) {
             return path.path === path1;
         });
@@ -268,6 +272,7 @@ var jdd = {
         return {
             path1: pathObj1,
             path2: pathObj2,
+            type: type,
             msg: msg
         }
     },
@@ -318,6 +323,13 @@ var jdd = {
 
             $(pre).replaceWith(codeBlock);
         });
+    },
+
+    processDiffs: function() {
+        _.each(jdd.diffs, function(diff, index) {
+            $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type);
+            $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type);
+        });
     }
 };
 
@@ -340,6 +352,7 @@ jQuery(document).ready(function() {
     config2.currentPath = [];
 
     jdd.findDiffs(config, DATA, config2, DATA2);
+    jdd.processDiffs();
 
     console.log('diffs: ' + JSON.stringify(jdd.diffs));
 });
