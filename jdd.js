@@ -307,7 +307,7 @@ var jdd = {
                 var div = $('<div class="codeLine line' + (index + 1) + '"></div>')
                 div.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
-                var span = $('<span></span');
+                var span = $('<span class="code"></span');
                 span.text(line);
                 div.append(span);
 

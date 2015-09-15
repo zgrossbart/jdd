@@ -15,6 +15,11 @@ pre .line-number {
   display:block;
 }
 
+pre.codeBlock span.code {
+    width: 33em;
+    display: inline-block;
+}
+
 pre .line-number {
   float:left;
   margin:0 1em 0 -1em;
