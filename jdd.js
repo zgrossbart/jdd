@@ -308,15 +308,21 @@ var jdd = {
     formatPRETags: function() {
         _.each($('pre'), function(pre) {
             var codeBlock = $('<pre class="codeBlock"></pre>');
+            var lineNumbers = $('<div class="gutter"></div>');
+            codeBlock.append(lineNumbers);
+
+            var codeLines = $('<div></div>');
+            codeBlock.append(codeLines);
+
             _.each($(pre).text().split('\n'), function(line, index) {
                 var div = $('<div class="codeLine line' + (index + 1) + '"></div>')
-                div.append($('<span class="line-number">' + (index + 1) + '.</span>'));
+                lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
                 var span = $('<span class="code"></span');
                 span.text(line);
                 div.append(span);
 
-                codeBlock.append(div);
+                codeLines.append(div);
             });
 
             codeBlock.addClass($(pre).attr('class'));
@@ -327,8 +333,8 @@ var jdd = {
 
     processDiffs: function() {
         _.each(jdd.diffs, function(diff, index) {
-            $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type);
-            $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type);
+            $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
+            $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type).addClass('diff');
         });
     }
 };

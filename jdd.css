@@ -16,16 +16,14 @@ pre .line-number, canvas {
 }
 
 pre.codeBlock span.code {
-    width: 33em;
+    min-width: 97%;
     display: inline-block;
 }
 
 pre .line-number {
-  float:left;
   margin:0 1em 0 -1em;
   border-right:1px solid;
   text-align:right;
-  width: 3em;
   line-height: 15px;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -47,11 +45,11 @@ pre .cl {
 
 div.container {
     position: relative;
-    width: 62em;
+    width: 98%;
 }
 
 pre.left {
-    width: 35em;
+    width: 40%;
     z-index: 2;
 }
 
@@ -59,8 +57,16 @@ pre.right {
     position: absolute;
     top: 0em;
     right: 0px;
-    width: 35em;
+    width: 40%;
     z-index: 2;
+}
+
+div.gutter {
+    float: left;
+}
+
+div.codeLine span.diff {
+    cursor: pointer;
 }
 
 div.codeLine span.eq {
