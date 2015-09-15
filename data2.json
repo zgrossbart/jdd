@@ -5,7 +5,7 @@ var DATA2 = {
             "The Wire"
         ],
         "string": "some string",
-        "int": 2,
+        "int": "2",
         "otherint": 4,
         "boolean": true,
         "object": {
@@ -17,8 +17,8 @@ var DATA2 = {
         "The Wire"
     ],
     "Annie Fitzgerald": [
-        "Big Love",
-        "True Blood"
+        "True Blood",
+        "Big Love"
     ],
     "Anwan Glover": [
         "Treme",
