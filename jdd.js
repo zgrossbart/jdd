@@ -1,68 +1,94 @@
 'use strict';
 
 var jdd = {
-    out: '',
-    indent: -1,
-
-    formatAndDecorate: function(/*Object*/ data) {
-        jdd.indent++;
-        jdd.out += '{';
+    formatAndDecorate: function(/*Object*/ config, /*Object*/ data) {
+        jdd.startObject(config);
         
-        if (jdd.indent === 0) {
-            jdd.indent++;
+        var props = jdd.getSortedProperties(data);
+        
+        /*
+         * If the first set has more than the second then we will catch it
+         * when we compare values.  However, if the second has more then
+         * we need to catch that here.
+         */
+        
+        _.each(props, function(key) {
+            config.out += '\n' + jdd.getTabs(config.indent) + '"' + key + '": ';
+            jdd.formatVal(data[key], config);
+        });
+
+        jdd.finishObject(config);
+    },
+
+    startObject: function(config) {
+        config.indent++;
+        config.out += '{';
+        
+        if (config.indent === 0) {
+            config.indent++;
+        }
+    },
+
+    finishObject: function(config) {
+        if (config.indent === 0) {
+            config.indent--;
         }
 
+        jdd.removeTrailingComma(config);
+
+        config.indent--;
+        config.out += '\n' + jdd.getTabs(config.indent) + '}';
+        if (config.indent !== 0) {
+            config.out += ',';
+        } else {
+            config.out += '\n';
+        }
+    },
+
+    formatVal: function(val, config) { 
+        if (_.isArray(val)) {
+            config.out += '[';
+
+            config.indent++;
+            _.each(val, function(arrayVal) {
+                config.out += '\n' + jdd.getTabs(config.indent);
+                jdd.formatVal(arrayVal, config);
+            });
+            jdd.removeTrailingComma(config);
+            config.indent--;
+
+            config.out += '\n' + jdd.getTabs(config.indent) + ']' + ',';
+        } else if (_.isObject(val)) {
+            jdd.formatAndDecorate(config, val);
+        } else if (_.isString(val)) {
+            config.out += '"' + val + '",';
+        } else if (_.isNumber(val)) {
+            config.out += val + ',';
+        } else if (_.isBoolean(val)) {
+            config.out += val + ',';
+        } 
+    },
+
+    getSortedProperties: function(/*Object*/ obj) {
         var props = [];
 
-        for (var prop in data) {
+        for (var prop in obj) {
             props.push(prop);
         }
 
         props = props.sort(function(a, b) {
             return a.localeCompare(b);
         });
-        
-        _.each(props, function(key) {
-            jdd.out += '\n' + jdd.getTabs(jdd.indent) + '"' + key + '": ';
-            jdd.formatVal(data[key]);
-        });
-        if (jdd.indent === 0) {
-            jdd.indent--;
-        }
 
-        jdd.removeTrailingComma();
-
-        jdd.indent--;
-        jdd.out += '\n' + jdd.getTabs(jdd.indent) + '}';
-        if (jdd.indent !== 0) {
-            jdd.out += ',';
-        } else {
-            jdd.out += '\n';
-        }
+        return props;
     },
 
-    formatVal: function(val) { 
-        if (_.isArray(val)) {
-            jdd.out += '[';
-
-            jdd.indent++;
-            _.each(val, function(arrayVal) {
-                jdd.out += '\n' + jdd.getTabs(jdd.indent);
-                jdd.formatVal(arrayVal);
-            });
-            jdd.removeTrailingComma();
-            jdd.indent--;
-
-            jdd.out += '\n' + jdd.getTabs(jdd.indent) + ']' + ',';
-        } else if (_.isObject(val)) {
-            jdd.formatAndDecorate(val);
-        } else if (_.isString(val)) {
-            jdd.out += '"' + val + '",';
-        } else if (_.isNumber(val)) {
-            jdd.out += val + ',';
-        } else if (_.isBoolean(val)) {
-            jdd.out += val + ',';
-        } 
+    generateDiff: function(/*int*/ line1, /*int*/ line2, /*String*/ msg) {
+        return {
+            line1: line1,
+            line2: line2,
+            msg: msg
+        }
     },
 
     getTabs: function(/*int*/ indent) {
@@ -74,12 +100,12 @@ var jdd = {
         return s;
     },
 
-    removeTrailingComma: function() {
+    removeTrailingComma: function(config) {
         /*
          * Remove the trailing comma
          */
-        if (jdd.out.charAt(jdd.out.length - 1) === ',') {
-            jdd.out = jdd.out.substring(0, jdd.out.length - 1);
+        if (config.out.charAt(config.out.length - 1) === ',') {
+            config.out = config.out.substring(0, config.out.length - 1);
         }
     },
 
@@ -94,12 +120,7 @@ var jdd = {
                 line_num.innerHTML += '<span>' + (j + 1) + '</span>';
             }
         }
-    }, 
-    reset: function() {
-         jdd.indent = -1;
-         jdd.out = '';
     }
-
 };
 
 
@@ -107,10 +128,22 @@ var jdd = {
 
 jQuery(document).ready(function() {
     //console.log('data: ' + JSON.stringify(DATA));
-    jdd.formatAndDecorate(DATA);
-    $('#out').text(jdd.out);
+    var config = {
+        out: '',
+        indent: -1
+    };
 
-    jdd.reset();
+    jdd.formatAndDecorate(config, DATA);
+    $('#out').text(config.out);
+
+
+    var config2 = {
+        out: '',
+        indent: -1
+    };
+
+    jdd.formatAndDecorate(config2, DATA2);
+    $('#out2').text(config2.out);
 
     jdd.formatPRETags();
 });

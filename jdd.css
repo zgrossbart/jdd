@@ -5,7 +5,6 @@ pre {
   overflow:auto;
   margin:0 0 1em;
   padding:.5em 1em;
-  max-width: 35em;
 }
 
 pre code,
@@ -31,4 +30,20 @@ pre .line-number span {
 pre .cl {
   display:block;
   clear:both;
+}
+
+div.container {
+    position: relative;
+    width: 62em;
+}
+
+pre.left {
+    width: 35em;
+}
+
+pre.right {
+    position: absolute;
+    top: 0em;
+    right: 0px;
+    width: 35em;
 }
