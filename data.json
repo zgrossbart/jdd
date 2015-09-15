@@ -10,11 +10,7 @@
         "object": {
             "foo": "bar"
         }
-    }/*,
-    "Alexander Skarsgård": [
-        "Generation Kill",
-        "True Blood"
-    ],
+    },
     "Amy Ryan": [
         "In Treatment",
         "The Wire"
@@ -26,5 +22,9 @@
     "Anwan Glover": [
         "Treme",
         "The Wire"
-    ]*/
+    ],
+    "Alexander Skarsgård": [
+        "Generation Kill",
+        "True Blood"
+    ],
 };

@@ -4,21 +4,27 @@ var jdd = {
     out: '',
     indent: -1,
 
-    formatAndDecorate: function(/*Object*/ data, /*Object*/ decoratedData) {
-        if (!jdd.line) {
-            jdd.line = 0;
-        }
-
+    formatAndDecorate: function(/*Object*/ data) {
         jdd.indent++;
         jdd.out += '{';
-        jdd.line++;
-
+        
         if (jdd.indent === 0) {
             jdd.indent++;
         }
-        _.each(data, function(val, key) {
+
+        var props = [];
+
+        for (var prop in data) {
+            props.push(prop);
+        }
+
+        props = props.sort(function(a, b) {
+            return a.localeCompare(b);
+        });
+        
+        _.each(props, function(key) {
             jdd.out += '\n' + jdd.getTabs(jdd.indent) + '"' + key + '": ';
-            jdd.formatVal(val, decoratedData);
+            jdd.formatVal(data[key]);
         });
         if (jdd.indent === 0) {
             jdd.indent--;
@@ -28,12 +34,14 @@ var jdd = {
 
         jdd.indent--;
         jdd.out += '\n' + jdd.getTabs(jdd.indent) + '}';
-        jdd.line++;
-        
-
+        if (jdd.indent !== 0) {
+            jdd.out += ',';
+        } else {
+            jdd.out += '\n';
+        }
     },
 
-    formatVal: function(val, decoratedData) { 
+    formatVal: function(val) { 
         if (_.isArray(val)) {
             jdd.out += '[';
 
@@ -46,18 +54,14 @@ var jdd = {
             jdd.indent--;
 
             jdd.out += '\n' + jdd.getTabs(jdd.indent) + ']' + ',';
-            jdd.line++;
         } else if (_.isObject(val)) {
-            jdd.formatAndDecorate(val, decoratedData);
+            jdd.formatAndDecorate(val);
         } else if (_.isString(val)) {
             jdd.out += '"' + val + '",';
-            jdd.line++;
         } else if (_.isNumber(val)) {
             jdd.out += val + ',';
-            jdd.line++;
         } else if (_.isBoolean(val)) {
             jdd.out += val + ',';
-            jdd.line++;
         } 
     },
 
@@ -90,6 +94,10 @@ var jdd = {
                 line_num.innerHTML += '<span>' + (j + 1) + '</span>';
             }
         }
+    }, 
+    reset: function() {
+         jdd.indent = -1;
+         jdd.out = '';
     }
 
 };
@@ -101,6 +109,8 @@ jQuery(document).ready(function() {
     //console.log('data: ' + JSON.stringify(DATA));
     jdd.formatAndDecorate(DATA);
     $('#out').text(jdd.out);
+
+    jdd.reset();
 
     jdd.formatPRETags();
 });
