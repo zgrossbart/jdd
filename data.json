@@ -1,7 +1,7 @@
 ﻿var DATA = {
     "Aidan Gillen": {
         "array": [
-            "Game of Thrones",
+            "Game of Thron\"es",
             "The Wire"
         ],
         "string": "some string",
