@@ -1,0 +1,30 @@
+﻿var DATA = {
+    "Aidan Gillen": {
+        "array": [
+            "Game of Thrones",
+            "The Wire"
+        ],
+        "string": "some string",
+        "int": 2,
+        "boolean": true,
+        "object": {
+            "foo": "bar"
+        }
+    }/*,
+    "Alexander Skarsgård": [
+        "Generation Kill",
+        "True Blood"
+    ],
+    "Amy Ryan": [
+        "In Treatment",
+        "The Wire"
+    ],
+    "Annie Fitzgerald": [
+        "Big Love",
+        "True Blood"
+    ],
+    "Anwan Glover": [
+        "Treme",
+        "The Wire"
+    ]*/
+};
