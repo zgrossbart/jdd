@@ -1,4 +1,7 @@
-body {background-color:white;padding:50px 50px}
+body {
+    padding: 0px 0px;
+    margin: 0px 0px;
+}
 
 pre {
   background-color:#eee;
@@ -7,10 +10,10 @@ pre {
   padding:.5em 1em;
 }
 
-pre code,
-pre .line-number, canvas {
+pre .codeLine,
+pre .line-number {
   /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */
-  font:normal normal 12px/14px "Courier New",Courier,Monospace;
+  font:normal normal 13px/16px "Monospace;
   color:black;
   display:block;
 }
@@ -24,13 +27,14 @@ pre .line-number {
   margin:0 1em 0 -1em;
   border-right:1px solid;
   text-align:right;
-  line-height: 15px;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
   
   -o-user-select: none;
   user-select: none;
+  padding-left: 0.4em;
+  padding-right: 0.2em;
 }
 
 pre .line-number span {
@@ -45,7 +49,7 @@ pre .cl {
 
 div.container {
     position: relative;
-    width: 98%;
+    margin: 0 auto;
 }
 
 pre.left {
@@ -61,13 +65,20 @@ pre.right {
     margin-left: 1em;
 }
 
-div.toolbar {
-    width: 11%;
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 1em;
-    border: thin solid black;
-    min-height: 500px;
+ul.toolbar {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    width: 12%;
+    border: thin solid lightgray;
+    background: #fbfbfb;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+ul.toolbar li {
+    margin: 1em 5px;
 }
 
 div.gutter {
@@ -79,19 +90,20 @@ div.codeLine span.diff {
 }
 
 div.codeLine span.eq {
-    background: wheat;
+    background: rgba(50, 57, 88, 0.1);
 }
 
 div.codeLine span.type {
-    background: cyan;
+    background: rgba(192, 100, 94, 0.1);
 }
 
 div.codeLine span.missing {
-    background: yellow;
+    background: rgba(0, 100, 80, 0.1);
 }
 
 div.codeLine span.selected {
-    background: orange;
+    background: #86abd9;
+    color: white;
 }
 
 canvas.center {

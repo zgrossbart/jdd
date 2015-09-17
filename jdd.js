@@ -314,7 +314,7 @@ var jdd = {
             var codeLines = $('<div></div>');
             codeBlock.append(codeLines);
 
-            _.each($(pre).text().split('\n'), function(line, index) {
+            var addLine = function(line, index) {
                 var div = $('<div class="codeLine line' + (index + 1) + '"></div>')
                 lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
@@ -323,8 +323,11 @@ var jdd = {
                 div.append(span);
 
                 codeLines.append(div);
-            });
+            };
 
+            var lines = $(pre).text().split('\n');
+            _.each(lines, addLine);
+            
             codeBlock.addClass($(pre).attr('class'));
 
             $(pre).replaceWith(codeBlock);
@@ -342,7 +345,7 @@ var jdd = {
 
         $('pre.left span.code').removeClass('selected');
         $('pre.right span.code').removeClass('selected');
-        $('div.toolbar').text('');
+        $('ul.toolbar').text('');
 
         _.each(diffs, function(diff) {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass('selected');
@@ -354,7 +357,9 @@ var jdd = {
 
     showDiffDetails: function(diffs) {
          _.each(diffs, function(diff) {
-             $('div.toolbar').append(diff.msg);
+             var li = $('<li></li>');
+             li.text(diff.msg);
+             $('ul.toolbar').append(li);
          });
     },
 
