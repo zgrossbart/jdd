@@ -50,15 +50,24 @@ div.container {
 
 pre.left {
     width: 40%;
-    z-index: 2;
+    display: inline-block;
+    vertical-align: top;
 }
 
 pre.right {
-    position: absolute;
-    top: 0em;
-    right: 0px;
     width: 40%;
-    z-index: 2;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 1em;
+}
+
+div.toolbar {
+    width: 11%;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 1em;
+    border: thin solid black;
+    min-height: 500px;
 }
 
 div.gutter {
@@ -79,4 +88,16 @@ div.codeLine span.type {
 
 div.codeLine span.missing {
     background: yellow;
+}
+
+div.codeLine span.selected {
+    background: orange;
+}
+
+canvas.center {
+    position: absolute;
+    left: 40%;
+    width: 20%;
+    height: 100%;
+    top: 0;
 }

@@ -331,10 +331,55 @@ var jdd = {
         });
     },
 
+    handleDiffClick: function (line, side) {
+        var diffs = _.filter(jdd.diffs, function(diff) {
+            if (side === 'left') {
+                return line === diff.path1.line;
+            } else {
+                return line === diff.path2.line;
+            }
+        });
+
+        $('pre.left span.code').removeClass('selected');
+        $('pre.right span.code').removeClass('selected');
+        $('div.toolbar').text('');
+
+        _.each(diffs, function(diff) {
+            $('pre.left div.line' + diff.path1.line + ' span.code').addClass('selected');
+            $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
+        });
+
+        jdd.showDiffDetails(diffs);
+    },
+
+    showDiffDetails: function(diffs) {
+         _.each(diffs, function(diff) {
+             $('div.toolbar').append(diff.msg);
+         });
+    },
+
     processDiffs: function() {
+         var left = [];
+         var right = [];
+
         _.each(jdd.diffs, function(diff, index) {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
+            if (_.indexOf(left, diff.path1.line) === -1) {
+                $('pre.left div.line' + diff.path1.line + ' span.code').click(function() {
+                    jdd.handleDiffClick(diff.path1.line, 'left');
+                });
+                left.push(diff.path1.line);
+            }
+
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type).addClass('diff');
+            if (_.indexOf(right, diff.path2.line) === -1) {
+                $('pre.right div.line' + diff.path2.line + ' span.code').click(function() {
+                    jdd.handleDiffClick(diff.path2.line, 'right');
+                });
+                right.push(diff.path2.line);
+            }
+
+
         });
     }
 };
@@ -360,5 +405,5 @@ jQuery(document).ready(function() {
     jdd.findDiffs(config, DATA, config2, DATA2);
     jdd.processDiffs();
 
-    console.log('diffs: ' + JSON.stringify(jdd.diffs));
+    //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 });
