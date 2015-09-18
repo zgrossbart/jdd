@@ -1,6 +1,7 @@
 body {
     padding: 0px 0px;
     margin: 0px 0px;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
 }
 
 h1 {
@@ -15,6 +16,7 @@ h3 {
     line-height: 1;
     margin-bottom: 1em;
     font-family: "sans";
+    margin-top: 1em;
 }
 
 #main {
@@ -209,4 +211,22 @@ button {
     color: #333;
     padding-left: .5em;
     padding-right: .5em;
+}
+
+.weak {
+    color: #999;
+    font-size: .9em;
+    font-weight: normal;
+    position: Absolute;
+    top: 29px;
+    left: 55%;
+    right: 5%;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+.header {
+    height: 8em;
 }

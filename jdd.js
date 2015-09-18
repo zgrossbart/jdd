@@ -544,11 +544,14 @@ var jdd = {
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
          */
-        if (!jdd.validateInput($('#textarealeft').val(), 'left')) {
+         var leftValid = jdd.validateInput($('#textarealeft').val(), 'left');
+         var rightValid = jdd.validateInput($('#textarearight').val(), 'right');
+
+        if (!leftValid) {
             return;
         }
 
-        if (!jdd.validateInput($('#textarearight').val(), 'right')) {
+        if (!rightValid) {
             return;
         }
 
