@@ -107,19 +107,18 @@ pre.codeBlock.right {
 }
 
 ul.toolbar {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    width: 12%;
-    border: thin solid lightgray;
-    background: #fbfbfb;
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    width: 11%;
+    display: inline-block;
 }
 
 ul.toolbar li {
-    margin: 1em 5px;
+    border: thin solid lightgray;
+    border-radius: 4px;
+    margin-bottom: 1em;
+    padding: 5px;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
 }
 
 div.gutter {
@@ -187,4 +186,8 @@ span.filterBlock {
 
 span.filterBlock input {
     margin-left: 2em;
+}
+
+#report {
+    margin-bottom: 1em;
 }
