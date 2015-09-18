@@ -86,10 +86,12 @@ div.right {
 }
 
 div.center {
-    width: 10%;
+    width: 13%;
     display: inline-block;
     vertical-align: top;
-    text-align: center;
+    text-align: left;
+    margin-top: 20%;
+    margin-left: 2%;
 }
     
 
@@ -159,12 +161,14 @@ canvas.center {
 }
 
 textarea {
-    width: 91%;
+    width: 100%;
     min-height: 500px;
     padding: 5px;
     background: #eee;
     border-radius: 4px;
     resize: vertical;
+    white-space: pre;
+    word-wrap: normal;
 }
 
 textarea.error {
@@ -198,4 +202,11 @@ span.filterBlock input {
     position: absolute;
     top: 0px;
     right: 12%;
+}
+
+button {
+    font-size: 1.65em;
+    color: #333;
+    padding-left: .5em;
+    padding-right: .5em;
 }
