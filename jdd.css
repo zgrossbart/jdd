@@ -3,27 +3,48 @@ body {
     margin: 0px 0px;
 }
 
-pre {
+h1 {
+    font-size: 3em;
+    line-height: 1;
+    margin-bottom: .1em;
+    font-family: "sans";
+}
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1;
+    margin-bottom: 1em;
+    font-family: "sans";
+}
+
+#main {
+    margin: 25px auto;
+    width: 95%
+}
+
+pre.codeBlock, div.codeBlock {
   background-color:#eee;
   overflow:auto;
   margin:0 0 1em;
   padding:.5em 1em;
 }
 
-pre .codeLine,
-pre .line-number {
+pre.codeBlock .codeLine,
+pre.codeBlock .line-number,
+div.codeBlock .codeLine,
+div.codeBlock .line-number {
   /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */
   font:normal normal 13px/16px "Monospace;
   color:black;
   display:block;
 }
 
-pre.codeBlock span.code {
+pre.codeBlock.codeBlock span.code, div.codeBlock span.code {
     min-width: 97%;
     display: inline-block;
 }
 
-pre .line-number {
+pre.codeBlock .line-number, div.codeBlock .line-number {
   margin:0 1em 0 -1em;
   border-right:1px solid;
   text-align:right;
@@ -37,28 +58,50 @@ pre .line-number {
   padding-right: 0.1em;
 }
 
-pre .line-number span {
+pre.codeBlock .line-number span, div.codeBlock .line-number span {
   display:block;
   padding:0 .5em 0 1em;
 }
 
-pre .cl {
+pre.codeBlock .cl {
   display:block;
   clear:both;
 }
 
-div.container {
+div.diffcontainer {
     position: relative;
     margin: 0 auto;
+    display: none;
 }
 
-pre.left {
+div.left {
+    width: 40%;
+    display: inline-block;
+}
+
+div.right {
     width: 40%;
     display: inline-block;
     vertical-align: top;
 }
 
-pre.right {
+div.center {
+    width: 13%;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    margin-top: 20%;
+    margin-left: 2%;
+}
+    
+
+pre.codeBlock.left {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+pre.codeBlock.right {
     width: 40%;
     display: inline-block;
     vertical-align: top;
@@ -66,19 +109,18 @@ pre.right {
 }
 
 ul.toolbar {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    width: 12%;
-    border: thin solid lightgray;
-    background: #fbfbfb;
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    width: 11%;
+    display: inline-block;
 }
 
 ul.toolbar li {
-    margin: 1em 5px;
+    border: thin solid lightgray;
+    border-radius: 4px;
+    margin-bottom: 1em;
+    padding: 5px;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
 }
 
 div.gutter {
@@ -87,6 +129,10 @@ div.gutter {
 
 div.codeLine span.diff {
     cursor: pointer;
+}
+
+div.codeLine span.eq_off, div.codeLine span.type_off, div.codeLine span.missing_off {
+    cursor: auto;
 }
 
 div.codeLine span.eq {
@@ -112,4 +158,55 @@ canvas.center {
     width: 20%;
     height: 100%;
     top: 0;
+}
+
+textarea {
+    width: 100%;
+    min-height: 500px;
+    padding: 5px;
+    background: #eee;
+    border-radius: 4px;
+    resize: vertical;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+textarea.error {
+    border-color: #FBC2C4;
+}
+
+pre.error {
+    background: #FBE3E4;
+    color: #D12F19;
+    border: thin solid #FBC2C4;
+    border-radius: 4px;
+    padding: 1em;
+    display: none;
+}
+
+span.filterBlock {
+    margin-bottom: 1em;
+}
+
+span.filterBlock input {
+    margin-left: 2em;
+}
+
+#report {
+    margin-bottom: 1em;
+    position: relative;
+}
+
+#report button {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 12%;
+}
+
+button {
+    font-size: 1.65em;
+    color: #333;
+    padding-left: .5em;
+    padding-right: .5em;
 }
