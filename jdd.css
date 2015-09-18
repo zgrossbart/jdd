@@ -230,3 +230,7 @@ p {
 .header {
     height: 8em;
 }
+
+span.fileInput {
+    margin-left: 2em;
+}
