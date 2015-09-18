@@ -386,6 +386,34 @@ var jdd = {
 
 
         });
+    },
+
+    compare: function() {
+
+        $('div.initContainer').hide();
+        $('div.diffcontainer').show();
+
+        jdd.diffs = [];
+
+        var config = jdd.createConfig();
+        var left = JSON.parse($('#textarealeft').val());
+        var right = JSON.parse($('#textarearight').val());
+
+        jdd.formatAndDecorate(config, left);
+        $('#out').text(config.out);
+        
+        var config2 = jdd.createConfig();
+        jdd.formatAndDecorate(config2, right);
+        $('#out2').text(config2.out);
+    
+        jdd.formatPRETags();
+    
+        config.currentPath = [];
+        config2.currentPath = [];
+    
+        jdd.findDiffs(config, left, config2, right);
+        jdd.processDiffs();
+
     }
 };
 
@@ -394,21 +422,10 @@ var jdd = {
 
 jQuery(document).ready(function() {
     //console.log('data: ' + JSON.stringify(DATA));
-    var config = jdd.createConfig();
-    jdd.formatAndDecorate(config, DATA);
-    $('#out').text(config.out);
     
-    var config2 = jdd.createConfig();
-    jdd.formatAndDecorate(config2, DATA2);
-    $('#out2').text(config2.out);
-
-    jdd.formatPRETags();
-
-    config.currentPath = [];
-    config2.currentPath = [];
-
-    jdd.findDiffs(config, DATA, config2, DATA2);
-    jdd.processDiffs();
-
     //console.log('diffs: ' + JSON.stringify(jdd.diffs));
+
+    $('#compare').click(function() {
+        jdd.compare();
+    });
 });

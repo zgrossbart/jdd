@@ -47,10 +47,30 @@ pre .cl {
   clear:both;
 }
 
-div.container {
+div.diffcontainer {
     position: relative;
     margin: 0 auto;
+    display: none;
 }
+
+div.left {
+    width: 40%;
+    display: inline-block;
+}
+
+div.right {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+div.center {
+    width: 10%;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+}
+    
 
 pre.left {
     width: 40%;
@@ -112,4 +132,11 @@ canvas.center {
     width: 20%;
     height: 100%;
     top: 0;
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 5px;
+    background: #eee;
 }

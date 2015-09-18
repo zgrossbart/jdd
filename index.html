@@ -9,13 +9,89 @@
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="data.json" type="text/javascript" charset="utf-8"></script>
-        <script src="data2.json" type="text/javascript" charset="utf-8"></script>
         <script src="jdd.js" type="text/javascript" charset="utf-8"></script>
     </head> 
     <body>
 
-        <div class="container">
+        <div class="initContainer">
+            <div class="left">
+                <textarea id="textarealeft" placeholder="Enter JSON to compare or select a file">{
+    "Aidan Gillen": {
+        "array": [
+            "Game of Thron\"es",
+            "The Wire"
+        ],
+        "string": "some string",
+        "int": 2,
+        "boolean": true,
+        "object": {
+            "foo": "bar"
+        }
+    },
+    "Amy Ryan": [
+        "In Treatment",
+        "The Wire"
+    ],
+    "Annie Fitzgerald": [
+        "Big Love",
+        "True Blood"
+    ],
+    "Anwan Glover": [
+        "Treme",
+        "The Wire"
+    ],
+    "Alexander Skarsg?rd": [
+        "Generation Kill",
+        "True Blood"
+    ]
+}</textarea>
+            </div>
+
+            <div class="center">
+                <button id="compare">Compare</button>
+            </div>
+
+            <div class="right">
+                <textarea class="right" id="textarearight" placeholder="Enter JSON to compare or select a file">{
+    "Aidan Gillen": {
+        "array": [
+            "Game of Thrones",
+            "The Wire"
+        ],
+        "string": "some string",
+        "int": "2",
+        "otherint": 4,
+        "boolean": true,
+        "object": {
+            "foo": "bar"
+        }
+    },
+    "Amy Ryan": [
+        "In Treatment",
+        "The Wire"
+    ],
+    "Annie Fitzgerald": [
+        "True Blood",
+        "Big Love"
+    ],
+    "Anwan Glover": [
+        "Treme",
+        "The Wire"
+    ],
+    "Alexander Skarsg?rd": [
+        "Generation Kill",
+        "True Blood"
+    ],
+    "Alice Farmer": [
+        "The Corner",
+        "Oz",
+        "The Wire"
+    ]
+}</textarea>
+            </div>
+        </div>
+
+        <div class="diffcontainer">
             <pre id="out" class="left"></pre>
             <pre id="out2" class="right"></pre>
             <ul id="toolbar" class="toolbar"></ul>
