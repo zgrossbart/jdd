@@ -34,7 +34,7 @@ pre .line-number {
   -o-user-select: none;
   user-select: none;
   padding-left: 0.4em;
-  padding-right: 0.2em;
+  padding-right: 0.1em;
 }
 
 pre .line-number span {
