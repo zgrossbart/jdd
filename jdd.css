@@ -3,27 +3,29 @@ body {
     margin: 0px 0px;
 }
 
-pre {
+pre.codeBlock, div.codeBlock {
   background-color:#eee;
   overflow:auto;
   margin:0 0 1em;
   padding:.5em 1em;
 }
 
-pre .codeLine,
-pre .line-number {
+pre.codeBlock .codeLine,
+pre.codeBlock .line-number,
+div.codeBlock .codeLine,
+div.codeBlock .line-number {
   /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */
   font:normal normal 13px/16px "Monospace;
   color:black;
   display:block;
 }
 
-pre.codeBlock span.code {
+pre.codeBlock.codeBlock span.code, div.codeBlock span.code {
     min-width: 97%;
     display: inline-block;
 }
 
-pre .line-number {
+pre.codeBlock .line-number, div.codeBlock .line-number {
   margin:0 1em 0 -1em;
   border-right:1px solid;
   text-align:right;
@@ -37,12 +39,12 @@ pre .line-number {
   padding-right: 0.1em;
 }
 
-pre .line-number span {
+pre.codeBlock .line-number span, div.codeBlock .line-number span {
   display:block;
   padding:0 .5em 0 1em;
 }
 
-pre .cl {
+pre.codeBlock .cl {
   display:block;
   clear:both;
 }
@@ -72,13 +74,13 @@ div.center {
 }
     
 
-pre.left {
+pre.codeBlock.left {
     width: 40%;
     display: inline-block;
     vertical-align: top;
 }
 
-pre.right {
+pre.codeBlock.right {
     width: 40%;
     display: inline-block;
     vertical-align: top;
@@ -134,9 +136,32 @@ canvas.center {
     top: 0;
 }
 
+div.initContainer {
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%
+}
+
 textarea {
-    width: 100%;
-    min-height: 300px;
+    width: 91%;
+    min-height: 600px;
     padding: 5px;
     background: #eee;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+textarea.error {
+    border-color: #FBC2C4;
+}
+
+pre.error {
+    background: #FBE3E4;
+    color: #D12F19;
+    border: thin solid #FBC2C4;
+    border-radius: 4px;
+    padding: 1em;
+    display: none;
 }

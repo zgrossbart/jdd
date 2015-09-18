@@ -334,6 +334,24 @@ var jdd = {
         });
     },
 
+    formatTextAreas: function() {
+        _.each($('textarea'), function(textarea) {
+            var codeBlock = $('<div class="codeBlock"></div>');
+            var lineNumbers = $('<div class="gutter"></div>');
+            codeBlock.append(lineNumbers);
+
+            var addLine = function(line, index) {
+                lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
+            };
+
+            var lines = $(textarea).val().split('\n');
+            _.each(lines, addLine);
+            
+            $(textarea).replaceWith(codeBlock);
+            codeBlock.append(textarea);
+        });
+    },
+
     handleDiffClick: function (line, side) {
         var diffs = _.filter(jdd.diffs, function(diff) {
             if (side === 'left') {
@@ -388,17 +406,60 @@ var jdd = {
         });
     },
 
+    validateInput: function(json, side) {
+         try {
+            var result = jsl.parser.parse(json);
+
+            if (side === 'left') {
+                $('#errorLeft').text('').hide();
+                $('#textarealeft').removeClass('error');
+            } else {
+                $('#errorRight').text('').hide();
+                $('#textarearight').removeClass('error');
+            }
+
+            return true;
+        } catch (parseException) {
+            console.log('parseException: ' + JSON.stringify(parseException));
+            console.log('parseException.message: ' + parseException.message);
+
+            if (side === 'left') {
+                $('#errorLeft').text(parseException.message).show();
+                $('#textarealeft').addClass('error');
+            } else {
+                $('#errorRight').text(parseException.message).show();
+                $('#textarearight').addClass('error');
+            }
+            return false;
+        }
+    },
+
     compare: function() {
+
+        /*
+         * We'll start by running the text through JSONlint since it gives
+         * much better error messages.
+         */
+        if (!jdd.validateInput($('#textarealeft').val(), 'left')) {
+            return;
+        }
+
+        if (!jdd.validateInput($('#textarearight').val(), 'right')) {
+            return;
+        }
 
         $('div.initContainer').hide();
         $('div.diffcontainer').show();
 
         jdd.diffs = [];
 
-        var config = jdd.createConfig();
+        
+
         var left = JSON.parse($('#textarealeft').val());
         var right = JSON.parse($('#textarearight').val());
 
+        
+        var config = jdd.createConfig();
         jdd.formatAndDecorate(config, left);
         $('#out').text(config.out);
         
@@ -428,4 +489,6 @@ jQuery(document).ready(function() {
     $('#compare').click(function() {
         jdd.compare();
     });
+
+   // jdd.formatTextAreas();
 });
