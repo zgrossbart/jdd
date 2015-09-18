@@ -1,0 +1,30 @@
+{
+  "curly": true,
+  "bitwise": true,
+  "eqeqeq": true,
+  "es3": true,
+  "forin": true,
+  "freeze": true,
+  "immed": true,
+  "indent": 4,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "nonbsp": true,
+  "nonew": true,
+  "quotmark": true,
+  "undef": true,
+  "strict": true,
+  "globalstrict": true,
+  "browser": true,
+  "jquery": true,
+  "devel": true,
+  "globals": {
+      "iac": false
+  },
+  "predef": [ "_","JSON", "jsl" ],
+  "maxparams": 14,
+  "maxdepth": 7,
+  "maxcomplexity": 15
+}

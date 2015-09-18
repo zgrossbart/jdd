@@ -5,7 +5,6 @@ var jdd = {
     EQUALITY: 'eq',
     TYPE: 'type',
     MISSING: 'missing',
-
     diffs: [],
 
     findDiffs: function(/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
@@ -240,7 +239,9 @@ var jdd = {
         var props = [];
 
         for (var prop in obj) {
-            props.push(prop);
+            if (obj.hasOwnProperty(prop)) {
+                props.push(prop);
+            }
         }
 
         props = props.sort(function(a, b) {
@@ -280,7 +281,7 @@ var jdd = {
             path2: pathObj2,
             type: type,
             msg: msg
-        }
+        };
     },
 
     getTabs: function(/*int*/ indent) {
@@ -308,7 +309,7 @@ var jdd = {
             currentPath: [],
             paths: [],
             line: 1
-        }
+        };
     },
 
     formatPRETags: function() {
@@ -321,7 +322,7 @@ var jdd = {
             codeBlock.append(codeLines);
 
             var addLine = function(line, index) {
-                var div = $('<div class="codeLine line' + (index + 1) + '"></div>')
+                var div = $('<div class="codeLine line' + (index + 1) + '"></div>');
                 lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
                 var span = $('<span class="code"></span');
