@@ -583,14 +583,24 @@ var jdd = {
         jdd.processDiffs();
         jdd.generateReport();
 
+    },
+
+    loadSampleData: function() {
+         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
+         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": true,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     }
 };
-
 
 
 
 jQuery(document).ready(function() {
     $('#compare').click(function() {
         jdd.compare();
+    });
+
+    $('#sample').click(function(e) {
+        console.log('hey there');
+        e.preventDefault();
+        jdd.loadSampleData();
     });
 });
