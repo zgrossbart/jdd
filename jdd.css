@@ -225,3 +225,7 @@ button {
 p {
     margin-bottom: 1em;
 }
+
+.header {
+    height: 8em;
+}
