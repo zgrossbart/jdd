@@ -3,6 +3,25 @@ body {
     margin: 0px 0px;
 }
 
+h1 {
+    font-size: 3em;
+    line-height: 1;
+    margin-bottom: .1em;
+    font-family: "sans";
+}
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1;
+    margin-bottom: 1em;
+    font-family: "sans";
+}
+
+#main {
+    margin: 25px auto;
+    width: 95%
+}
+
 pre.codeBlock, div.codeBlock {
   background-color:#eee;
   overflow:auto;
@@ -111,6 +130,10 @@ div.codeLine span.diff {
     cursor: pointer;
 }
 
+div.codeLine span.eq_off, div.codeLine span.type_off, div.codeLine span.missing_off {
+    cursor: auto;
+}
+
 div.codeLine span.eq {
     background: rgba(50, 57, 88, 0.1);
 }
@@ -136,14 +159,6 @@ canvas.center {
     top: 0;
 }
 
-div.initContainer {
-    height: 100%;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%
-}
-
 textarea {
     width: 91%;
     min-height: 500px;
@@ -164,4 +179,12 @@ pre.error {
     border-radius: 4px;
     padding: 1em;
     display: none;
+}
+
+span.filterBlock {
+    margin-bottom: 1em;
+}
+
+span.filterBlock input {
+    margin-left: 2em;
 }

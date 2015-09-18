@@ -450,6 +450,79 @@ var jdd = {
         reader.readAsText(files[0]);
     },
 
+    generateReport: function() {
+         var report = $('#report');
+
+        report.text('');
+        if (jdd.diffs.length === 0) {
+            report.text('The two files were semantically  identical');
+            return;
+        }
+
+        var typeCount = 0;
+        var eqCount = 0;
+        var missingCount = 0;
+
+        _.each(jdd.diffs, function(diff) {
+            if (diff.type === jdd.EQUALITY) {
+                eqCount++;
+            } else if (diff.type === jdd.MISSING) {
+                missingCount++;
+            } else if (diff.type === jdd.TYPE) {
+                typeCount++;
+            }
+        });
+
+        var title = $('<h3></h3>');
+        title.text('There were ' + jdd.diffs.length + ' differences');
+        report.prepend(title);
+
+        var filterBlock = $('<span class="filterBlock">Show:</span>');
+
+        /*
+         * The missing checkbox
+         */
+        var missing = $('<label><input id="showMissing" type="checkbox" name="checkbox" value="value" checked="true">' + missingCount + ' missing properties</label>');
+        missing.children('input').click(function() {
+            if (!$(this).prop('checked')) {
+                $('span.code.diff.missing').addClass('missing_off').removeClass('missing');
+            } else {
+                $('span.code.diff.missing_off').addClass('missing').removeClass('missing_off');
+            }
+        });
+        filterBlock.append(missing);
+
+        /*
+         * The types checkbox
+         */
+        var types = $('<label><input id="showTypes" type="checkbox" name="checkbox" value="value" checked="true">' + typeCount + ' incorrect types</label>');
+        types.children('input').click(function() {
+            if (!$(this).prop('checked')) {
+                $('span.code.diff.type').addClass('type_off').removeClass('type');
+            } else {
+                $('span.code.diff.type_off').addClass('type').removeClass('type_off');
+            }
+        });
+        filterBlock.append(types);
+
+        /*
+         * The equals checkbox
+         */
+        var eq = $('<label><input id="showEq" type="checkbox" name="checkbox" value="value" checked="true">' + eqCount + ' unequal Values</label>');
+        eq.children('input').click(function() {
+            if (!$(this).prop('checked')) {
+                $('span.code.diff.eq').addClass('eq_off').removeClass('eq');
+            } else {
+                $('span.code.diff.eq_off').addClass('eq').removeClass('eq_off');
+            }
+        });
+        filterBlock.append(eq);
+
+        report.append(filterBlock);
+
+
+    },
+
     compare: function() {
 
         /*
@@ -490,6 +563,7 @@ var jdd = {
     
         jdd.findDiffs(config, left, config2, right);
         jdd.processDiffs();
+        jdd.generateReport();
 
     }
 };
