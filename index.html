@@ -20,37 +20,9 @@
 
         <div class="initContainer">
             <div class="left">
-                <textarea id="textarealeft" placeholder="Enter JSON to compare or select a file">{
-    "Aidan Gillen": {
-        "array": [
-            "Game of Thron\"es",
-            "The Wire"
-        ],
-        "string": "some string",
-        "int": 2,
-        "boolean": true,
-        "object": {
-            "foo": "bar"
-        }
-    },
-    "Amy Ryan": [
-        "In Treatment",
-        "The Wire"
-    ],
-    "Annie Fitzgerald": [
-        "Big Love",
-        "True Blood"
-    ],
-    "Anwan Glover": [
-        "Treme",
-        "The Wire"
-    ],
-    "Alexander Skarsg?rd": [
-        "Generation Kill",
-        "True Blood"
-    ]
-}</textarea>
+                <textarea id="textarealeft" placeholder="Enter JSON to compare or select a file"></textarea>
                 <pre id="errorLeft" class="error"></pre>
+                <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')">
             </div>
 
             <div class="center">
@@ -95,6 +67,7 @@
     ]
 }</textarea>
                 <pre id="errorRight" class="error"></pre>
+                <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'left')">
             </div>
         </div>
 

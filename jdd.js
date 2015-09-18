@@ -434,6 +434,22 @@ var jdd = {
         }
     },
 
+    handleFiles: function(files, side) {
+        var reader = new FileReader();
+
+        reader.onload = (function(theFile) {
+            return function(e) {
+                if (side === 'left') {
+                    $('#textarealeft').val(e.target.result);
+                } else {
+                    $('#textarearight').val(e.target.result);
+                }
+            };
+        })(files[0]);
+        
+        reader.readAsText(files[0]);
+    },
+
     compare: function() {
 
         /*
