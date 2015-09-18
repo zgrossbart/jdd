@@ -37,8 +37,6 @@ var jdd = {
                 * This means that the first data has a property which
                 * isn't present in the second data
                 */
-               console.log('config1.currentPath: ' + jdd.generatePath(config1));
-               console.log('config2.currentPath: ' + jdd.generatePath(config2));
                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                config2, jdd.generatePath(config2),
                                                'Missing property (' + key + ') from right side', jdd.MISSING));
@@ -253,6 +251,14 @@ var jdd = {
     },
 
     generateDiff: function(config1, path1, config2, path2, /*String*/ msg, type) {
+        if (path1 !== '/' && path1.charAt(path1.length - 1) === '/') {
+            path1 = path1.substring(0, path1.length - 1);
+        }
+
+        if (path2 !== '/' && path2.charAt(path2.length - 1) === '/') {
+            path2 = path2.substring(0, path2.length - 1);
+        }
+
         var pathObj1 = _.find(config1.paths, function(path) {
             return path.path === path1;
         });
@@ -420,9 +426,6 @@ var jdd = {
 
             return true;
         } catch (parseException) {
-            console.log('parseException: ' + JSON.stringify(parseException));
-            console.log('parseException.message: ' + parseException.message);
-
             if (side === 'left') {
                 $('#errorLeft').text(parseException.message).show();
                 $('#textarealeft').addClass('error');
