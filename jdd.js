@@ -336,6 +336,7 @@ var jdd = {
             _.each(lines, addLine);
             
             codeBlock.addClass($(pre).attr('class'));
+            codeBlock.attr('id', $(pre).attr('id'));
 
             $(pre).replaceWith(codeBlock);
         });
@@ -458,6 +459,16 @@ var jdd = {
          var report = $('#report');
 
         report.text('');
+
+        var newDiff = $('<button>Perform a new diff</button>');
+        report.append(newDiff);
+        newDiff.click(function() {
+            $('div.initContainer').show();
+            $('div.diffcontainer').hide();
+            $('div.diffcontainer pre').text('');
+            $('ul.toolbar').text('');
+        });
+
         if (jdd.diffs.length === 0) {
             report.text('The two files were semantically  identical');
             return;
@@ -559,7 +570,7 @@ var jdd = {
         var config2 = jdd.createConfig();
         jdd.formatAndDecorate(config2, right);
         $('#out2').text(config2.out);
-    
+
         jdd.formatPRETags();
     
         config.currentPath = [];
@@ -576,13 +587,7 @@ var jdd = {
 
 
 jQuery(document).ready(function() {
-    //console.log('data: ' + JSON.stringify(DATA));
-    
-    //console.log('diffs: ' + JSON.stringify(jdd.diffs));
-
     $('#compare').click(function() {
         jdd.compare();
     });
-
-   // jdd.formatTextAreas();
 });

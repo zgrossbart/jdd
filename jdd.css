@@ -190,4 +190,12 @@ span.filterBlock input {
 
 #report {
     margin-bottom: 1em;
+    position: relative;
+}
+
+#report button {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 12%;
 }
