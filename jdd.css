@@ -113,8 +113,9 @@ pre.codeBlock.right {
 ul.toolbar {
     width: 11%;
     display: inline-block;
-    position: fixed;
     right: 10px;
+    top: 5em;
+    position: absolute;
 }
 
 ul.toolbar li {
@@ -209,6 +210,7 @@ span.filterBlock input {
 #report {
     margin-bottom: 1em;
     position: relative;
+    height: 4em;
 }
 
 #report button {

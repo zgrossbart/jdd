@@ -7,6 +7,9 @@ var jdd = {
     MISSING: 'missing',
     diffs: [],
 
+    /**
+     * Find the differences between the two objects and recurse into their sub objects.
+     */
     findDiffs: function(/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
        config1.currentPath.push('/');
        config2.currentPath.push('/');
@@ -75,6 +78,10 @@ var jdd = {
        };
     },
 
+    /**
+     * Generate the differences between two values.  This handles differences of object
+     * types and actual values.
+     */
     diffVal: function(val1, config1, val2, config2) { 
 
         if (_.isArray(val1)) {
@@ -92,7 +99,6 @@ var jdd = {
             });
         } else if (_.isObject(val1)) {
             if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
-                console.log('not an object');
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
                                                 'Both types should be objects', jdd.TYPE));
@@ -125,9 +131,15 @@ var jdd = {
                                                 config2, jdd.generatePath(config2),
                                                 'Both types should be booleans', jdd.TYPE));
             } else if (val1 !== val2) {
-                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                                'Both sides should be equal booleans', jdd.EQUALITY));
+                if (val1) {
+                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                    config2, jdd.generatePath(config2),
+                                                    'The left side is <code>true</code> and the right side is <code>false</code>', jdd.EQUALITY));
+                } else {
+                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                    config2, jdd.generatePath(config2),
+                                                    'The left side is <code>false</code> and the right side is <code>true</code>', jdd.EQUALITY));
+                }
             }
         } 
     },
@@ -648,11 +660,24 @@ var jdd = {
         $('body').removeClass('progress');
         $('compate').attr('disabled', '');
 
+        /*
+         * We want to switch the toolbar bar between fixed and absolute position when you 
+         * scroll so you can get the maximum number of toolbar items.
+         */
+        var toolbarTop = $('#toolbar').offset().top - 15;
+        $(window).scroll(function() {
+            if (toolbarTop < $(window).scrollTop()) {
+                $('#toolbar').css('position', 'fixed').css('top', '10px');
+            } else {
+                $('#toolbar').css('position', 'absolute').css('top', '');
+            }
+        });
+
     },
 
     loadSampleData: function() {
          $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
-         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": true,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     }
 };
 
