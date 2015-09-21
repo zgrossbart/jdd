@@ -91,13 +91,14 @@ var jdd = {
                 config2.currentPath.pop();
             });
         } else if (_.isObject(val1)) {
-            if (!_.isObject(val2)) {
-               jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                               config2, jdd.generatePath(config2),
-                                               'Both types should be objects', jdd.TYPE));
+            if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
+                console.log('not an object');
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                config2, jdd.generatePath(config2),
+                                                'Both types should be objects', jdd.TYPE));
+            } else {
+                jdd.findDiffs(config1, val1, config2, val2);
             }
-
-            jdd.findDiffs(config1, val1, config2, val2);
         } else if (_.isString(val1)) {
             if (!_.isString(val2)) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
@@ -650,7 +651,7 @@ var jdd = {
     },
 
     loadSampleData: function() {
-         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
+         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
          $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": true,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     }
 };
