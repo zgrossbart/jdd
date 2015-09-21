@@ -147,9 +147,12 @@ ul.toolbar li code {
 
 #buttons {
     white-space: nowrap;
-    position: fixed;
-    right: 5px;
-    bottom: 10px;
+    margin-bottom: 1em;
+}
+
+#buttons a {
+    color: #8a6d3b;
+    font-size: 18px;
 }
 
 #buttons a.disabled {
@@ -159,6 +162,7 @@ ul.toolbar li code {
 
 #buttons a.disabled:hover {
     text-decoration: none;
+    cursor: default;
 }
 
 #prevButton {

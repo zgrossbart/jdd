@@ -475,7 +475,7 @@ var jdd = {
         });
 
         var buttons = $('<div id="buttons"><div>');
-        var prev = $('<a href="#" id="prevButton">Prev</a>');
+        var prev = $('<a href="#" title="Previous difference" id="prevButton">&lt;</a>');
         prev.addClass('disabled');
         prev.click(function(e) {
             e.preventDefault();
@@ -489,7 +489,7 @@ var jdd = {
         });
         buttons.append(prev);
 
-        var next = $('<a href="#" id="nextButton">Next</a>');
+        var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
         next.click(function(e) {
             e.preventDefault();
             if (jdd.currentDiff < jdd.diffs.length - 1) {
@@ -506,7 +506,7 @@ var jdd = {
             $('#prevButton').removeClass('disabled');
             $('#nextButton').removeClass('disabled');
             
-            if (jdd.currentDiff === 0) {
+            if (jdd.currentDiff === 1) {
                 $('#prevButton').addClass('disabled');
             } else if (jdd.currentDiff === jdd.diffs.length - 1) {
                 $('#nextButton').addClass('disabled');
