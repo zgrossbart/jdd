@@ -92,7 +92,6 @@ var jdd = {
             });
         } else if (_.isObject(val1)) {
             if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
-                console.log('not an object');
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
                                                 'Both types should be objects', jdd.TYPE));
@@ -647,6 +646,19 @@ var jdd = {
 
         $('body').removeClass('progress');
         $('compate').attr('disabled', '');
+
+        /*
+         * We want to switch the toolbar bar between fixed and absolute position when you 
+         * scroll so you can get the maximum number of toolbar items.
+         */
+        var toolbarTop = $('#toolbar').offset().top - 15;
+        $(window).scroll(function() {
+            if (toolbarTop < $(window).scrollTop()) {
+                $('#toolbar').css('position', 'fixed').css('top', '10px');
+            } else {
+                $('#toolbar').css('position', 'absolute').css('top', '');
+            }
+        });
 
     },
 
