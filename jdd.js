@@ -13,14 +13,18 @@ var jdd = {
     findDiffs: function(/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
        config1.currentPath.push('/');
        config2.currentPath.push('/');
+
+       var key;
+       var val;
+
        if (data1.length < data2.length) {
            /*
             * This means the second data has more properties than the first.
             * We need to find the extra ones and create diffs for them.
             */
-           for (var key in data2) {
+           for (key in data2) {
                if (data2.hasOwnProperty(key)) {
-                   var val = data1[key];
+                   val = data1[key];
                    if (!data1.hasOwnProperty(key)) {
                        jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                        config2, jdd.generatePath(config2, '/' + key),
@@ -34,9 +38,9 @@ var jdd = {
         * Now we're going to look for all the properties in object one and
         * compare them to object two
         */
-       for (var key in data1) {
+       for (key in data1) {
            if (data1.hasOwnProperty(key)) {
-               var val = data1[key];
+               val = data1[key];
 
                config1.currentPath.push(key);
     
@@ -65,9 +69,9 @@ var jdd = {
         * Now we want to look at all the properties in object two that
         * weren't in object one and generate diffs for them.
         */
-       for (var key in data2) {
+       for (key in data2) {
            if (data2.hasOwnProperty(key)) {
-               var val = data1[key];
+               val = data1[key];
 
                if (!data1.hasOwnProperty(key)) {
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
@@ -75,7 +79,7 @@ var jdd = {
                                                    'Missing property <code>' + key + '</code> from the left side', jdd.MISSING));
                }
            }
-       };
+       }
     },
 
     /**
@@ -126,24 +130,35 @@ var jdd = {
                                                'Both sides should be equal numbers', jdd.EQUALITY));
             }
         } else if (_.isBoolean(val1)) {
-            if (!_.isBoolean(val2)) {
-                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                                'Both types should be booleans', jdd.TYPE));
-            } else if (val1 !== val2) {
-                if (val1) {
-                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                    config2, jdd.generatePath(config2),
-                                                    'The left side is <code>true</code> and the right side is <code>false</code>', jdd.EQUALITY));
-                } else {
-                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                    config2, jdd.generatePath(config2),
-                                                    'The left side is <code>false</code> and the right side is <code>true</code>', jdd.EQUALITY));
-                }
-            }
+            jdd.diffBool(val1, config1, val2, config2);
         } 
     },
 
+    /**
+     * We handle boolean values specially because we can show a nicer message for them.
+     */
+    diffBool: function(val1, config1, val2, config2) { 
+        if (!_.isBoolean(val2)) {
+            jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                            config2, jdd.generatePath(config2),
+                                            'Both types should be booleans', jdd.TYPE));
+        } else if (val1 !== val2) {
+            if (val1) {
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                config2, jdd.generatePath(config2),
+                                                'The left side is <code>true</code> and the right side is <code>false</code>', jdd.EQUALITY));
+            } else {
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                config2, jdd.generatePath(config2),
+                                                'The left side is <code>false</code> and the right side is <code>true</code>', jdd.EQUALITY));
+            }
+        }
+    },
+
+    /**
+     * Format the object into the output stream and decorate the data tree with 
+     * the data about this object.
+     */
     formatAndDecorate: function(/*Object*/ config, /*Object*/ data) {
         jdd.startObject(config);
         config.currentPath.push('/');
@@ -171,6 +186,9 @@ var jdd = {
         config.currentPath.pop();
     },
 
+    /**
+     * Generate the start of the an object in the output stream and push in the new path
+     */
     startObject: function(config) {
         config.indent++;
         config.out += '{';
@@ -191,6 +209,9 @@ var jdd = {
         }
     },
 
+    /**
+     * Finish the object, outdent, and pop off all the path
+     */
     finishObject: function(config) {
         if (config.indent === 0) {
             config.indent--;
@@ -207,6 +228,9 @@ var jdd = {
         }
     },
 
+    /**
+     * Format a specific value into the output stream.
+     */
     formatVal: function(val, config) { 
         if (_.isArray(val)) {
             config.out += '[';
@@ -238,6 +262,9 @@ var jdd = {
         } 
     },
 
+    /**
+     * Generate a JSON path based on the specific configuration and an optional property.
+     */
     generatePath: function(config, prop) {
         var s = '';
         _.each(config.currentPath, function(path) {
@@ -255,11 +282,17 @@ var jdd = {
         }
     },
 
+    /**
+     * Add a new line to the output stream
+     */
     newLine: function(config) {
         config.line++;
         return '\n';
     },
 
+    /**
+     * Sort all the relevant properties and return them in an alphabetical sort by property key
+     */
     getSortedProperties: function(/*Object*/ obj) {
         var props = [];
 
@@ -276,6 +309,9 @@ var jdd = {
         return props;
     },
 
+    /**
+     * Generate the diff and verify that it matches a JSON path
+     */
     generateDiff: function(config1, path1, config2, path2, /*String*/ msg, type) {
         if (path1 !== '/' && path1.charAt(path1.length - 1) === '/') {
             path1 = path1.substring(0, path1.length - 1);
@@ -309,6 +345,9 @@ var jdd = {
         };
     },
 
+    /**
+     * Get the current indent level
+     */
     getTabs: function(/*int*/ indent) {
         var s = '';
         for (var i = 0; i < indent; i++) {
@@ -318,6 +357,9 @@ var jdd = {
         return s;
     },
 
+    /**
+     * Remove the trailing comma from the output.
+     */
     removeTrailingComma: function(config) {
         /*
          * Remove the trailing comma
@@ -327,6 +369,9 @@ var jdd = {
         }
     },
 
+    /**
+     * Create a config object for holding differences
+     */
     createConfig: function() {
         return {
             out: '',
@@ -337,6 +382,9 @@ var jdd = {
         };
     },
 
+    /**
+     * Format the output pre tags.
+     */
     formatPRETags: function() {
         _.each($('pre'), function(pre) {
             var codeBlock = $('<pre class="codeBlock"></pre>');
@@ -367,6 +415,9 @@ var jdd = {
         });
     },
 
+    /**
+     * Format the text edits which handle the JSON input
+     */
     formatTextAreas: function() {
         _.each($('textarea'), function(textarea) {
             var codeBlock = $('<div class="codeBlock"></div>');
@@ -406,10 +457,16 @@ var jdd = {
         jdd.showDiffDetails(diffs);
     },
 
+    /**
+     * Highlight the diff at the specified index
+     */
     highlightDiff: function(index) {
         jdd.handleDiffClick(jdd.diffs[index].path1.line, 'left');
     },
 
+    /**
+     * Show the details of the specified diff
+     */
     showDiffDetails: function(diffs) {
          _.each(diffs, function(diff) {
              var li = $('<li></li>');
@@ -423,12 +480,18 @@ var jdd = {
          });
     },
 
+    /**
+     * Scroll the specified diff to be visible
+     */
     scrollToDiff: function(diff) {
         $('html, body').animate({
             scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
         }, 2000);
     },
 
+    /**
+     * Process the specified diff
+     */
     processDiffs: function() {
          var left = [];
          var right = [];
@@ -457,6 +520,9 @@ var jdd = {
 
     },
 
+    /**
+     * Validate the input against the JSON parser
+     */
     validateInput: function(json, side) {
          try {
             var result = jsl.parser.parse(json);
@@ -482,6 +548,9 @@ var jdd = {
         }
     },
 
+    /**
+     * Handle the file uploads
+     */
     handleFiles: function(files, side) {
         var reader = new FileReader();
 
@@ -498,6 +567,9 @@ var jdd = {
         reader.readAsText(files[0]);
     },
 
+    /**
+     * Generate the report section with the diff
+     */
     generateReport: function() {
          var report = $('#report');
 
@@ -603,6 +675,9 @@ var jdd = {
 
     },
 
+    /**
+     * Implement the compare button and complete the compare process
+     */
     compare: function() {
 
         $('body').addClass('progress');
@@ -675,6 +750,9 @@ var jdd = {
 
     },
 
+    /**
+     * Load in the sample data
+     */
     loadSampleData: function() {
          $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
          $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
