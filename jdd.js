@@ -474,6 +474,47 @@ var jdd = {
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
         });
 
+        var buttons = $('<div id="buttons"><div>');
+        var prev = $('<a href="#" id="prevButton">Prev</a>');
+        prev.addClass('disabled');
+        prev.click(function(e) {
+            e.preventDefault();
+            if (jdd.currentDiff > 0) {
+                jdd.currentDiff--;
+                jdd.highlightDiff(jdd.currentDiff);
+                //jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+
+                updateButtonStyles();
+            }
+        });
+        buttons.append(prev);
+
+        var next = $('<a href="#" id="nextButton">Next</a>');
+        next.click(function(e) {
+            e.preventDefault();
+            if (jdd.currentDiff < jdd.diffs.length - 1) {
+                jdd.currentDiff++;
+                jdd.highlightDiff(jdd.currentDiff);
+                //jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+
+                updateButtonStyles();
+            }
+        });
+        buttons.append(next);
+
+        var updateButtonStyles = function() {
+            $('#prevButton').removeClass('disabled');
+            $('#nextButton').removeClass('disabled');
+            
+            if (jdd.currentDiff === 0) {
+                $('#prevButton').addClass('disabled');
+            } else if (jdd.currentDiff === jdd.diffs.length - 1) {
+                $('#nextButton').addClass('disabled');
+            }
+        };
+
+        $('ul.toolbar').append(buttons);
+
         jdd.showDiffDetails(diffs);
     },
 
@@ -710,11 +751,9 @@ var jdd = {
          var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
          var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
 
-        if (!leftValid) {
-            return;
-        }
-
-        if (!rightValid) {
+        if (!leftValid || !rightValid) {
+            $('body').removeClass('progress');
+            $('compate').attr('disabled', '');
             return;
         }
 
@@ -722,8 +761,6 @@ var jdd = {
         $('div.diffcontainer').show();
 
         jdd.diffs = [];
-
-        
 
         var left = JSON.parse($('#textarealeft').val());
         var right = JSON.parse($('#textarearight').val());
@@ -749,6 +786,7 @@ var jdd = {
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
         if (jdd.diffs.length > 0) {
+            jdd.currentDiff = 1;
             jdd.highlightDiff(0);
         }
 
