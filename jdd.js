@@ -474,12 +474,22 @@ var jdd = {
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
         });
 
+        jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
+            return diff.path1.line === line;
+        });
+
+        if (jdd.currentDiff === -1) {
+            jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
+                return diff.path2.line === line;
+            });
+        }
+
         var buttons = $('<div id="buttons"><div>');
         var prev = $('<a href="#" title="Previous difference" id="prevButton">&lt;</a>');
         prev.addClass('disabled');
         prev.click(function(e) {
             e.preventDefault();
-            if (jdd.currentDiff > 0) {
+            if (jdd.currentDiff > 1) {
                 jdd.currentDiff--;
                 jdd.highlightDiff(jdd.currentDiff);
                 //jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
@@ -488,6 +498,8 @@ var jdd = {
             }
         });
         buttons.append(prev);
+
+        buttons.append('<span id="prevNextLabel"></span>');
 
         var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
         next.click(function(e) {
@@ -505,6 +517,8 @@ var jdd = {
         var updateButtonStyles = function() {
             $('#prevButton').removeClass('disabled');
             $('#nextButton').removeClass('disabled');
+
+            $('#prevNextLabel').text(jdd.currentDiff + ' of ' + (jdd.diffs.length - 1));
             
             if (jdd.currentDiff === 1) {
                 $('#prevButton').addClass('disabled');
@@ -514,6 +528,7 @@ var jdd = {
         };
 
         $('ul.toolbar').append(buttons);
+        updateButtonStyles();
 
         jdd.showDiffDetails(diffs);
     },
@@ -665,7 +680,7 @@ var jdd = {
         });
 
         var title = $('<h3></h3>');
-        title.text('There were ' + jdd.diffs.length + ' differences');
+        title.text('There were ' + (jdd.diffs.length - 1) + ' differences');
         report.prepend(title);
 
         var filterBlock = $('<span class="filterBlock">Show:</span>');
@@ -812,8 +827,8 @@ var jdd = {
      * Load in the sample data
      */
     loadSampleData: function() {
-         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
-         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4,"boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
+         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     }
 };
 

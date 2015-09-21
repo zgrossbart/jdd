@@ -165,8 +165,10 @@ ul.toolbar li code {
     cursor: default;
 }
 
-#prevButton {
-    margin-right: 5em;
+#prevNextLabel {
+    width: 80%;
+    text-align: center;
+    display: inline-block;
 }
 
 div.gutter {
