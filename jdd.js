@@ -402,7 +402,18 @@ var jdd = {
              var li = $('<li></li>');
              li.text(diff.msg);
              $('ul.toolbar').append(li);
+
+             li.click(function() {
+                 jdd.scrollToDiff(diff);
+             });
+
          });
+    },
+
+    scrollToDiff: function(diff) {
+        $('html, body').animate({
+            scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
+        }, 2000);
     },
 
     processDiffs: function() {
