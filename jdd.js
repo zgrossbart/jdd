@@ -15,38 +15,45 @@ var jdd = {
             * This means the second data has more properties than the first.
             * We need to find the extra ones and create diffs for them.
             */
-           _.each(data2, function(val, key) {
-               if (!data1.hasOwnProperty(key)) {
-                   jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                   config2, jdd.generatePath(config2, '/' + key),
-                                                   'Wrong number of items', jdd.MISSING));
+           for (var key in data2) {
+               if (data2.hasOwnProperty(key)) {
+                   var val = data1[key];
+                   if (!data1.hasOwnProperty(key)) {
+                       jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                       config2, jdd.generatePath(config2, '/' + key),
+                                                       'Wrong number of items', jdd.MISSING));
+                   }
                }
-           });
+           }
        }
 
        /*
         * Now we're going to look for all the properties in object one and
         * compare them to object two
         */
-       _.each(data1, function(val, key) {
-           config1.currentPath.push(key);
+       for (var key in data1) {
+           if (data1.hasOwnProperty(key)) {
+               var val = data1[key];
 
-           if (!data2.hasOwnProperty(key)) {
-               /*
-                * This means that the first data has a property which
-                * isn't present in the second data
-                */
-               jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                               config2, jdd.generatePath(config2),
-                                               'Missing property (' + key + ') from right side', jdd.MISSING));
-            } else {
-                config2.currentPath.push(key);
-            
-                jdd.diffVal(data1[key], config1, data2[key], config2);
-                config2.currentPath.pop();
-            }
-            config1.currentPath.pop();
-       });
+               config1.currentPath.push(key);
+    
+               if (!data2.hasOwnProperty(key)) {
+                   /*
+                    * This means that the first data has a property which
+                    * isn't present in the second data
+                    */
+                   jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                   config2, jdd.generatePath(config2),
+                                                   'Missing property (' + key + ') from right side', jdd.MISSING));
+                } else {
+                    config2.currentPath.push(key);
+                
+                    jdd.diffVal(data1[key], config1, data2[key], config2);
+                    config2.currentPath.pop();
+                }
+                config1.currentPath.pop();
+           }
+       }
 
        config1.currentPath.pop();
        config2.currentPath.pop();
@@ -55,15 +62,17 @@ var jdd = {
         * Now we want to look at all the properties in object two that
         * weren't in object one and generate diffs for them.
         */
-       _.each(data2, function(val, key) {
-           if (!data1.hasOwnProperty(key)) {
-               jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                               config2, jdd.generatePath(config2, key),
-                                               'Missing property (' + key + ') from left side', jdd.MISSING));
+       for (var key in data2) {
+           if (data2.hasOwnProperty(key)) {
+               var val = data1[key];
+
+               if (!data1.hasOwnProperty(key)) {
+                   jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                   config2, jdd.generatePath(config2, key),
+                                                   'Missing property (' + key + ') from left side', jdd.MISSING));
+               }
            }
-
-       });
-
+       };
     },
 
     diffVal: function(val1, config1, val2, config2) { 
@@ -196,7 +205,10 @@ var jdd = {
                     path: jdd.generatePath(config, '[' + index + ']'),
                     line: config.line
                 });
+
+                config.currentPath.push('/[' + index + ']');
                 jdd.formatVal(arrayVal, config);
+                config.currentPath.pop();
             });
             jdd.removeTrailingComma(config);
             config.indent--;
@@ -381,12 +393,27 @@ var jdd = {
         jdd.showDiffDetails(diffs);
     },
 
+    highlightDiff: function(index) {
+        jdd.handleDiffClick(jdd.diffs[index].path1.line, 'left');
+    },
+
     showDiffDetails: function(diffs) {
          _.each(diffs, function(diff) {
              var li = $('<li></li>');
              li.text(diff.msg);
              $('ul.toolbar').append(li);
+
+             li.click(function() {
+                 jdd.scrollToDiff(diff);
+             });
+
          });
+    },
+
+    scrollToDiff: function(diff) {
+        $('html, body').animate({
+            scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
+        }, 2000);
     },
 
     processDiffs: function() {
@@ -409,9 +436,12 @@ var jdd = {
                 });
                 right.push(diff.path2.line);
             }
-
-
         });
+
+        jdd.diffs = jdd.diffs.sort(function(a, b) {
+            return a.path1.line - b.path1.line;
+        });
+
     },
 
     validateInput: function(json, side) {
@@ -470,7 +500,7 @@ var jdd = {
         });
 
         if (jdd.diffs.length === 0) {
-            report.text('The two files were semantically  identical');
+            report.append('<span>The two files were semantically  identical.</span>');
             return;
         }
 
@@ -540,6 +570,9 @@ var jdd = {
 
     compare: function() {
 
+        $('body').addClass('progress');
+        $('compate').attr('disabled', 'true');
+
         /*
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
@@ -583,6 +616,15 @@ var jdd = {
         jdd.processDiffs();
         jdd.generateReport();
 
+        //console.log('diffs: ' + JSON.stringify(jdd.diffs));
+
+        if (jdd.diffs.length > 0) {
+            jdd.highlightDiff(0);
+        }
+
+        $('body').removeClass('progress');
+        $('compate').attr('disabled', '');
+
     },
 
     loadSampleData: function() {
@@ -599,7 +641,6 @@ jQuery(document).ready(function() {
     });
 
     $('#sample').click(function(e) {
-        console.log('hey there');
         e.preventDefault();
         jdd.loadSampleData();
     });

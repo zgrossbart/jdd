@@ -113,6 +113,8 @@ pre.codeBlock.right {
 ul.toolbar {
     width: 11%;
     display: inline-block;
+    position: fixed;
+    right: 10px;
 }
 
 ul.toolbar li {
@@ -123,6 +125,7 @@ ul.toolbar li {
     background-color: #fcf8e3;
     border-color: #faebcc;
     color: #8a6d3b;
+    cursor: pointer;
 }
 
 div.gutter {
@@ -233,4 +236,13 @@ p {
 
 span.fileInput {
     margin-left: 2em;
+}
+
+.throbber-loader:not(:required) {
+    display: none;
+}
+
+.progress .throbber-loader:not(:required) {
+    display: block;
+    margin: 5px auto;
 }
