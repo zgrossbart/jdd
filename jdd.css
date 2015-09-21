@@ -35,8 +35,7 @@ pre.codeBlock .codeLine,
 pre.codeBlock .line-number,
 div.codeBlock .codeLine,
 div.codeBlock .line-number {
-  /* Ukuran line-height antara teks di dalam tag <code> dan <span class="line-number"> harus sama! */
-  font:normal normal 13px/16px "Monospace;
+  font:normal normal 13px/16px "Monospace";
   color:black;
   display:block;
 }
