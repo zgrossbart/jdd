@@ -2,6 +2,9 @@
 
 var jdd = {
 
+    LEFT: 'left',
+    RIGHT: 'right',
+
     EQUALITY: 'eq',
     TYPE: 'type',
     MISSING: 'missing',
@@ -28,7 +31,7 @@ var jdd = {
                    if (!data1.hasOwnProperty(key)) {
                        jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                        config2, jdd.generatePath(config2, '/' + key),
-                                                       'The right side has more items than the left side', jdd.MISSING));
+                                                       'The right side of this object has more items than the left side', jdd.MISSING));
                    }
                }
            }
@@ -51,7 +54,7 @@ var jdd = {
                     */
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                    config2, jdd.generatePath(config2),
-                                                   'Missing property <code>' + key + '</code> from the right side', jdd.MISSING));
+                                                   'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
                 } else {
                     config2.currentPath.push(key);
                 
@@ -76,7 +79,7 @@ var jdd = {
                if (!data1.hasOwnProperty(key)) {
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                    config2, jdd.generatePath(config2, key),
-                                                   'Missing property <code>' + key + '</code> from the left side', jdd.MISSING));
+                                                   'Missing property <code>' + key + '</code> from the object on the left side', jdd.MISSING));
                }
            }
        }
@@ -438,7 +441,7 @@ var jdd = {
 
     handleDiffClick: function (line, side) {
         var diffs = _.filter(jdd.diffs, function(diff) {
-            if (side === 'left') {
+            if (side === jdd.LEFT) {
                 return line === diff.path1.line;
             } else {
                 return line === diff.path2.line;
@@ -461,7 +464,7 @@ var jdd = {
      * Highlight the diff at the specified index
      */
     highlightDiff: function(index) {
-        jdd.handleDiffClick(jdd.diffs[index].path1.line, 'left');
+        jdd.handleDiffClick(jdd.diffs[index].path1.line, jdd.LEFT);
     },
 
     /**
@@ -500,7 +503,7 @@ var jdd = {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
             if (_.indexOf(left, diff.path1.line) === -1) {
                 $('pre.left div.line' + diff.path1.line + ' span.code').click(function() {
-                    jdd.handleDiffClick(diff.path1.line, 'left');
+                    jdd.handleDiffClick(diff.path1.line, jdd.LEFT);
                 });
                 left.push(diff.path1.line);
             }
@@ -508,7 +511,7 @@ var jdd = {
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type).addClass('diff');
             if (_.indexOf(right, diff.path2.line) === -1) {
                 $('pre.right div.line' + diff.path2.line + ' span.code').click(function() {
-                    jdd.handleDiffClick(diff.path2.line, 'right');
+                    jdd.handleDiffClick(diff.path2.line, jdd.RIGHT);
                 });
                 right.push(diff.path2.line);
             }
@@ -527,7 +530,7 @@ var jdd = {
          try {
             var result = jsl.parser.parse(json);
 
-            if (side === 'left') {
+            if (side === jdd.LEFT) {
                 $('#errorLeft').text('').hide();
                 $('#textarealeft').removeClass('error');
             } else {
@@ -537,7 +540,7 @@ var jdd = {
 
             return true;
         } catch (parseException) {
-            if (side === 'left') {
+            if (side === jdd.LEFT) {
                 $('#errorLeft').text(parseException.message).show();
                 $('#textarealeft').addClass('error');
             } else {
@@ -556,7 +559,7 @@ var jdd = {
 
         reader.onload = (function(theFile) {
             return function(e) {
-                if (side === 'left') {
+                if (side === jdd.LEFT) {
                     $('#textarealeft').val(e.target.result);
                 } else {
                     $('#textarearight').val(e.target.result);
@@ -687,8 +690,8 @@ var jdd = {
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
          */
-         var leftValid = jdd.validateInput($('#textarealeft').val(), 'left');
-         var rightValid = jdd.validateInput($('#textarearight').val(), 'right');
+         var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
+         var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
 
         if (!leftValid) {
             return;
