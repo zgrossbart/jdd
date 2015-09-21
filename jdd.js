@@ -381,6 +381,10 @@ var jdd = {
         jdd.showDiffDetails(diffs);
     },
 
+    hidhlightDiff: function(index) {
+        jdd.handleDiffClick(jdd.diffs[index].path1.line, 'left');
+    },
+
     showDiffDetails: function(diffs) {
          _.each(diffs, function(diff) {
              var li = $('<li></li>');
@@ -409,9 +413,12 @@ var jdd = {
                 });
                 right.push(diff.path2.line);
             }
-
-
         });
+
+        jdd.diffs = jdd.diffs.sort(function(a, b) {
+            return a.path1.line - b.path1.line;
+        });
+
     },
 
     validateInput: function(json, side) {
@@ -583,6 +590,12 @@ var jdd = {
         jdd.processDiffs();
         jdd.generateReport();
 
+        //console.log('diffs: ' + JSON.stringify(jdd.diffs));
+
+        if (jdd.diffs.length > -1) {
+            jdd.hidhlightDiff(0);
+        }
+
     },
 
     loadSampleData: function() {
@@ -599,7 +612,6 @@ jQuery(document).ready(function() {
     });
 
     $('#sample').click(function(e) {
-        console.log('hey there');
         e.preventDefault();
         jdd.loadSampleData();
     });
