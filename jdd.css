@@ -237,3 +237,12 @@ p {
 span.fileInput {
     margin-left: 2em;
 }
+
+.throbber-loader:not(:required) {
+    display: none;
+}
+
+.progress .throbber-loader:not(:required) {
+    display: block;
+    margin: 5px auto;
+}

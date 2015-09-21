@@ -570,6 +570,9 @@ var jdd = {
 
     compare: function() {
 
+        $('body').addClass('progress');
+        $('compate').attr('disabled', 'true');
+
         /*
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
@@ -618,6 +621,9 @@ var jdd = {
         if (jdd.diffs.length > 0) {
             jdd.highlightDiff(0);
         }
+
+        $('body').removeClass('progress');
+        $('compate').attr('disabled', '');
 
     },
 
