@@ -19,6 +19,14 @@ h3 {
     margin-top: 1em;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 #main {
     margin: 25px auto;
     width: 95%
@@ -135,6 +143,26 @@ ul.toolbar li code {
     background-color: #f8f8f8;
     border-radius: 3px;
     color: #333;
+}
+
+#buttons {
+    white-space: nowrap;
+    position: fixed;
+    right: 5px;
+    bottom: 10px;
+}
+
+#buttons a.disabled {
+    color: #999;
+    cursor: auto;
+}
+
+#buttons a.disabled:hover {
+    text-decoration: none;
+}
+
+#prevButton {
+    margin-right: 5em;
 }
 
 div.gutter {
