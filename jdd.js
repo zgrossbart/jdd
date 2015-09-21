@@ -21,7 +21,7 @@ var jdd = {
                    if (!data1.hasOwnProperty(key)) {
                        jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                        config2, jdd.generatePath(config2, '/' + key),
-                                                       'Wrong number of items', jdd.MISSING));
+                                                       'The right side has more items than the left side', jdd.MISSING));
                    }
                }
            }
@@ -44,7 +44,7 @@ var jdd = {
                     */
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                    config2, jdd.generatePath(config2),
-                                                   'Missing property (' + key + ') from right side', jdd.MISSING));
+                                                   'Missing property <code>' + key + '</code> from the right side', jdd.MISSING));
                 } else {
                     config2.currentPath.push(key);
                 
@@ -69,7 +69,7 @@ var jdd = {
                if (!data1.hasOwnProperty(key)) {
                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                    config2, jdd.generatePath(config2, key),
-                                                   'Missing property (' + key + ') from left side', jdd.MISSING));
+                                                   'Missing property <code>' + key + '</code> from the left side', jdd.MISSING));
                }
            }
        };
@@ -400,7 +400,7 @@ var jdd = {
     showDiffDetails: function(diffs) {
          _.each(diffs, function(diff) {
              var li = $('<li></li>');
-             li.text(diff.msg);
+             li.html(diff.msg);
              $('ul.toolbar').append(li);
 
              li.click(function() {
