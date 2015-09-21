@@ -128,6 +128,15 @@ ul.toolbar li {
     cursor: pointer;
 }
 
+ul.toolbar li code {
+    margin: 0 2px;
+    padding: 0px 5px;
+    border: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    color: #333;
+}
+
 div.gutter {
     float: left;
 }
