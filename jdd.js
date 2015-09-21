@@ -478,7 +478,9 @@ var jdd = {
             return diff.path1.line === line;
         });
 
-        if (jdd.currentDiff === -1) {
+        if (jdd.currentDiff === 0) {
+            jdd.currentDiff = 1;
+        } else if (jdd.currentDiff === -1) {
             jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
                 return diff.path2.line === line;
             });
@@ -801,8 +803,8 @@ var jdd = {
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
         if (jdd.diffs.length > 0) {
-            jdd.currentDiff = 1;
             jdd.highlightDiff(0);
+            jdd.currentDiff = 1;
         }
 
         $('body').removeClass('progress');
