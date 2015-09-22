@@ -491,13 +491,7 @@ var jdd = {
         prev.addClass('disabled');
         prev.click(function(e) {
             e.preventDefault();
-            if (jdd.currentDiff > 1) {
-                jdd.currentDiff--;
-                jdd.highlightDiff(jdd.currentDiff);
-                jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
-
-                updateButtonStyles();
-            }
+            jdd.highlightPrevDiff();
         });
         buttons.append(prev);
 
@@ -506,33 +500,47 @@ var jdd = {
         var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
         next.click(function(e) {
             e.preventDefault();
-            if (jdd.currentDiff < jdd.diffs.length - 1) {
-                jdd.currentDiff++;
-                jdd.highlightDiff(jdd.currentDiff);
-                jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
-
-                updateButtonStyles();
-            }
+            jdd.highlightNextDiff();
         });
         buttons.append(next);
 
-        var updateButtonStyles = function() {
-            $('#prevButton').removeClass('disabled');
-            $('#nextButton').removeClass('disabled');
-
-            $('#prevNextLabel').text(jdd.currentDiff + ' of ' + (jdd.diffs.length - 1));
-            
-            if (jdd.currentDiff === 1) {
-                $('#prevButton').addClass('disabled');
-            } else if (jdd.currentDiff === jdd.diffs.length - 1) {
-                $('#nextButton').addClass('disabled');
-            }
-        };
-
         $('ul.toolbar').append(buttons);
-        updateButtonStyles();
+        jdd.updateButtonStyles();
 
         jdd.showDiffDetails(diffs);
+    },
+
+    highlightPrevDiff: function() {
+        if (jdd.currentDiff > 1) {
+            jdd.currentDiff--;
+            jdd.highlightDiff(jdd.currentDiff);
+            jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+
+            jdd.updateButtonStyles();
+        }
+    },
+
+    highlightNextDiff: function() {
+        if (jdd.currentDiff < jdd.diffs.length - 1) {
+            jdd.currentDiff++;
+            jdd.highlightDiff(jdd.currentDiff);
+            jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+
+            jdd.updateButtonStyles();
+        }
+    },
+
+    updateButtonStyles: function() {
+        $('#prevButton').removeClass('disabled');
+        $('#nextButton').removeClass('disabled');
+
+        $('#prevNextLabel').text(jdd.currentDiff + ' of ' + (jdd.diffs.length - 1));
+        
+        if (jdd.currentDiff === 1) {
+            $('#prevButton').addClass('disabled');
+        } else if (jdd.currentDiff === jdd.diffs.length - 1) {
+            $('#nextButton').addClass('disabled');
+        }
     },
 
     /**
@@ -844,5 +852,19 @@ jQuery(document).ready(function() {
     $('#sample').click(function(e) {
         e.preventDefault();
         jdd.loadSampleData();
+    });
+
+    $(document).keydown(function(event) {
+        if (event.keyCode === 78 || event.keyCode === 39) {
+            /*
+             * The N key or right arrow key
+             */
+            jdd.highlightNextDiff();
+        } else if (event.keyCode === 80 || event.keyCode === 37) {
+            /*
+             * The P key or left arrow key
+             */
+            jdd.highlightPrevDiff();
+        }
     });
 });
