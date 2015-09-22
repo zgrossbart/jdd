@@ -125,6 +125,18 @@ ul.toolbar {
     position: absolute;
 }
 
+#report .reportTitle {
+    border: thin solid lightgray;
+    border-radius: 4px;
+    margin-bottom: 1em;
+    padding: 5px;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+    width: 15em;
+}
+    
+
 ul.toolbar li {
     border: thin solid lightgray;
     border-radius: 4px;

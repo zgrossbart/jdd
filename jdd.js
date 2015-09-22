@@ -689,8 +689,13 @@ var jdd = {
             }
         });
 
-        var title = $('<h3></h3>');
-        title.text('There were ' + (jdd.diffs.length - 1) + ' differences');
+        var title = $('<div class="reportTitle"></div>');
+        if (jdd.diffs.length === 1) {
+            title.text('Found ' + (jdd.diffs.length - 1) + ' difference');
+        } else {
+            title.text('Found ' + (jdd.diffs.length - 1) + ' differences');
+        }
+        
         report.prepend(title);
 
         var filterBlock = $('<span class="filterBlock">Show:</span>');
