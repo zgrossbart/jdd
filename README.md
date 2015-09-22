@@ -1,4 +1,4 @@
 JSON Diff
 ==================================================
 
-Try it out:  [zgrossbart.github.com/jdd](http://zgrossbart.github.com/jdd)
+Try it out:  [http://www.jsondiff.com](http://www.jsondiff.com)
