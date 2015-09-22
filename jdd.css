@@ -8,14 +8,14 @@ h1 {
     font-size: 3em;
     line-height: 1;
     margin-bottom: .1em;
-    font-family: "sans";
+    font-family: sans-serif;
 }
 
 h3 {
     font-size: 1.5em;
     line-height: 1;
     margin-bottom: 1em;
-    font-family: "sans";
+    font-family: sans-serif;
     margin-top: 1em;
 }
 
