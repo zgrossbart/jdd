@@ -494,7 +494,7 @@ var jdd = {
             if (jdd.currentDiff > 1) {
                 jdd.currentDiff--;
                 jdd.highlightDiff(jdd.currentDiff);
-                //jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+                jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
 
                 updateButtonStyles();
             }
@@ -509,7 +509,7 @@ var jdd = {
             if (jdd.currentDiff < jdd.diffs.length - 1) {
                 jdd.currentDiff++;
                 jdd.highlightDiff(jdd.currentDiff);
-                //jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
+                jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
 
                 updateButtonStyles();
             }
@@ -564,7 +564,7 @@ var jdd = {
     scrollToDiff: function(diff) {
         $('html, body').animate({
             scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
-        }, 2000);
+        }, 0);
     },
 
     /**
