@@ -109,25 +109,7 @@ var jdd = {
     diffVal: function(val1, config1, val2, config2) { 
 
         if (_.isArray(val1)) {
-            if (!_.isArray(val2)) {
-               jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                               config2, jdd.generatePath(config2),
-                                               'Both types should be arrays', jdd.TYPE));
-            }
-            _.each(val1, function(arrayVal, index) {
-                if (val2.length <= index) {
-                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                    config2, jdd.generatePath(config2),
-                                                    'Both arrays should have the same number of elements', jdd.TYPE));
-                } else {
-                    config1.currentPath.push('/[' + index + ']');
-                    config2.currentPath.push('/[' + index + ']');
-                    
-                    jdd.diffVal(val1[index], config1, val2[index], config2);
-                    config1.currentPath.pop();
-                    config2.currentPath.pop();
-                }
-            });
+            jdd.diffArray(val1, config1, val2, config2);
         } else if (_.isObject(val1)) {
             if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
@@ -159,6 +141,44 @@ var jdd = {
         } else if (_.isBoolean(val1)) {
             jdd.diffBool(val1, config1, val2, config2);
         } 
+    },
+
+    /**
+     * Arrays are more complex because we need to recurse into them and handle different length
+     * issues so we handle them specially in this function.
+     */
+    diffArray: function(val1, config1, val2, config2) {
+        if (!_.isArray(val2)) {
+           jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                           config2, jdd.generatePath(config2),
+                                           'Both types should be arrays', jdd.TYPE));
+        }
+
+        if (val1.length < val2.length) {
+            /*
+             * Then there were more elements on the right side and we need to 
+             * generate those differences.
+             */
+            for (var i = val1.length; i < val2.length; i++) {
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                config2, jdd.generatePath(config2, '[' + i + ']'),
+                                                'Missing element <code>' + i + '</code> from the array on the left side', jdd.MISSING));
+            }
+        }
+        _.each(val1, function(arrayVal, index) {
+            if (val2.length <= index) {
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1, '[' + index + ']'),
+                                                config2, jdd.generatePath(config2),
+                                                'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
+            } else {
+                config1.currentPath.push('/[' + index + ']');
+                config2.currentPath.push('/[' + index + ']');
+                
+                jdd.diffVal(val1[index], config1, val2[index], config2);
+                config1.currentPath.pop();
+                config2.currentPath.pop();
+            }
+        });
     },
 
     /**
@@ -850,7 +870,7 @@ var jdd = {
      */
     loadSampleData: function() {
          $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
-         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     }
 };
 
