@@ -115,11 +115,18 @@ var jdd = {
                                                'Both types should be arrays', jdd.TYPE));
             }
             _.each(val1, function(arrayVal, index) {
-                config1.currentPath.push('/[' + index + ']');
-                config2.currentPath.push('/[' + index + ']');
-                jdd.diffVal(val1[index], config1, val2[index], config2);
-                config1.currentPath.pop();
-                config2.currentPath.pop();
+                if (val2.length <= index) {
+                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                    config2, jdd.generatePath(config2),
+                                                    'Both arrays should have the same number of elements', jdd.TYPE));
+                } else {
+                    config1.currentPath.push('/[' + index + ']');
+                    config2.currentPath.push('/[' + index + ']');
+                    
+                    jdd.diffVal(val1[index], config1, val2[index], config2);
+                    config1.currentPath.pop();
+                    config2.currentPath.pop();
+                }
             });
         } else if (_.isObject(val1)) {
             if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
