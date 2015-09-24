@@ -4,82 +4,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
         <title>JSON Diff</title> 
 
-        <link rel="stylesheet" href="reset.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="throbber.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="jdd.css" type="text/css" media="screen">
-        
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript" charset="utf-8"></script>
-
-        <script src="jsl/jsl.format.js" type="text/javascript" charset="utf-8"></script>
-        <script src="jsl/jsl.parser.js" type="text/javascript" charset="utf-8"></script>
-        <script src="jdd.js" type="text/javascript" charset="utf-8"></script>
-
-        <script type="text/javascript">
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-26336682-1']);
-            _gaq.push(['_trackPageview']);
-            
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
+        <meta http-equiv="refresh" content="0; URL='http://jsondiff.com'" />
     </head> 
     <body>
-
-        <div id="main">
-            <div class="header">
-                <h1>JSON Diff</h1>
-                <h3>The semantic JSON compare tool</h3>
-    
-                <div class="weak">
-                    <p>
-                        Validate, format, and compare two JSON documents.  See the differences between the objects instead of just the new lines and mixed up properties.
-                    </p>
-    
-                    <p>
-                        Created by <a href="http://www.zackgrossbart.com">Zack Grossbart</a>.  Get the <a href="https://github.com/zgrossbart/jdd">source code</a>.
-                    </p>
-    
-                    <p>
-                        Big thanks owed to the team behind <a href="http://www.jsonlint.com">JSONLint</a>.
-                    </p>
-    
-                </div>
-            </div>
-    
-            <div class="initContainer">
-                <div class="left">
-                    <textarea spellcheck="false" id="textarealeft" placeholder="Enter JSON or select a file to compare"></textarea>
-                    <pre id="errorLeft" class="error"></pre>
-                    <span class="fileInput">or <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')"></span>
-                </div>
-    
-                <div class="center">
-                    <button id="compare">Compare</button>
-                    <div class="throbber-loader"></div>
-                    <br/><br/><br/><br/>
-                    or try some <a href="#" id="sample">sample data</a>
-
-                </div>
-    
-                <div class="right">
-                    <textarea spellcheck="false" class="right" id="textarearight" placeholder="Enter JSON or select a file to compare"></textarea>
-                    <pre id="errorRight" class="error"></pre>
-                    <span class="fileInput">or <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'left')"></span>
-                </div>
-            </div>
-    
-            <div class="diffcontainer">
-                <div id="report">
-                </div>
-                <pre id="out" class="left" class="codeBlock"></pre>
-                <pre id="out2" class="right" class="codeBlock"></pre>
-                <ul id="toolbar" class="toolbar"></ul>
-            </div>
-        </div>
-        
     </body>
 </html>
