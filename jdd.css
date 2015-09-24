@@ -281,6 +281,7 @@ button {
     top: 29px;
     left: 55%;
     right: 5%;
+    padding-left: 5px;
 }
 
 p {
