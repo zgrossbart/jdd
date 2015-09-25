@@ -26,6 +26,7 @@ var jdd = {
     TYPE: 'type',
     MISSING: 'missing',
     diffs: [],
+    requestCount: 0,
 
     /**
      * Find the differences between the two objects and recurse into their sub objects.
@@ -798,8 +799,41 @@ var jdd = {
      */
     compare: function() {
 
+        if (jdd.requestCount !== 0) {
+            /*
+             * This means we have a pending request and we just need to wait for that to finish.
+             */
+            return;
+        }
+
         $('body').addClass('progress');
-        $('compate').attr('disabled', 'true');
+        $('#compare').attr('disabled', 'true');
+
+        if ($('#textarealeft').val().trim().substring(0, 4).toLowerCase() === "http") {
+            jdd.requestCount++;
+            $.post("proxy.php", 
+                   {
+                       "url": jsonVal.trim()
+                   }, function (responseObj) {
+                        $('#textarealeft').val(responseObj.content);
+                        jdd.requestCount--;
+                        jdd.compare();
+                   }, 'json');
+            return;
+        }
+
+        if ($('#textarearight').val().trim().substring(0, 4).toLowerCase() === "http") {
+            jdd.requestCount++;
+            $.post("proxy.php", 
+                   {
+                       "url": jsonVal.trim()
+                   }, function (responseObj) {
+                        $('#textarearight').val(responseObj.content);
+                        jdd.requestCount--;
+                        jdd.compare();
+                   }, 'json');
+            return;
+        }
 
         /*
          * We'll start by running the text through JSONlint since it gives
@@ -810,7 +844,7 @@ var jdd = {
 
         if (!leftValid || !rightValid) {
             $('body').removeClass('progress');
-            $('compate').attr('disabled', '');
+            $('#compare').attr('disabled', '');
             return;
         }
 
@@ -848,7 +882,7 @@ var jdd = {
         }
 
         $('body').removeClass('progress');
-        $('compate').attr('disabled', '');
+        $('#compare').attr('disabled', '');
 
         /*
          * We want to switch the toolbar bar between fixed and absolute position when you 
