@@ -807,31 +807,37 @@ var jdd = {
         }
 
         $('body').addClass('progress');
-        $('#compare').attr('disabled', 'true');
-
-        if ($('#textarealeft').val().trim().substring(0, 4).toLowerCase() === "http") {
-            jdd.requestCount++;
-            $.post("proxy.php", 
-                   {
-                       "url": jsonVal.trim()
-                   }, function (responseObj) {
-                        $('#textarealeft').val(responseObj.content);
-                        jdd.requestCount--;
-                        jdd.compare();
-                   }, 'json');
+        $('#compare').prop('disabled', true);
+        
+        var loadUrl = function(id, errId) {
+            if ($('#' + id).val().trim().substring(0, 4).toLowerCase() === 'http') {
+                jdd.requestCount++;
+                $.post('proxy.php', 
+                       {
+                           'url': $('#' + id).val().trim()
+                       }, function (responseObj) {
+                           if (responseObj.error) {
+                               $('#' + errId).text(responseObj.result).show();
+                               $('#' + id).addClass('error');
+                               $('body').removeClass('progress');
+                               $('#compare').prop('disabled', false);
+                           } else {
+                               $('#' + id).val(responseObj.content);
+                                jdd.requestCount--;
+                                jdd.compare();
+                            }
+                       }, 'json');
+                return true;
+            } else {
+                return false;
+            }
+        };
+        
+        if (loadUrl('textarealeft', 'errorLeft')) {
             return;
         }
-
-        if ($('#textarearight').val().trim().substring(0, 4).toLowerCase() === "http") {
-            jdd.requestCount++;
-            $.post("proxy.php", 
-                   {
-                       "url": jsonVal.trim()
-                   }, function (responseObj) {
-                        $('#textarearight').val(responseObj.content);
-                        jdd.requestCount--;
-                        jdd.compare();
-                   }, 'json');
+        
+        if (loadUrl('textarearight', 'errorRight')) {
             return;
         }
 
@@ -844,7 +850,7 @@ var jdd = {
 
         if (!leftValid || !rightValid) {
             $('body').removeClass('progress');
-            $('#compare').attr('disabled', '');
+            $('#compare').prop('disabled', false);
             return;
         }
 
@@ -882,7 +888,7 @@ var jdd = {
         }
 
         $('body').removeClass('progress');
-        $('#compare').attr('disabled', '');
+        $('#compare').prop('disabled', false);
 
         /*
          * We want to switch the toolbar bar between fixed and absolute position when you 
@@ -905,6 +911,13 @@ var jdd = {
     loadSampleData: function() {
          $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"]}');
          $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+    },
+    
+    getParameterByName: function(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+            results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 };
 
@@ -914,6 +927,19 @@ jQuery(document).ready(function() {
     $('#compare').click(function() {
         jdd.compare();
     });
+    
+    if (jdd.getParameterByName('left')) {
+        $('#textarealeft').val(jdd.getParameterByName('left'));
+    }
+    
+    if (jdd.getParameterByName('right')) {
+        $('#textarearight').val(jdd.getParameterByName('right'));
+    }
+    
+    if (jdd.getParameterByName('left') && jdd.getParameterByName('right')) {
+        jdd.compare();
+    }
+    
 
     $('#sample').click(function(e) {
         e.preventDefault();

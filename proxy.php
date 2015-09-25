@@ -9,7 +9,7 @@ if (!$url || !preg_match("/^https?:/i", $url)) {
 
 $parsed_url = parse_url($url);
 $scheme = strtolower($parsed_url['scheme']);
-if (array_key_exists('port', $parsed_url) || ($scheme !== "http" && $scheme !== "https")) {
+if (($scheme !== "http" && $scheme !== "https")) {
     echo '{ "result": "Invalid URL - Please check your URL and try again.", "error": true }';
     return;
 }
