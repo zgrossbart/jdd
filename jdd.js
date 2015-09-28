@@ -488,8 +488,10 @@ var jdd = {
         var diffs = _.filter(jdd.diffs, function(diff) {
             if (side === jdd.LEFT) {
                 return line === diff.path1.line;
-            } else {
+            } else if (side === jdd.RIGHT) {
                 return line === diff.path2.line;
+            } else {
+                return line === diff.path1.line || line === diff.path2.line;
             }
         });
 
@@ -502,13 +504,13 @@ var jdd = {
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
         });
 
-        jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
-            return diff.path1.line === line;
-        });
+        if (side === jdd.LEFT || side === jdd.RIGHT) {
+            jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
+                return diff.path1.line === line;
+            });
+        }
 
-        if (jdd.currentDiff === 0) {
-            jdd.currentDiff = 1;
-        } else if (jdd.currentDiff === -1) {
+        if (jdd.currentDiff === -1) {
             jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
                 return diff.path2.line === line;
             });
@@ -539,7 +541,7 @@ var jdd = {
     },
 
     highlightPrevDiff: function() {
-        if (jdd.currentDiff > 1) {
+        if (jdd.currentDiff > 0) {
             jdd.currentDiff--;
             jdd.highlightDiff(jdd.currentDiff);
             jdd.scrollToDiff(jdd.diffs[jdd.currentDiff]);
@@ -562,7 +564,7 @@ var jdd = {
         $('#prevButton').removeClass('disabled');
         $('#nextButton').removeClass('disabled');
 
-        $('#prevNextLabel').text(jdd.currentDiff + ' of ' + (jdd.diffs.length - 1));
+        $('#prevNextLabel').text((jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length));
         
         if (jdd.currentDiff === 1) {
             $('#prevButton').addClass('disabled');
@@ -575,7 +577,7 @@ var jdd = {
      * Highlight the diff at the specified index
      */
     highlightDiff: function(index) {
-        jdd.handleDiffClick(jdd.diffs[index].path1.line, jdd.LEFT);
+        jdd.handleDiffClick(jdd.diffs[index].path1.line, jdd.BOTH);
     },
 
     /**
@@ -719,9 +721,9 @@ var jdd = {
 
         var title = $('<div class="reportTitle"></div>');
         if (jdd.diffs.length === 1) {
-            title.text('Found ' + (jdd.diffs.length - 1) + ' difference');
+            title.text('Found ' + (jdd.diffs.length) + ' difference');
         } else {
-            title.text('Found ' + (jdd.diffs.length - 1) + ' differences');
+            title.text('Found ' + (jdd.diffs.length) + ' differences');
         }
         
         report.prepend(title);
@@ -879,12 +881,13 @@ var jdd = {
         jdd.findDiffs(config, left, config2, right);
         jdd.processDiffs();
         jdd.generateReport();
-
+        
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
         if (jdd.diffs.length > 0) {
             jdd.highlightDiff(0);
-            jdd.currentDiff = 1;
+            jdd.currentDiff = 0;
+            jdd.updateButtonStyles();
         }
 
         $('body').removeClass('progress');
