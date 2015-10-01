@@ -95,7 +95,7 @@ div.right {
 }
 
 div.center {
-    width: 15%;
+    width: 14%;
     display: inline-block;
     vertical-align: top;
     text-align: left;
@@ -279,7 +279,7 @@ button {
     font-weight: normal;
     position: Absolute;
     top: 29px;
-    left: 57%;
+    left: 56%;
     right: 3%;
     padding-left: 5px;
 }
