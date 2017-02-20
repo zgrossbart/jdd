@@ -17,6 +17,10 @@
  ******************************************************************************/
 'use strict';
 
+/**
+ * The jdd object handles all of the functions for the main page.  It finds the diffs and manages
+ * the interactions of displaying them.
+ */
 var jdd = {
 
     LEFT: 'left',
@@ -380,11 +384,13 @@ var jdd = {
         });
 
         if (!pathObj1) {
-            throw 'Unable to find line number for(' + msg + '): ' + path1;
+            throw 'Unable to find line number for (' + msg + '): ' + path1;
         }
+        
+        console.log('pathObj1: ' + JSON.stringify(pathObj1));
 
         if (!pathObj2) {
-            throw 'Unable to find line number for(' + msg + '): ' + path2;
+            throw 'Unable to find line number for (' + msg + '): ' + path2;
         }
 
         return {
