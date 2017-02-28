@@ -212,6 +212,11 @@ var jdd = {
      * the data about this object.
      */
     formatAndDecorate: function(/*Object*/ config, /*Object*/ data) {
+        if (_.isArray(data)) {
+            jdd.formatAndDecorateArray(config, data);
+            return;
+        }
+        
         jdd.startObject(config);
         config.currentPath.push('/');
         
@@ -236,6 +241,77 @@ var jdd = {
 
         jdd.finishObject(config);
         config.currentPath.pop();
+    },
+    
+    /**
+     * Format the array into the output stream and decorate the data tree with 
+     * the data about this object.
+     */
+    formatAndDecorateArray: function(/*Object*/ config, /*Array*/ data) {
+        jdd.startArray(config);
+        
+        /*
+         * If the first set has more than the second then we will catch it
+         * when we compare values.  However, if the second has more then
+         * we need to catch that here.
+         */
+        
+        _.each(data, function(arrayVal, index) {
+            config.out += jdd.newLine(config) + jdd.getTabs(config.indent);
+            config.paths.push({
+                path: jdd.generatePath(config, '[' + index + ']'),
+                line: config.line
+            });
+
+            config.currentPath.push('/[' + index + ']');
+            jdd.formatVal(arrayVal, config);
+            config.currentPath.pop();
+        });
+
+        jdd.finishArray(config);
+        config.currentPath.pop();
+    },
+    
+    /**
+     * Generate the start of the an array in the output stream and push in the new path
+     */
+    startArray: function(config) {
+        config.indent++;
+        config.out += '[';
+
+        if (config.paths.length === 0) {
+            /*
+             * Then we are at the top of the array and we want to add 
+             * a path for it.
+             */
+            config.paths.push({
+                path: jdd.generatePath(config),
+                line: config.line
+            });
+        }
+        
+        if (config.indent === 0) {
+            config.indent++;
+        }
+    },
+    
+    /**
+     * Finish the array, outdent, and pop off all the path
+     */
+    finishArray: function(config) {
+        if (config.indent === 0) {
+            config.indent--;
+        }
+
+        jdd.removeTrailingComma(config);
+
+        config.indent--;
+        config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + ']';
+        if (config.indent !== 0) {
+            config.out += ',';
+        } else {
+            config.out += jdd.newLine(config);
+        }
     },
 
     /**
@@ -386,8 +462,6 @@ var jdd = {
         if (!pathObj1) {
             throw 'Unable to find line number for (' + msg + '): ' + path1;
         }
-        
-        console.log('pathObj1: ' + JSON.stringify(pathObj1));
 
         if (!pathObj2) {
             throw 'Unable to find line number for (' + msg + '): ' + path2;
@@ -886,7 +960,7 @@ var jdd = {
         config.currentPath = [];
         config2.currentPath = [];
     
-        jdd.findDiffs(config, left, config2, right);
+        jdd.diffVal(left, config, right, config2);
         jdd.processDiffs();
         jdd.generateReport();
         
@@ -921,6 +995,8 @@ var jdd = {
      */
     loadSampleData: function() {
          $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}');
+/*$('#textarealeft').val('[{  "OBJ_ID": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "b3067a77-875b-4208-9ee3-39128adeb654",  "lastLogon": "0",  "sAMAccountName": "ksmith",  "userPrincipalName": "ksmith@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"},{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]');
+$('#textarearight').val('[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]');*/
          $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     },
     
