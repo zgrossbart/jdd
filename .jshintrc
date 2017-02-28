@@ -23,7 +23,7 @@
   "globals": {
       "iac": false
   },
-  "predef": [ "_","JSON", "jsl" ],
+  "predef": [ "_","JSON", "jsl", "jdd", "QUnit" ],
   "maxparams": 14,
   "maxdepth": 7,
   "maxcomplexity": 15

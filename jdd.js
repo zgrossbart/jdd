@@ -1,6 +1,6 @@
 /******************************************************************************* 
  * 
- * Copyright 2015-2016 Zack Grossbart
+ * Copyright 2015-2017 Zack Grossbart
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
  * The jdd object handles all of the functions for the main page.  It finds the diffs and manages
  * the interactions of displaying them.
  */
+/*global jdd:true */
 var jdd = {
 
     LEFT: 'left',
@@ -769,6 +770,13 @@ var jdd = {
         
         reader.readAsText(files[0]);
     },
+    
+    setupNewDiff: function() {
+        $('div.initContainer').show();
+        $('div.diffcontainer').hide();
+        $('div.diffcontainer pre').text('');
+        $('ul.toolbar').text('');
+    },
 
     /**
      * Generate the report section with the diff
@@ -781,10 +789,7 @@ var jdd = {
         var newDiff = $('<button>Perform a new diff</button>');
         report.append(newDiff);
         newDiff.click(function() {
-            $('div.initContainer').show();
-            $('div.diffcontainer').hide();
-            $('div.diffcontainer pre').text('');
-            $('ul.toolbar').text('');
+            jdd.setupNewDiff();
         });
 
         if (jdd.diffs.length === 0) {
