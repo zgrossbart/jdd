@@ -8,3 +8,5 @@ I often work with large documents and it's difficult to see the differences betw
 JSON Diff sorts, formats, and compares two JSON documents to find the actual semantic differences instead of just the text ones.
 
 Try it out:  [http://www.jsondiff.com](http://www.jsondiff.com)
+
+Run the built-in unit tests:  [http://www.jsondiff.com/index-test.html](http://www.jsondiff.com/index-test.html)
