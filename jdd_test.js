@@ -120,6 +120,37 @@ QUnit.test( 'Object to array compare tests', function( assert ) {
     jdd.setupNewDiff();
 });
 
+QUnit.test( 'Arrays order test', function( assert ) {
+    $('#textarealeft').val('{"a": [1,2,3],"b":"abc"}');
+    $('#textarearight').val('{"b":"abc","a": [1,3,2]}');
+
+    jdd.compare();
+
+    // This test makes sure there wasn't a parsing error
+    assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors' );
+
+    assert.ok(jdd.diffs.length === 2, 'Checking for the correct number of differences' );
+
+    assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking incorrect type' );
+
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
+
+QUnit.test( 'Arrays ignore order test', function( assert ) {
+    $('#textarealeft').val('{"a": [1,2,3],"b":"abc"}');
+    $('#textarearight').val('{"b":"abc","a": [1,3,2]}');
+    $('#ignore-array-order').prop('checked', true);
+
+    jdd.compare();
+
+    assert.ok(jdd.diffs.length === 0, 'Checking for the correct number of differences' );
+
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
 
 QUnit.done(function() {
     $('div.initContainer').hide();
