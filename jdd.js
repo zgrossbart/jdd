@@ -956,6 +956,11 @@ var jdd = {
         var left = JSON.parse($('#textarealeft').val());
         var right = JSON.parse($('#textarearight').val());
 
+        // if ignore order, then sort arrays
+        if ($('#ignore-array-order').is(':checked')) {
+            jdd.sortArrays(left);
+            jdd.sortArrays(right);
+        }
         
         var config = jdd.createConfig();
         jdd.formatAndDecorate(config, left);
@@ -998,6 +1003,43 @@ var jdd = {
             }
         });
 
+    },
+
+    /**
+     * For JSON objects a and b, convert objects to string and compare
+     */
+    jsonComparator: function jsonComparator(a,b) {
+        var aStr = JSON.stringify(a);
+        var bStr = JSON.stringify(b);
+        if (aStr > bStr) {
+            return 1;
+        }
+        else if (aStr < bStr) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    },
+
+    /**
+     * recursively sort arrays contained in the JSON object jsonData
+     */
+    sortArrays: function(jsonData) {
+        var dataType = $.type(jsonData);
+        if (dataType === "array") {
+            for (var i = 0; i < jsonData.length; i++) {
+                jdd.sortArrays(jsonData[i]);
+            }
+            jsonData.sort(jdd.jsonComparator);
+        }
+        else if (dataType === "object") {
+            for (var p in jsonData) {
+                if (jsonData.hasOwnProperty(p)) {
+                    jdd.sortArrays(jsonData[p]);
+                }
+            }
+        }
     },
 
     /**
