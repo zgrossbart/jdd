@@ -146,7 +146,13 @@ var jdd = {
             }
         } else if (_.isBoolean(val1)) {
             jdd.diffBool(val1, config1, val2, config2);
-        } 
+        } else if (_.isNull(val1)) {
+            if (!_.isNull(val2)) {
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                                config2, jdd.generatePath(config2),
+                                               'Both types should be nulls', jdd.TYPE));
+            }
+        }
     },
 
     /**
