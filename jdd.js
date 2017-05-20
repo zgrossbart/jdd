@@ -1,5 +1,5 @@
-/******************************************************************************* 
- * 
+/*******************************************************************************
+ *
  * Copyright 2015-2017 Zack Grossbart
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ var jdd = {
                val = data1[key];
 
                config1.currentPath.push(key);
-    
+
                if (!data2.hasOwnProperty(key)) {
                    /*
                     * This means that the first data has a property which
@@ -80,7 +80,7 @@ var jdd = {
                                                    'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
                 } else {
                     config2.currentPath.push(key);
-                
+
                     jdd.diffVal(data1[key], config1, data2[key], config2);
                     config2.currentPath.pop();
                 }
@@ -168,7 +168,7 @@ var jdd = {
 
         if (val1.length < val2.length) {
             /*
-             * Then there were more elements on the right side and we need to 
+             * Then there were more elements on the right side and we need to
              * generate those differences.
              */
             for (var i = val1.length; i < val2.length; i++) {
@@ -183,15 +183,15 @@ var jdd = {
                                                 config2, jdd.generatePath(config2),
                                                 'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
             } else {
-                config1.currentPath.push('/[' + index + ']');                
+                config1.currentPath.push('/[' + index + ']');
                 config2.currentPath.push('/[' + index + ']');
-                
+
                 if (_.isArray(val2)) {
                     /*
                      * If both sides are arrays then we want to diff them.
                      */
                     jdd.diffVal(val1[index], config1, val2[index], config2);
-                } 
+                }
                 config1.currentPath.pop();
                 config2.currentPath.pop();
             }
@@ -201,7 +201,7 @@ var jdd = {
     /**
      * We handle boolean values specially because we can show a nicer message for them.
      */
-    diffBool: function(val1, config1, val2, config2) { 
+    diffBool: function(val1, config1, val2, config2) {
         if (!_.isBoolean(val2)) {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                             config2, jdd.generatePath(config2),
@@ -220,7 +220,7 @@ var jdd = {
     },
 
     /**
-     * Format the object into the output stream and decorate the data tree with 
+     * Format the object into the output stream and decorate the data tree with
      * the data about this object.
      */
     formatAndDecorate: function(/*Object*/ config, /*Object*/ data) {
@@ -228,18 +228,18 @@ var jdd = {
             jdd.formatAndDecorateArray(config, data);
             return;
         }
-        
+
         jdd.startObject(config);
         config.currentPath.push('/');
-        
+
         var props = jdd.getSortedProperties(data);
-        
+
         /*
          * If the first set has more than the second then we will catch it
          * when we compare values.  However, if the second has more then
          * we need to catch that here.
          */
-        
+
         _.each(props, function(key) {
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + '"' + key + '": ';
             config.currentPath.push(key);
@@ -254,20 +254,20 @@ var jdd = {
         jdd.finishObject(config);
         config.currentPath.pop();
     },
-    
+
     /**
-     * Format the array into the output stream and decorate the data tree with 
+     * Format the array into the output stream and decorate the data tree with
      * the data about this object.
      */
     formatAndDecorateArray: function(/*Object*/ config, /*Array*/ data) {
         jdd.startArray(config);
-        
+
         /*
          * If the first set has more than the second then we will catch it
          * when we compare values.  However, if the second has more then
          * we need to catch that here.
          */
-        
+
         _.each(data, function(arrayVal, index) {
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent);
             config.paths.push({
@@ -283,7 +283,7 @@ var jdd = {
         jdd.finishArray(config);
         config.currentPath.pop();
     },
-    
+
     /**
      * Generate the start of the an array in the output stream and push in the new path
      */
@@ -293,7 +293,7 @@ var jdd = {
 
         if (config.paths.length === 0) {
             /*
-             * Then we are at the top of the array and we want to add 
+             * Then we are at the top of the array and we want to add
              * a path for it.
              */
             config.paths.push({
@@ -301,12 +301,12 @@ var jdd = {
                 line: config.line
             });
         }
-        
+
         if (config.indent === 0) {
             config.indent++;
         }
     },
-    
+
     /**
      * Finish the array, outdent, and pop off all the path
      */
@@ -335,7 +335,7 @@ var jdd = {
 
         if (config.paths.length === 0) {
             /*
-             * Then we are at the top of the object and we want to add 
+             * Then we are at the top of the object and we want to add
              * a path for it.
              */
             config.paths.push({
@@ -343,7 +343,7 @@ var jdd = {
                 line: config.line
             });
         }
-        
+
         if (config.indent === 0) {
             config.indent++;
         }
@@ -371,10 +371,10 @@ var jdd = {
     /**
      * Format a specific value into the output stream.
      */
-    formatVal: function(val, config) { 
+    formatVal: function(val, config) {
         if (_.isArray(val)) {
             config.out += '[';
-            
+
             config.indent++;
             _.each(val, function(arrayVal, index) {
                 config.out += jdd.newLine(config) + jdd.getTabs(config.indent);
@@ -401,7 +401,7 @@ var jdd = {
             config.out += val + ',';
         } else if (_.isNull(val)) {
             config.out += 'null,';
-        } 
+        }
     },
 
     /**
@@ -549,7 +549,7 @@ var jdd = {
 
             var lines = $(pre).text().split('\n');
             _.each(lines, addLine);
-            
+
             codeBlock.addClass($(pre).attr('class'));
             codeBlock.attr('id', $(pre).attr('id'));
 
@@ -572,7 +572,7 @@ var jdd = {
 
             var lines = $(textarea).val().split('\n');
             _.each(lines, addLine);
-            
+
             $(textarea).replaceWith(codeBlock);
             codeBlock.append(textarea);
         });
@@ -659,7 +659,7 @@ var jdd = {
         $('#nextButton').removeClass('disabled');
 
         $('#prevNextLabel').text((jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length));
-        
+
         if (jdd.currentDiff === 1) {
             $('#prevButton').addClass('disabled');
         } else if (jdd.currentDiff === jdd.diffs.length - 1) {
@@ -773,10 +773,10 @@ var jdd = {
                 }
             };
         })(files[0]);
-        
+
         reader.readAsText(files[0]);
     },
-    
+
     setupNewDiff: function() {
         $('div.initContainer').show();
         $('div.diffcontainer').hide();
@@ -823,7 +823,7 @@ var jdd = {
         } else {
             title.text('Found ' + (jdd.diffs.length) + ' differences');
         }
-        
+
         report.prepend(title);
 
         var filterBlock = $('<span class="filterBlock">Show:</span>');
@@ -858,7 +858,7 @@ var jdd = {
             } else {
                 types.append(typeCount + ' incorrect types');
             }
-    
+
             types.children('input').click(function() {
                 if (!$(this).prop('checked')) {
                     $('span.code.diff.type').addClass('type_off').removeClass('type');
@@ -908,11 +908,11 @@ var jdd = {
 
         $('body').addClass('progress');
         $('#compare').prop('disabled', true);
-        
+
         var loadUrl = function(id, errId) {
             if ($('#' + id).val().trim().substring(0, 4).toLowerCase() === 'http') {
                 jdd.requestCount++;
-                $.post('proxy.php', 
+                $.post('proxy.php',
                        {
                            'url': $('#' + id).val().trim()
                        }, function (responseObj) {
@@ -932,11 +932,11 @@ var jdd = {
                 return false;
             }
         };
-        
+
         if (loadUrl('textarealeft', 'errorLeft')) {
             return;
         }
-        
+
         if (loadUrl('textarearight', 'errorRight')) {
             return;
         }
@@ -962,24 +962,24 @@ var jdd = {
         var left = JSON.parse($('#textarealeft').val());
         var right = JSON.parse($('#textarearight').val());
 
-        
+
         var config = jdd.createConfig();
         jdd.formatAndDecorate(config, left);
         $('#out').text(config.out);
-        
+
         var config2 = jdd.createConfig();
         jdd.formatAndDecorate(config2, right);
         $('#out2').text(config2.out);
 
         jdd.formatPRETags();
-    
+
         config.currentPath = [];
         config2.currentPath = [];
-    
+
         jdd.diffVal(left, config, right, config2);
         jdd.processDiffs();
         jdd.generateReport();
-        
+
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
         if (jdd.diffs.length > 0) {
@@ -992,7 +992,7 @@ var jdd = {
         $('#compare').prop('disabled', false);
 
         /*
-         * We want to switch the toolbar bar between fixed and absolute position when you 
+         * We want to switch the toolbar bar between fixed and absolute position when you
          * scroll so you can get the maximum number of toolbar items.
          */
         var toolbarTop = $('#toolbar').offset().top - 15;
@@ -1015,7 +1015,7 @@ var jdd = {
 $('#textarearight').val('{"foo":[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]}');*/
          $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     },
-    
+
     getParameterByName: function(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
@@ -1030,19 +1030,19 @@ jQuery(document).ready(function() {
     $('#compare').click(function() {
         jdd.compare();
     });
-    
+
     if (jdd.getParameterByName('left')) {
         $('#textarealeft').val(jdd.getParameterByName('left'));
     }
-    
+
     if (jdd.getParameterByName('right')) {
         $('#textarearight').val(jdd.getParameterByName('right'));
     }
-    
+
     if (jdd.getParameterByName('left') && jdd.getParameterByName('right')) {
         jdd.compare();
     }
-    
+
 
     $('#sample').click(function(e) {
         e.preventDefault();
