@@ -62,8 +62,6 @@ QUnit.test( 'Array to object compare tests', function( assert ) {
 
     assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences' );
 
-//    console.log('jdd.diffs: ' + JSON.stringify(jdd.diffs));
-
     assert.ok(jdd.diffs[0].type === jdd.TYPE, 'Checking incorrect type' );
 
     $('#textarealeft').val('');
@@ -114,6 +112,32 @@ QUnit.test( 'Object to array compare tests', function( assert ) {
     assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences' );
 
     assert.ok(jdd.diffs[0].type === jdd.TYPE, 'Checking incorrect type' );
+
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
+
+QUnit.test( 'Whitespace formatting tests', function( assert ) {
+    $('#textarealeft').val('{"newline": "a\\nb","slash": "a\\\\b","quotes": "a\\"b","backspace": "a\\bb","formfeed": "a\\fb","carriagereturn": "a\\rb","tab": "a\\tb","a\\nb": "newline","a\\\\b": "slash","a\\"b": "quotes","a\\bb": "backspace","a\\fb": "formfeed","a\\rb": "carriagereturn","a\\tb": "tab"}');
+    $('#textarearight').val('{"newline": "a\\nbx","slash": "a\\\\bx","quotes": "a\\"bx","backspace": "a\\bbx","formfeed": "a\\fbx","carriagereturn": "a\\rbx","tab": "a\\tbx","a\\nb": "newline","a\\\\bx": "slash","a\\"bx": "quotes","a\\bbx": "backspace","a\\fbx": "formfeed","a\\rbx": "carriagereturn","a\\tbx": "tab"}');
+
+    jdd.compare();
+
+    // This test makes sure there wasn't a parsing error
+    assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors' );
+
+    assert.ok(jdd.diffs.length === 19, 'Checking for the correct number of differences' );
+
+    assert.ok(jdd.diffs[0].type === jdd.MISSING, 'Checking missing property' );
+    assert.ok(jdd.diffs[0].msg === 'Missing property <code>a\\bx</code> from the object on the left side', 'Checking property formatting' );
+    
+    assert.ok(jdd.diffs[9].type === jdd.MISSING, 'Checking missing property' );
+    assert.ok(jdd.diffs[9].msg === 'Missing property <code>a\"b</code> from the object on the right side', 'Checking property formatting' );
+    
+    assert.ok(jdd.diffs[14].type === jdd.EQUALITY, 'Checking missing property' );
+    
+    assert.ok(jdd.diffs[18].type === jdd.EQUALITY, 'Checking missing property' );
 
     $('#textarealeft').val('');
     $('#textarearight').val('');

@@ -239,7 +239,7 @@ var jdd = {
          */
 
         _.each(props, function(key) {
-            config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + '"' + key + '": ';
+            config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + '"' + jdd.unescapeString(key) + '": ';
             config.currentPath.push(key);
             config.paths.push({
                 path: jdd.generatePath(config),
@@ -392,13 +392,39 @@ var jdd = {
         } else if (_.isObject(val)) {
             jdd.formatAndDecorate(config, val);
         } else if (_.isString(val)) {
-            config.out += '"' + val.replace('\"', '\\"') + '",';
+            config.out += '"' + jdd.unescapeString(val) + '",';
         } else if (_.isNumber(val)) {
             config.out += val + ',';
         } else if (_.isBoolean(val)) {
             config.out += val + ',';
         } else if (_.isNull(val)) {
             config.out += 'null,';
+        }
+    },
+    
+    /**
+     * When we parse the JSON string we end up removing the escape strings when we parse it 
+     * into objects.  This results in invalid JSON if we insert those strings back into the 
+     * generated JSON.  We also need to look out for characters that change the line count 
+     * like new lines and carriage returns.  
+     * 
+     * This function puts those escaped values back when we generate the JSON output for the 
+     * well known escape strings in JSON.  It handles properties and values.
+     *
+     * This function does not handle unicode escapes.  Unicode escapes are optional in JSON 
+     * and the JSON output is still valid with a unicode character in it.  
+     */
+    unescapeString: function(val) {
+        if (val) {
+            return val.replace('\\', '\\\\')    // Single slashes need to be replaced first
+                      .replace('\"', '\\"')     // Then double quotes
+                      .replace('\n', '\\n')     // New lines
+                      .replace('\b', '\\b')     // Backspace
+                      .replace('\f', '\\f')     // Formfeed
+                      .replace('\r', '\\r')     // Carriage return
+                      .replace('\t', '\\t');    // Horizontal tabs
+        } else {
+            return val;
         }
     },
 
