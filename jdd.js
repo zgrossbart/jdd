@@ -117,7 +117,7 @@ var jdd = {
         if (_.isArray(val1)) {
             jdd.diffArray(val1, config1, val2, config2);
         } else if (_.isObject(val1)) {
-            if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2)) {
+            if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2) || _.isNull(val2) ) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                                 config2, jdd.generatePath(config2),
                                                 'Both types should be objects', jdd.TYPE));
