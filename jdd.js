@@ -162,6 +162,7 @@ var jdd = {
            jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                            config2, jdd.generatePath(config2),
                                            'Both types should be arrays', jdd.TYPE));
+		   return;
         }
 
         if (val1.length < val2.length) {

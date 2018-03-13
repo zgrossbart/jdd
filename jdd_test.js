@@ -176,6 +176,39 @@ QUnit.test( 'Whitespace formatting tests', function( assert ) {
     jdd.setupNewDiff();
 });
 
+/** 
+ * This test tests for null values when compared to arrays on the right side of the compare.
+ */
+QUnit.test( 'Null length tests - right side', function( assert ) {
+    $('#textarealeft').val('{ "akey": [] }');
+    $('#textarearight').val('{ "akey": null }');
+
+    jdd.compare();
+	
+	assert.ok(jdd.diffs[0].type === jdd.TYPE, 'Checking correct type' );
+	
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
+
+/** 
+ * This test tests for null values when compared to arrays on the left side of the compare.
+ */
+QUnit.test( 'Null length tests - left side', function( assert ) {
+    $('#textarealeft').val('{ "akey": null }');
+    $('#textarearight').val('{ "akey": [] }');
+
+    jdd.compare();
+	
+	assert.ok(jdd.diffs[0].type === jdd.TYPE, 'Checking correct type' );
+	
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
+	
+
 
 QUnit.done(function() {
     $('div.initContainer').hide();
