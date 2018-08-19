@@ -41,7 +41,8 @@ var jdd = {
         config2.currentPath.push('/');
 
         var key;
-        var val;
+        // no un-used vars
+        // var val;
 
         if (data1.length < data2.length) {
             /*
@@ -50,7 +51,8 @@ var jdd = {
              */
             for (key in data2) {
                 if (data2.hasOwnProperty(key)) {
-                    val = data1[key];
+                    // no un-used vars
+                    // val = data1[key];
                     if (!data1.hasOwnProperty(key)) {
                         jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                             config2, jdd.generatePath(config2, '/' + key),
@@ -66,7 +68,8 @@ var jdd = {
          */
         for (key in data1) {
             if (data1.hasOwnProperty(key)) {
-                val = data1[key];
+                // no un-used vars
+                // val = data1[key];
 
                 config1.currentPath.push(key);
 
@@ -97,7 +100,8 @@ var jdd = {
          */
         for (key in data2) {
             if (data2.hasOwnProperty(key)) {
-                val = data1[key];
+                // no un-used vars
+                // val = data1[key];
 
                 if (!data1.hasOwnProperty(key)) {
                     jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
@@ -725,7 +729,7 @@ var jdd = {
     processDiffs: function () {
         var left = [];
         var right = [];
-        jdd.diffs.forEach(function (diff, index) {
+        jdd.diffs.forEach(function (diff) {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
             if (left.indexOf(diff.path1.line) === -1) {
                 $('pre.left div.line' + diff.path1.line + ' span.code').click(function () {
@@ -754,7 +758,7 @@ var jdd = {
      */
     validateInput: function (json, side) {
         try {
-            var result = jsl.parser.parse(json);
+            jsl.parser.parse(json);
 
             if (side === jdd.LEFT) {
                 $('#errorLeft').text('').hide();
@@ -783,7 +787,7 @@ var jdd = {
     handleFiles: function (files, side) {
         var reader = new FileReader();
 
-        reader.onload = (function (theFile) {
+        reader.onload = (function () {
             return function (e) {
                 if (side === jdd.LEFT) {
                     $('#textarealeft').val(e.target.result);
@@ -1091,7 +1095,7 @@ jQuery(document).ready(function () {
  * return typeof value
  */
 function getType(value) {
-    if ((function () { return value && (value !== this) }).call(value)) {
+    if ((function () { return value && (value !== this); }).call(value)) {
         //fallback on 'typeof' for truthy primitive values
         return typeof value;
     }
@@ -1107,6 +1111,6 @@ function getType(value) {
  */
 function forEach(array, callback, scope) {
     for (var idx = 0; idx < array.length; idx++) {
-        callback.call(scope, array[idx], idx, array)
+        callback.call(scope, array[idx], idx, array);
     }
 }
