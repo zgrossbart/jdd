@@ -125,7 +125,7 @@ var jdd = {
                 jdd.findDiffs(config1, val1, config2, val2);
             }
         } else if (getType(val1) === 'string') {
-            if (!getType(val2) === 'string') {
+            if (getType(val2) !== 'string') {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                     config2, jdd.generatePath(config2),
                     'Both types should be strings', jdd.TYPE));
@@ -135,7 +135,7 @@ var jdd = {
                     'Both sides should be equal strings', jdd.EQUALITY));
             }
         } else if (getType(val1) === 'number') {
-            if (!getType(val2) === 'number') {
+            if (getType(val2) !== 'number') {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                     config2, jdd.generatePath(config2),
                     'Both types should be numbers', jdd.TYPE));
@@ -146,7 +146,7 @@ var jdd = {
             }
         } else if (getType(val1) === 'boolean') {
             jdd.diffBool(val1, config1, val2, config2);
-        } else if (getType(val1) === 'null' && !getType(val2) === 'null') {
+        } else if (getType(val1) === 'null' && getType(val2) !== 'null') {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                 config2, jdd.generatePath(config2),
                 'Both types should be nulls', jdd.TYPE));
@@ -158,7 +158,7 @@ var jdd = {
      * issues so we handle them specially in this function.
      */
     diffArray: function (val1, config1, val2, config2) {
-        if (!getType(val2) === 'array') {
+        if (getType(val2) !== 'array') {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                 config2, jdd.generatePath(config2),
                 'Both types should be arrays', jdd.TYPE));
@@ -201,7 +201,7 @@ var jdd = {
      * We handle boolean values specially because we can show a nicer message for them.
      */
     diffBool: function (val1, config1, val2, config2) {
-        if (!getType(val2) === 'boolean') {
+        if (getType(val2) !== 'boolean') {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                 config2, jdd.generatePath(config2),
                 'Both types should be booleans', jdd.TYPE));
