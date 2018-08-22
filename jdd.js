@@ -17,6 +17,35 @@
  ******************************************************************************/
 'use strict';
 
+// utilites
+// 
+/**
+ * Fixing typeof
+ * takes value and returns type of value
+ * @param  value 
+ * return typeof value
+ */
+function getType(value) {
+    if ((function () { return value && (value !== this); }).call(value)) {
+        //fallback on 'typeof' for truthy primitive values
+        return typeof value;
+    }
+    return ({}).toString.call(value).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
+}
+/**
+ * Iterate over array of objects and call given callback for each item in the array
+ * Optionally may take this as scope
+ * 
+ * @param array 
+ * @param callback 
+ * @param optional scope 
+ */
+function forEach(array, callback, scope) {
+    for (var idx = 0; idx < array.length; idx++) {
+        callback.call(scope, array[idx], idx, array);
+    }
+}
+
 /**
  * The jdd object handles all of the functions for the main page.  It finds the diffs and manages
  * the interactions of displaying them.
@@ -1086,35 +1115,6 @@ jQuery(document).ready(function () {
     });
 });
 
-// utilites
-// 
-/**
- * Fixing typeof
- * takes value and returns type of value
- * @param  value 
- * return typeof value
- */
-function getType(value) {
-    if ((function () { return value && (value !== this); }).call(value)) {
-        //fallback on 'typeof' for truthy primitive values
-        return typeof value;
-    }
-    return ({}).toString.call(value).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
-}
-/**
- * Iterate over array of objects and call given callback for each item in the array
- * Optionally may take this as scope
- * 
- * @param array 
- * @param callback 
- * @param optional scope 
- */
-function forEach(array, callback, scope) {
-    for (var idx = 0; idx < array.length; idx++) {
-        callback.call(scope, array[idx], idx, array);
-    }
-}
-
 // polyfills
 
 // Array.prototype.find
@@ -1123,7 +1123,7 @@ if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
         value: function (predicate) {
             // 1. Let O be ? ToObject(this value).
-            if (this == null) {
+            if (this === null) {
                 throw new TypeError('"this" is null or not defined');
             }
 
@@ -1171,7 +1171,7 @@ if (!Array.prototype.findIndex) {
     Object.defineProperty(Array.prototype, 'findIndex', {
         value: function (predicate) {
             // 1. Let O be ? ToObject(this value).
-            if (this == null) {
+            if (this === null) {
                 throw new TypeError('"this" is null or not defined');
             }
 
