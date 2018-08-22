@@ -36,48 +36,51 @@ var jdd = {
     /**
      * Find the differences between the two objects and recurse into their sub objects.
      */
-    findDiffs: function(/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
-       config1.currentPath.push('/');
-       config2.currentPath.push('/');
+    findDiffs: function (/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
+        config1.currentPath.push('/');
+        config2.currentPath.push('/');
 
-       var key;
-       var val;
+        var key;
+        // no un-used vars
+        // var val;
 
-       if (data1.length < data2.length) {
-           /*
-            * This means the second data has more properties than the first.
-            * We need to find the extra ones and create diffs for them.
-            */
-           for (key in data2) {
-               if (data2.hasOwnProperty(key)) {
-                   val = data1[key];
-                   if (!data1.hasOwnProperty(key)) {
-                       jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                       config2, jdd.generatePath(config2, '/' + key),
-                                                       'The right side of this object has more items than the left side', jdd.MISSING));
-                   }
-               }
-           }
-       }
+        if (data1.length < data2.length) {
+            /*
+             * This means the second data has more properties than the first.
+             * We need to find the extra ones and create diffs for them.
+             */
+            for (key in data2) {
+                if (data2.hasOwnProperty(key)) {
+                    // no un-used vars
+                    // val = data1[key];
+                    if (!data1.hasOwnProperty(key)) {
+                        jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                            config2, jdd.generatePath(config2, '/' + key),
+                            'The right side of this object has more items than the left side', jdd.MISSING));
+                    }
+                }
+            }
+        }
 
-       /*
-        * Now we're going to look for all the properties in object one and
-        * compare them to object two
-        */
-       for (key in data1) {
-           if (data1.hasOwnProperty(key)) {
-               val = data1[key];
+        /*
+         * Now we're going to look for all the properties in object one and
+         * compare them to object two
+         */
+        for (key in data1) {
+            if (data1.hasOwnProperty(key)) {
+                // no un-used vars
+                // val = data1[key];
 
-               config1.currentPath.push(key);
+                config1.currentPath.push(key);
 
-               if (!data2.hasOwnProperty(key)) {
-                   /*
-                    * This means that the first data has a property which
-                    * isn't present in the second data
-                    */
-                   jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                   config2, jdd.generatePath(config2),
-                                                   'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
+                if (!data2.hasOwnProperty(key)) {
+                    /*
+                     * This means that the first data has a property which
+                     * isn't present in the second data
+                     */
+                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                        config2, jdd.generatePath(config2),
+                        'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
                 } else {
                     config2.currentPath.push(key);
 
@@ -85,71 +88,72 @@ var jdd = {
                     config2.currentPath.pop();
                 }
                 config1.currentPath.pop();
-           }
-       }
+            }
+        }
 
-       config1.currentPath.pop();
-       config2.currentPath.pop();
+        config1.currentPath.pop();
+        config2.currentPath.pop();
 
-       /*
-        * Now we want to look at all the properties in object two that
-        * weren't in object one and generate diffs for them.
-        */
-       for (key in data2) {
-           if (data2.hasOwnProperty(key)) {
-               val = data1[key];
+        /*
+         * Now we want to look at all the properties in object two that
+         * weren't in object one and generate diffs for them.
+         */
+        for (key in data2) {
+            if (data2.hasOwnProperty(key)) {
+                // no un-used vars
+                // val = data1[key];
 
-               if (!data1.hasOwnProperty(key)) {
-                   jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                   config2, jdd.generatePath(config2, key),
-                                                   'Missing property <code>' + key + '</code> from the object on the left side', jdd.MISSING));
-               }
-           }
-       }
+                if (!data1.hasOwnProperty(key)) {
+                    jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                        config2, jdd.generatePath(config2, key),
+                        'Missing property <code>' + key + '</code> from the object on the left side', jdd.MISSING));
+                }
+            }
+        }
     },
 
     /**
      * Generate the differences between two values.  This handles differences of object
      * types and actual values.
      */
-    diffVal: function(val1, config1, val2, config2) { 
+    diffVal: function (val1, config1, val2, config2) {
 
-        if (_.isArray(val1)) {
+        if (getType(val1) === 'array') {
             jdd.diffArray(val1, config1, val2, config2);
-        } else if (_.isObject(val1)) {
-            if (_.isArray(val2) || _.isString(val2) || _.isNumber(val2) || _.isBoolean(val2) || _.isNull(val2) ) {
+        } else if (getType(val1) === 'object') {
+            if (['array', 'string', 'number', 'boolean', 'null'].indexOf(getType(val2)) > -1) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                                'Both types should be objects', jdd.TYPE));
+                    config2, jdd.generatePath(config2),
+                    'Both types should be objects', jdd.TYPE));
             } else {
                 jdd.findDiffs(config1, val1, config2, val2);
             }
-        } else if (_.isString(val1)) {
-            if (!_.isString(val2)) {
+        } else if (getType(val1) === 'string') {
+            if (getType(val2) !== 'string') {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                               'Both types should be strings', jdd.TYPE));
+                    config2, jdd.generatePath(config2),
+                    'Both types should be strings', jdd.TYPE));
             } else if (val1 !== val2) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                               'Both sides should be equal strings', jdd.EQUALITY));
+                    config2, jdd.generatePath(config2),
+                    'Both sides should be equal strings', jdd.EQUALITY));
             }
-        } else if (_.isNumber(val1)) {
-            if (!_.isNumber(val2)) {
+        } else if (getType(val1) === 'number') {
+            if (getType(val2) !== 'number') {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                               'Both types should be numbers', jdd.TYPE));
+                    config2, jdd.generatePath(config2),
+                    'Both types should be numbers', jdd.TYPE));
             } else if (val1 !== val2) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                               'Both sides should be equal numbers', jdd.EQUALITY));
+                    config2, jdd.generatePath(config2),
+                    'Both sides should be equal numbers', jdd.EQUALITY));
             }
-        } else if (_.isBoolean(val1)) {
+        } else if (getType(val1) === 'boolean') {
             jdd.diffBool(val1, config1, val2, config2);
-        } else if (_.isNull(val1) && !_.isNull(val2)) {
+        } else if (getType(val1) === 'null' && getType(val2) !== 'null') {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                            config2, jdd.generatePath(config2),
-                                           'Both types should be nulls', jdd.TYPE));
+                config2, jdd.generatePath(config2),
+                'Both types should be nulls', jdd.TYPE));
         }
     },
 
@@ -157,12 +161,12 @@ var jdd = {
      * Arrays are more complex because we need to recurse into them and handle different length
      * issues so we handle them specially in this function.
      */
-    diffArray: function(val1, config1, val2, config2) {
-        if (!_.isArray(val2)) {
-           jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                           config2, jdd.generatePath(config2),
-                                           'Both types should be arrays', jdd.TYPE));
-		   return;
+    diffArray: function (val1, config1, val2, config2) {
+        if (getType(val2) !== 'array') {
+            jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                config2, jdd.generatePath(config2),
+                'Both types should be arrays', jdd.TYPE));
+            return;
         }
 
         if (val1.length < val2.length) {
@@ -172,20 +176,20 @@ var jdd = {
              */
             for (var i = val1.length; i < val2.length; i++) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2, '[' + i + ']'),
-                                                'Missing element <code>' + i + '</code> from the array on the left side', jdd.MISSING));
+                    config2, jdd.generatePath(config2, '[' + i + ']'),
+                    'Missing element <code>' + i + '</code> from the array on the left side', jdd.MISSING));
             }
         }
-        _.each(val1, function(arrayVal, index) {
+        val1.forEach(function (arrayVal, index) {
             if (val2.length <= index) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1, '[' + index + ']'),
-                                                config2, jdd.generatePath(config2),
-                                                'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
+                    config2, jdd.generatePath(config2),
+                    'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
             } else {
                 config1.currentPath.push('/[' + index + ']');
                 config2.currentPath.push('/[' + index + ']');
 
-                if (_.isArray(val2)) {
+                if (getType(val2) === 'array') {
                     /*
                      * If both sides are arrays then we want to diff them.
                      */
@@ -200,20 +204,20 @@ var jdd = {
     /**
      * We handle boolean values specially because we can show a nicer message for them.
      */
-    diffBool: function(val1, config1, val2, config2) {
-        if (!_.isBoolean(val2)) {
+    diffBool: function (val1, config1, val2, config2) {
+        if (getType(val2) !== 'boolean') {
             jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                            config2, jdd.generatePath(config2),
-                                            'Both types should be booleans', jdd.TYPE));
+                config2, jdd.generatePath(config2),
+                'Both types should be booleans', jdd.TYPE));
         } else if (val1 !== val2) {
             if (val1) {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                                'The left side is <code>true</code> and the right side is <code>false</code>', jdd.EQUALITY));
+                    config2, jdd.generatePath(config2),
+                    'The left side is <code>true</code> and the right side is <code>false</code>', jdd.EQUALITY));
             } else {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                                                config2, jdd.generatePath(config2),
-                                                'The left side is <code>false</code> and the right side is <code>true</code>', jdd.EQUALITY));
+                    config2, jdd.generatePath(config2),
+                    'The left side is <code>false</code> and the right side is <code>true</code>', jdd.EQUALITY));
             }
         }
     },
@@ -222,8 +226,8 @@ var jdd = {
      * Format the object into the output stream and decorate the data tree with
      * the data about this object.
      */
-    formatAndDecorate: function(/*Object*/ config, /*Object*/ data) {
-        if (_.isArray(data)) {
+    formatAndDecorate: function (/*Object*/ config, /*Object*/ data) {
+        if (getType(data) === 'array') {
             jdd.formatAndDecorateArray(config, data);
             return;
         }
@@ -238,8 +242,7 @@ var jdd = {
          * when we compare values.  However, if the second has more then
          * we need to catch that here.
          */
-
-        _.each(props, function(key) {
+        props.forEach(function (key) {
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + '"' + jdd.unescapeString(key) + '": ';
             config.currentPath.push(key);
             config.paths.push({
@@ -258,7 +261,7 @@ var jdd = {
      * Format the array into the output stream and decorate the data tree with
      * the data about this object.
      */
-    formatAndDecorateArray: function(/*Object*/ config, /*Array*/ data) {
+    formatAndDecorateArray: function (/*Object*/ config, /*Array*/ data) {
         jdd.startArray(config);
 
         /*
@@ -266,8 +269,7 @@ var jdd = {
          * when we compare values.  However, if the second has more then
          * we need to catch that here.
          */
-
-        _.each(data, function(arrayVal, index) {
+        data.forEach(function (arrayVal, index) {
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent);
             config.paths.push({
                 path: jdd.generatePath(config, '[' + index + ']'),
@@ -286,7 +288,7 @@ var jdd = {
     /**
      * Generate the start of the an array in the output stream and push in the new path
      */
-    startArray: function(config) {
+    startArray: function (config) {
         config.indent++;
         config.out += '[';
 
@@ -309,7 +311,7 @@ var jdd = {
     /**
      * Finish the array, outdent, and pop off all the path
      */
-    finishArray: function(config) {
+    finishArray: function (config) {
         if (config.indent === 0) {
             config.indent--;
         }
@@ -328,7 +330,7 @@ var jdd = {
     /**
      * Generate the start of the an object in the output stream and push in the new path
      */
-    startObject: function(config) {
+    startObject: function (config) {
         config.indent++;
         config.out += '{';
 
@@ -351,7 +353,7 @@ var jdd = {
     /**
      * Finish the object, outdent, and pop off all the path
      */
-    finishObject: function(config) {
+    finishObject: function (config) {
         if (config.indent === 0) {
             config.indent--;
         }
@@ -370,12 +372,12 @@ var jdd = {
     /**
      * Format a specific value into the output stream.
      */
-    formatVal: function(val, config) {
-        if (_.isArray(val)) {
+    formatVal: function (val, config) {
+        if (getType(val) === 'array') {
             config.out += '[';
 
             config.indent++;
-            _.each(val, function(arrayVal, index) {
+            val.forEach(function (arrayVal, index) {
                 config.out += jdd.newLine(config) + jdd.getTabs(config.indent);
                 config.paths.push({
                     path: jdd.generatePath(config, '[' + index + ']'),
@@ -390,19 +392,19 @@ var jdd = {
             config.indent--;
 
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + ']' + ',';
-        } else if (_.isObject(val)) {
+        } else if (getType(val) === 'object') {
             jdd.formatAndDecorate(config, val);
-        } else if (_.isString(val)) {
+        } else if (getType(val) === 'string') {
             config.out += '"' + jdd.unescapeString(val) + '",';
-        } else if (_.isNumber(val)) {
+        } else if (getType(val) === 'number') {
             config.out += val + ',';
-        } else if (_.isBoolean(val)) {
+        } else if (getType(val) === 'boolean') {
             config.out += val + ',';
-        } else if (_.isNull(val)) {
+        } else if (getType(val) === 'null') {
             config.out += 'null,';
         }
     },
-    
+
     /**
      * When we parse the JSON string we end up removing the escape strings when we parse it 
      * into objects.  This results in invalid JSON if we insert those strings back into the 
@@ -415,15 +417,15 @@ var jdd = {
      * This function does not handle unicode escapes.  Unicode escapes are optional in JSON 
      * and the JSON output is still valid with a unicode character in it.  
      */
-    unescapeString: function(val) {
+    unescapeString: function (val) {
         if (val) {
             return val.replace('\\', '\\\\')    // Single slashes need to be replaced first
-                      .replace('\"', '\\"')     // Then double quotes
-                      .replace('\n', '\\n')     // New lines
-                      .replace('\b', '\\b')     // Backspace
-                      .replace('\f', '\\f')     // Formfeed
-                      .replace('\r', '\\r')     // Carriage return
-                      .replace('\t', '\\t');    // Horizontal tabs
+                .replace('\"', '\\"')     // Then double quotes
+                .replace('\n', '\\n')     // New lines
+                .replace('\b', '\\b')     // Backspace
+                .replace('\f', '\\f')     // Formfeed
+                .replace('\r', '\\r')     // Carriage return
+                .replace('\t', '\\t');    // Horizontal tabs
         } else {
             return val;
         }
@@ -432,9 +434,9 @@ var jdd = {
     /**
      * Generate a JSON path based on the specific configuration and an optional property.
      */
-    generatePath: function(config, prop) {
+    generatePath: function (config, prop) {
         var s = '';
-        _.each(config.currentPath, function(path) {
+        config.currentPath.forEach(function (path) {
             s += path;
         });
 
@@ -452,7 +454,7 @@ var jdd = {
     /**
      * Add a new line to the output stream
      */
-    newLine: function(config) {
+    newLine: function (config) {
         config.line++;
         return '\n';
     },
@@ -460,7 +462,7 @@ var jdd = {
     /**
      * Sort all the relevant properties and return them in an alphabetical sort by property key
      */
-    getSortedProperties: function(/*Object*/ obj) {
+    getSortedProperties: function (/*Object*/ obj) {
         var props = [];
 
         for (var prop in obj) {
@@ -469,7 +471,7 @@ var jdd = {
             }
         }
 
-        props = props.sort(function(a, b) {
+        props = props.sort(function (a, b) {
             return a.localeCompare(b);
         });
 
@@ -479,7 +481,7 @@ var jdd = {
     /**
      * Generate the diff and verify that it matches a JSON path
      */
-    generateDiff: function(config1, path1, config2, path2, /*String*/ msg, type) {
+    generateDiff: function (config1, path1, config2, path2, /*String*/ msg, type) {
         if (path1 !== '/' && path1.charAt(path1.length - 1) === '/') {
             path1 = path1.substring(0, path1.length - 1);
         }
@@ -487,12 +489,10 @@ var jdd = {
         if (path2 !== '/' && path2.charAt(path2.length - 1) === '/') {
             path2 = path2.substring(0, path2.length - 1);
         }
-
-        var pathObj1 = _.find(config1.paths, function(path) {
+        var pathObj1 = config1.paths.find(function (path) {
             return path.path === path1;
         });
-
-        var pathObj2 = _.find(config2.paths, function(path) {
+        var pathObj2 = config2.paths.find(function (path) {
             return path.path === path2;
         });
 
@@ -515,7 +515,7 @@ var jdd = {
     /**
      * Get the current indent level
      */
-    getTabs: function(/*int*/ indent) {
+    getTabs: function (/*int*/ indent) {
         var s = '';
         for (var i = 0; i < indent; i++) {
             s += '    ';
@@ -527,7 +527,7 @@ var jdd = {
     /**
      * Remove the trailing comma from the output.
      */
-    removeTrailingComma: function(config) {
+    removeTrailingComma: function (config) {
         /*
          * Remove the trailing comma
          */
@@ -539,7 +539,7 @@ var jdd = {
     /**
      * Create a config object for holding differences
      */
-    createConfig: function() {
+    createConfig: function () {
         return {
             out: '',
             indent: -1,
@@ -552,8 +552,8 @@ var jdd = {
     /**
      * Format the output pre tags.
      */
-    formatPRETags: function() {
-        _.each($('pre'), function(pre) {
+    formatPRETags: function () {
+        forEach($('pre'), function (pre) {
             var codeBlock = $('<pre class="codeBlock"></pre>');
             var lineNumbers = $('<div class="gutter"></div>');
             codeBlock.append(lineNumbers);
@@ -561,7 +561,7 @@ var jdd = {
             var codeLines = $('<div></div>');
             codeBlock.append(codeLines);
 
-            var addLine = function(line, index) {
+            var addLine = function (line, index) {
                 var div = $('<div class="codeLine line' + (index + 1) + '"></div>');
                 lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
 
@@ -573,7 +573,7 @@ var jdd = {
             };
 
             var lines = $(pre).text().split('\n');
-            _.each(lines, addLine);
+            lines.forEach(addLine);
 
             codeBlock.addClass($(pre).attr('class'));
             codeBlock.attr('id', $(pre).attr('id'));
@@ -585,18 +585,18 @@ var jdd = {
     /**
      * Format the text edits which handle the JSON input
      */
-    formatTextAreas: function() {
-        _.each($('textarea'), function(textarea) {
+    formatTextAreas: function () {
+        forEach($('textarea'), function (textarea) {
             var codeBlock = $('<div class="codeBlock"></div>');
             var lineNumbers = $('<div class="gutter"></div>');
             codeBlock.append(lineNumbers);
 
-            var addLine = function(line, index) {
+            var addLine = function (line, index) {
                 lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
             };
 
             var lines = $(textarea).val().split('\n');
-            _.each(lines, addLine);
+            lines.forEach(addLine);
 
             $(textarea).replaceWith(codeBlock);
             codeBlock.append(textarea);
@@ -604,7 +604,7 @@ var jdd = {
     },
 
     handleDiffClick: function (line, side) {
-        var diffs = _.filter(jdd.diffs, function(diff) {
+        var diffs = jdd.diffs.filter(function (diff) {
             if (side === jdd.LEFT) {
                 return line === diff.path1.line;
             } else if (side === jdd.RIGHT) {
@@ -617,20 +617,19 @@ var jdd = {
         $('pre.left span.code').removeClass('selected');
         $('pre.right span.code').removeClass('selected');
         $('ul.toolbar').text('');
-
-        _.each(diffs, function(diff) {
+        diffs.forEach(function (diff) {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass('selected');
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
         });
 
         if (side === jdd.LEFT || side === jdd.RIGHT) {
-            jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
+            jdd.currentDiff = jdd.diffs.findIndex(function (diff) {
                 return diff.path1.line === line;
             });
         }
 
         if (jdd.currentDiff === -1) {
-            jdd.currentDiff = _.findIndex(jdd.diffs, function(diff) {
+            jdd.currentDiff = jdd.diffs.findIndex(function (diff) {
                 return diff.path2.line === line;
             });
         }
@@ -638,7 +637,7 @@ var jdd = {
         var buttons = $('<div id="buttons"><div>');
         var prev = $('<a href="#" title="Previous difference" id="prevButton">&lt;</a>');
         prev.addClass('disabled');
-        prev.click(function(e) {
+        prev.click(function (e) {
             e.preventDefault();
             jdd.highlightPrevDiff();
         });
@@ -647,7 +646,7 @@ var jdd = {
         buttons.append('<span id="prevNextLabel"></span>');
 
         var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
-        next.click(function(e) {
+        next.click(function (e) {
             e.preventDefault();
             jdd.highlightNextDiff();
         });
@@ -659,7 +658,7 @@ var jdd = {
         jdd.showDiffDetails(diffs);
     },
 
-    highlightPrevDiff: function() {
+    highlightPrevDiff: function () {
         if (jdd.currentDiff > 0) {
             jdd.currentDiff--;
             jdd.highlightDiff(jdd.currentDiff);
@@ -669,7 +668,7 @@ var jdd = {
         }
     },
 
-    highlightNextDiff: function() {
+    highlightNextDiff: function () {
         if (jdd.currentDiff < jdd.diffs.length - 1) {
             jdd.currentDiff++;
             jdd.highlightDiff(jdd.currentDiff);
@@ -679,7 +678,7 @@ var jdd = {
         }
     },
 
-    updateButtonStyles: function() {
+    updateButtonStyles: function () {
         $('#prevButton').removeClass('disabled');
         $('#nextButton').removeClass('disabled');
 
@@ -695,30 +694,30 @@ var jdd = {
     /**
      * Highlight the diff at the specified index
      */
-    highlightDiff: function(index) {
+    highlightDiff: function (index) {
         jdd.handleDiffClick(jdd.diffs[index].path1.line, jdd.BOTH);
     },
 
     /**
      * Show the details of the specified diff
      */
-    showDiffDetails: function(diffs) {
-         _.each(diffs, function(diff) {
-             var li = $('<li></li>');
-             li.html(diff.msg);
-             $('ul.toolbar').append(li);
+    showDiffDetails: function (diffs) {
+        diffs.forEach(function (diff) {
+            var li = $('<li></li>');
+            li.html(diff.msg);
+            $('ul.toolbar').append(li);
 
-             li.click(function() {
-                 jdd.scrollToDiff(diff);
-             });
+            li.click(function () {
+                jdd.scrollToDiff(diff);
+            });
 
-         });
+        });
     },
 
     /**
      * Scroll the specified diff to be visible
      */
-    scrollToDiff: function(diff) {
+    scrollToDiff: function (diff) {
         $('html, body').animate({
             scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
         }, 0);
@@ -727,29 +726,28 @@ var jdd = {
     /**
      * Process the specified diff
      */
-    processDiffs: function() {
-         var left = [];
-         var right = [];
-
-        _.each(jdd.diffs, function(diff, index) {
+    processDiffs: function () {
+        var left = [];
+        var right = [];
+        jdd.diffs.forEach(function (diff) {
             $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
-            if (_.indexOf(left, diff.path1.line) === -1) {
-                $('pre.left div.line' + diff.path1.line + ' span.code').click(function() {
+            if (left.indexOf(diff.path1.line) === -1) {
+                $('pre.left div.line' + diff.path1.line + ' span.code').click(function () {
                     jdd.handleDiffClick(diff.path1.line, jdd.LEFT);
                 });
                 left.push(diff.path1.line);
             }
 
             $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type).addClass('diff');
-            if (_.indexOf(right, diff.path2.line) === -1) {
-                $('pre.right div.line' + diff.path2.line + ' span.code').click(function() {
+            if (right.indexOf(diff.path2.line) === -1) {
+                $('pre.right div.line' + diff.path2.line + ' span.code').click(function () {
                     jdd.handleDiffClick(diff.path2.line, jdd.RIGHT);
                 });
                 right.push(diff.path2.line);
             }
         });
 
-        jdd.diffs = jdd.diffs.sort(function(a, b) {
+        jdd.diffs = jdd.diffs.sort(function (a, b) {
             return a.path1.line - b.path1.line;
         });
 
@@ -758,9 +756,9 @@ var jdd = {
     /**
      * Validate the input against the JSON parser
      */
-    validateInput: function(json, side) {
-         try {
-            var result = jsl.parser.parse(json);
+    validateInput: function (json, side) {
+        try {
+            jsl.parser.parse(json);
 
             if (side === jdd.LEFT) {
                 $('#errorLeft').text('').hide();
@@ -786,11 +784,11 @@ var jdd = {
     /**
      * Handle the file uploads
      */
-    handleFiles: function(files, side) {
+    handleFiles: function (files, side) {
         var reader = new FileReader();
 
-        reader.onload = (function(theFile) {
-            return function(e) {
+        reader.onload = (function () {
+            return function (e) {
                 if (side === jdd.LEFT) {
                     $('#textarealeft').val(e.target.result);
                 } else {
@@ -802,7 +800,7 @@ var jdd = {
         reader.readAsText(files[0]);
     },
 
-    setupNewDiff: function() {
+    setupNewDiff: function () {
         $('div.initContainer').show();
         $('div.diffcontainer').hide();
         $('div.diffcontainer pre').text('');
@@ -812,14 +810,14 @@ var jdd = {
     /**
      * Generate the report section with the diff
      */
-    generateReport: function() {
-         var report = $('#report');
+    generateReport: function () {
+        var report = $('#report');
 
         report.text('');
 
         var newDiff = $('<button>Perform a new diff</button>');
         report.append(newDiff);
-        newDiff.click(function() {
+        newDiff.click(function () {
             jdd.setupNewDiff();
         });
 
@@ -831,8 +829,7 @@ var jdd = {
         var typeCount = 0;
         var eqCount = 0;
         var missingCount = 0;
-
-        _.each(jdd.diffs, function(diff) {
+        jdd.diffs.forEach(function (diff) {
             if (diff.type === jdd.EQUALITY) {
                 eqCount++;
             } else if (diff.type === jdd.MISSING) {
@@ -863,7 +860,7 @@ var jdd = {
             } else {
                 missing.append(missingCount + ' missing properties');
             }
-            missing.children('input').click(function() {
+            missing.children('input').click(function () {
                 if (!$(this).prop('checked')) {
                     $('span.code.diff.missing').addClass('missing_off').removeClass('missing');
                 } else {
@@ -884,7 +881,7 @@ var jdd = {
                 types.append(typeCount + ' incorrect types');
             }
 
-            types.children('input').click(function() {
+            types.children('input').click(function () {
                 if (!$(this).prop('checked')) {
                     $('span.code.diff.type').addClass('type_off').removeClass('type');
                 } else {
@@ -904,7 +901,7 @@ var jdd = {
             } else {
                 eq.append(eqCount + ' unequal values');
             }
-            eq.children('input').click(function() {
+            eq.children('input').click(function () {
                 if (!$(this).prop('checked')) {
                     $('span.code.diff.eq').addClass('eq_off').removeClass('eq');
                 } else {
@@ -922,7 +919,7 @@ var jdd = {
     /**
      * Implement the compare button and complete the compare process
      */
-    compare: function() {
+    compare: function () {
 
         if (jdd.requestCount !== 0) {
             /*
@@ -934,24 +931,24 @@ var jdd = {
         $('body').addClass('progress');
         $('#compare').prop('disabled', true);
 
-        var loadUrl = function(id, errId) {
+        var loadUrl = function (id, errId) {
             if ($('#' + id).val().trim().substring(0, 4).toLowerCase() === 'http') {
                 jdd.requestCount++;
                 $.post('proxy.php',
-                       {
-                           'url': $('#' + id).val().trim()
-                       }, function (responseObj) {
-                           if (responseObj.error) {
-                               $('#' + errId).text(responseObj.result).show();
-                               $('#' + id).addClass('error');
-                               $('body').removeClass('progress');
-                               $('#compare').prop('disabled', false);
-                           } else {
-                               $('#' + id).val(responseObj.content);
-                                jdd.requestCount--;
-                                jdd.compare();
-                            }
-                       }, 'json');
+                    {
+                        'url': $('#' + id).val().trim()
+                    }, function (responseObj) {
+                        if (responseObj.error) {
+                            $('#' + errId).text(responseObj.result).show();
+                            $('#' + id).addClass('error');
+                            $('body').removeClass('progress');
+                            $('#compare').prop('disabled', false);
+                        } else {
+                            $('#' + id).val(responseObj.content);
+                            jdd.requestCount--;
+                            jdd.compare();
+                        }
+                    }, 'json');
                 return true;
             } else {
                 return false;
@@ -970,8 +967,8 @@ var jdd = {
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
          */
-         var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
-         var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
+        var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
+        var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
 
         if (!leftValid || !rightValid) {
             $('body').removeClass('progress');
@@ -1021,7 +1018,7 @@ var jdd = {
          * scroll so you can get the maximum number of toolbar items.
          */
         var toolbarTop = $('#toolbar').offset().top - 15;
-        $(window).scroll(function() {
+        $(window).scroll(function () {
             if (toolbarTop < $(window).scrollTop()) {
                 $('#toolbar').css('position', 'fixed').css('top', '10px');
             } else {
@@ -1034,14 +1031,14 @@ var jdd = {
     /**
      * Load in the sample data
      */
-    loadSampleData: function() {
-         $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}');
-/*$('#textarealeft').val('[{  "OBJ_ID": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "b3067a77-875b-4208-9ee3-39128adeb654",  "lastLogon": "0",  "sAMAccountName": "ksmith",  "userPrincipalName": "ksmith@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"},{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]');
-$('#textarearight').val('{"foo":[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]}');*/
-         $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+    loadSampleData: function () {
+        $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}');
+        /*$('#textarealeft').val('[{  "OBJ_ID": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "b3067a77-875b-4208-9ee3-39128adeb654",  "lastLogon": "0",  "sAMAccountName": "ksmith",  "userPrincipalName": "ksmith@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"},{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]');
+        $('#textarearight').val('{"foo":[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]}');*/
+        $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
     },
 
-    getParameterByName: function(name) {
+    getParameterByName: function (name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
             results = regex.exec(location.search);
@@ -1051,8 +1048,8 @@ $('#textarearight').val('{"foo":[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willo
 
 
 
-jQuery(document).ready(function() {
-    $('#compare').click(function() {
+jQuery(document).ready(function () {
+    $('#compare').click(function () {
         jdd.compare();
     });
 
@@ -1069,12 +1066,12 @@ jQuery(document).ready(function() {
     }
 
 
-    $('#sample').click(function(e) {
+    $('#sample').click(function (e) {
         e.preventDefault();
         jdd.loadSampleData();
     });
 
-    $(document).keydown(function(event) {
+    $(document).keydown(function (event) {
         if (event.keyCode === 78 || event.keyCode === 39) {
             /*
              * The N key or right arrow key
@@ -1088,3 +1085,130 @@ jQuery(document).ready(function() {
         }
     });
 });
+
+// utilites
+// 
+/**
+ * Fixing typeof
+ * takes value and returns type of value
+ * @param  value 
+ * return typeof value
+ */
+function getType(value) {
+    if ((function () { return value && (value !== this); }).call(value)) {
+        //fallback on 'typeof' for truthy primitive values
+        return typeof value;
+    }
+    return ({}).toString.call(value).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
+}
+/**
+ * Iterate over array of objects and call given callback for each item in the array
+ * Optionally may take this as scope
+ * 
+ * @param array 
+ * @param callback 
+ * @param optional scope 
+ */
+function forEach(array, callback, scope) {
+    for (var idx = 0; idx < array.length; idx++) {
+        callback.call(scope, array[idx], idx, array);
+    }
+}
+
+// polyfills
+
+// Array.prototype.find
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        value: function (predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return undefined.
+            return undefined;
+        },
+        configurable: true,
+        writable: true
+    });
+}
+
+// Array.prototype.findIndex
+// https://tc39.github.io/ecma262/#sec-array.prototype.findIndex
+if (!Array.prototype.findIndex) {
+    Object.defineProperty(Array.prototype, 'findIndex', {
+        value: function (predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+
+            var o = Object(this);
+
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
+
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
+
+            // 5. Let k be 0.
+            var k = 0;
+
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return k.
+                var kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return k;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+
+            // 7. Return -1.
+            return -1;
+        },
+        configurable: true,
+        writable: true
+    });
+}
