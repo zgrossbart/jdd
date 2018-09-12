@@ -449,12 +449,12 @@ var jdd = {
     unescapeString: function (val) {
         if (val) {
             return val.replace('\\', '\\\\')    // Single slashes need to be replaced first
-                .replace('\"', '\\"')     // Then double quotes
-                .replace('\n', '\\n')     // New lines
-                .replace('\b', '\\b')     // Backspace
-                .replace('\f', '\\f')     // Formfeed
-                .replace('\r', '\\r')     // Carriage return
-                .replace('\t', '\\t');    // Horizontal tabs
+                .replace(/\"/g, '\\"')     // Then double quotes
+                .replace(/\n/g, '\\n')     // New lines
+                .replace('\b', '\\b')      // Backspace
+                .replace(/\f/g, '\\f')     // Formfeed
+                .replace(/\r/g, '\\r')     // Carriage return
+                .replace(/\t/g, '\\t');    // Horizontal tabs
         } else {
             return val;
         }

@@ -241,6 +241,20 @@ QUnit.test('Null object length tests - left side', function (assert) {
     jdd.setupNewDiff();
 });
 
+QUnit.test('Escaped quotes test', function (assert) {
+    $('#textarealeft').val('{"link": "<a href=\\\"http://google.com/\\\">Google</a>"}');
+    $('#textarearight').val('{"link": "<a href=\\\"http://googlex.com/\\\">Google</a>"}');
+
+    jdd.compare();
+    assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking correct type');
+	assert.ok($('pre.right div.line2 span').text().trim() === '"link": "<a href=\\\"http://googlex.com/\\\">Google</a>"', 'Checking escaped quotes');
+	assert.ok($('pre.left div.line2 span').text().trim() === '"link": "<a href=\\\"http://google.com/\\\">Google</a>"', 'Checking escaped quotes');
+
+    $('#textarealeft').val('');
+    $('#textarearight').val('');
+    jdd.setupNewDiff();
+});
+
 
 QUnit.done(function () {
     $('div.initContainer').hide();
