@@ -1,26 +1,27 @@
 body {
-    padding: 0px 0px;
-    margin: 0px 0px;
-    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: Grotesk, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: .9rem;
 }
 
 h1 {
     font-size: 3em;
     line-height: 1;
     margin-bottom: .1em;
-    font-family: sans-serif;
+    font-weight: 300;
 }
 
 h3 {
     font-size: 1.5em;
     line-height: 1;
     margin-bottom: 1em;
-    font-family: sans-serif;
     margin-top: 1em;
 }
 
 a {
     text-decoration: none;
+    color: #36c;
 }
 
 a:hover {
@@ -33,7 +34,6 @@ a:hover {
 }
 
 pre.codeBlock, div.codeBlock {
-  background-color:#eee;
   overflow:auto;
   margin:0 0 1em;
   padding:.5em 1em;
@@ -43,7 +43,8 @@ pre.codeBlock .codeLine,
 pre.codeBlock .line-number,
 div.codeBlock .codeLine,
 div.codeBlock .line-number {
-  font:normal normal 13px/16px "Monospace";
+  font:normal normal 13px/16px monospace;
+  font-family: Monaco, monospace;
   color:black;
   display:block;
 }
@@ -55,7 +56,8 @@ pre.codeBlock.codeBlock span.code, div.codeBlock span.code {
 
 pre.codeBlock .line-number, div.codeBlock .line-number {
   margin:0 1em 0 -1em;
-  border-right:1px solid;
+  border-right:1px solid #eee;
+  color: #bbb;
   text-align:right;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -190,6 +192,7 @@ div.gutter {
 
 div.codeLine span.diff {
     cursor: pointer;
+    color: #c00;
 }
 
 div.codeLine span.eq_off, div.codeLine span.type_off, div.codeLine span.missing_off {
@@ -198,19 +201,21 @@ div.codeLine span.eq_off, div.codeLine span.type_off, div.codeLine span.missing_
 
 div.codeLine span.eq {
     background: rgba(50, 57, 88, 0.1);
+    color: #333;
 }
 
 div.codeLine span.type {
-    background: rgba(192, 100, 94, 0.1);
+    background: rgba(220, 100, 100, 0.1);
 }
 
 div.codeLine span.missing {
-    background: rgba(0, 100, 80, 0.1);
+    background: rgba(0, 160, 80, 0.1);
+    color: green;
 }
 
 div.codeLine span.selected {
-    background: #86abd9;
-    color: white;
+    background: #cef;
+    color: #47e;
 }
 
 canvas.center {
@@ -225,7 +230,7 @@ textarea {
     width: 100%;
     min-height: 500px;
     padding: 5px;
-    background: #eee;
+    background: #f3f3f3;
     border-radius: 4px;
     resize: vertical;
     white-space: pre;
@@ -262,26 +267,30 @@ span.filterBlock input {
 #report button {
     display: block;
     position: absolute;
-    top: 0px;
-    right: 12%;
+    top: 0;
+    left: 50%;
+    border-color: #36c;
+    color: #36c;
 }
 
 button {
-    font-size: 1.65em;
+    font-size: 1.2em;
     color: #333;
-    padding-left: .5em;
-    padding-right: .5em;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: white;
+    padding: .5rem .7rem;
 }
 
 .weak {
-    color: #999;
+    color: #333;
+    max-width: 25rem;
     font-size: .9em;
-    font-weight: normal;
-    position: Absolute;
+    position: absolute;
     top: 29px;
-    left: 56%;
+    left: 50%;
     right: 3%;
-    padding-left: 5px;
+    padding: 0 1em 0 0;
 }
 
 p {
