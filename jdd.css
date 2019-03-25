@@ -103,6 +103,7 @@ div.center {
     text-align: left;
     margin-top: 20%;
     margin-left: 2%;
+	text-align: center;
 }
     
 
@@ -268,7 +269,7 @@ span.filterBlock input {
     display: block;
     position: absolute;
     top: 0;
-    left: 56%;
+    left: 56.5%;
     border-color: #36c;
     color: #36c;
 }
@@ -288,7 +289,7 @@ button {
     font-size: .9em;
     position: absolute;
     top: 29px;
-    left: 56%;
+    left: 56.5%;
     right: 3%;
     padding: 0 1em 0 0;
 }
