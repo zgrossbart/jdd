@@ -268,7 +268,7 @@ span.filterBlock input {
     display: block;
     position: absolute;
     top: 0;
-    left: 50%;
+    left: 56%;
     border-color: #36c;
     color: #36c;
 }
@@ -288,7 +288,7 @@ button {
     font-size: .9em;
     position: absolute;
     top: 29px;
-    left: 50%;
+    left: 56%;
     right: 3%;
     padding: 0 1em 0 0;
 }
