@@ -133,9 +133,8 @@ ul.toolbar {
     border-radius: 4px;
     margin-bottom: 1em;
     padding: 5px;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
-    color: #8a6d3b;
+    background-color: rgba(50, 57, 88, 0.1);
+    color: black;
     width: 15em;
 }
     
@@ -145,9 +144,8 @@ ul.toolbar li {
     border-radius: 4px;
     margin-bottom: 1em;
     padding: 5px;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
-    color: #8a6d3b;
+    background-color: rgba(50, 57, 88, 0.1);
+    color: black;
     cursor: pointer;
 }
 
@@ -159,6 +157,8 @@ ul.toolbar li code {
     border-radius: 3px;
     color: #333;
     line-height: 26px;
+	font-family: Monaco, monospace;
+	font-size: 0.85em;
 }
 
 #buttons {
@@ -281,6 +281,7 @@ button {
     border-radius: 4px;
     background: white;
     padding: .5rem .7rem;
+	cursor: pointer;
 }
 
 .weak {
@@ -304,6 +305,8 @@ p {
 
 span.fileInput {
     margin-left: 2em;
+	margin-top: 0.5em;
+	display: inline-block;
 }
 
 .throbber-loader:not(:required) {
