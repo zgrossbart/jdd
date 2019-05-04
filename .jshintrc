@@ -2,7 +2,7 @@
   "curly": true,
   "bitwise": false,
   "eqeqeq": true,
-  "es3": true,
+  "esversion": 9,
   "forin": true,
   "freeze": true,
   "immed": true,
