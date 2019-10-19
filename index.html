@@ -52,11 +52,11 @@
                 <div class="left">
                     <textarea spellcheck="false" id="textarealeft" placeholder="Enter JSON to compare, enter an URL to JSON" tabindex="1"></textarea>
                     <pre id="errorLeft" class="error"></pre>
-                    <span class="fileInput">or <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')" tabindex="2"></span>
+                    <span class="fileInput">or <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')" tabindex="4"></span>
                 </div>
     
                 <div class="center">
-                    <button id="compare" tabindex="5">Compare</button>
+                    <button id="compare" tabindex="3">Compare</button>
                     <div class="throbber-loader"></div>
                     <br/><br/>
                     or try some<br /><a href="#" id="sample">sample data</a>
@@ -64,9 +64,9 @@
                 </div>
     
                 <div class="right">
-                    <textarea spellcheck="false" class="right" id="textarearight" placeholder="Enter JSON to compare, enter an URL to JSON" tabindex="3"></textarea>
+                    <textarea spellcheck="false" class="right" id="textarearight" placeholder="Enter JSON to compare, enter an URL to JSON" tabindex="2"></textarea>
                     <pre id="errorRight" class="error"></pre>
-                    <span class="fileInput">or <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'right')" tabindex="4"></span>
+                    <span class="fileInput">or <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'right')" tabindex="5"></span>
                 </div>
             </div>
     
