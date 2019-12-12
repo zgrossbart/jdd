@@ -147,6 +147,7 @@ ul.toolbar li {
     background-color: rgba(50, 57, 88, 0.1);
     color: black;
     cursor: pointer;
+	line-height: 18px;
 }
 
 ul.toolbar li code {
