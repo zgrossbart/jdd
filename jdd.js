@@ -63,6 +63,60 @@ var jdd = {
     requestCount: 0,
 
     /**
+     * Add all child objects as missing (because parent is missing)
+     */
+    addChildAsMissingLeft: function(/*Object*/ data1, /*Object*/ config1, /*Object*/ data2, /*Object*/ config2, /*String*/ key) {
+        if (getType(data1) === 'array') {
+            data1.forEach(function (arrayVal, index) {
+                config1.currentPath.push('/[' + index + ']');
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                config2, jdd.generatePath(config2),
+                                'Missing property <code>' + key + '</code> from the object on the left (inherited)', jdd.MISSING));
+                config1.currentPath.pop();
+            });
+        }
+        else if (getType(data1) === 'object') {
+            config1.currentPath.push('/');
+            for (key in data1) {
+                config1.currentPath.push(key);
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                            config2, jdd.generatePath(config2),
+                            'Missing property <code>' + key + '</code> from the object on the left (inherited)', jdd.MISSING));
+                jdd.addChildAsMissingLeft(data1[key], config1, data2, config2, key)
+                config1.currentPath.pop();
+            }
+            config1.currentPath.pop();
+        }
+    },
+    
+    /**
+     * Same as above but the right side
+     */
+    addChildAsMissingRight: function(/*Object*/ data1, /*Object*/ config1, /*Object*/ data2, /*Object*/ config2, /*String*/ key) {
+        if (getType(data2) === 'array') {
+            data2.forEach(function (arrayVal, index) {
+                config2.currentPath.push('/[' + index + ']');
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                                config2, jdd.generatePath(config2),
+                                'Missing property <code>' + key + '</code> from the object on the right (inherited)', jdd.MISSING));
+                config2.currentPath.pop();
+            });
+        }
+        else if (getType(data2) === 'object') {
+            config2.currentPath.push('/');
+            for (key in data1) {
+                config2.currentPath.push(key);
+                jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
+                            config2, jdd.generatePath(config2),
+                            'Missing property <code>' + key + '</code> from the object on the right (inherited)', jdd.MISSING));
+                jdd.addChildAsMissingRight(data1[key], config1, data2, config2, key)
+                config2.currentPath.pop();
+            }
+            config2.currentPath.pop();
+        }
+    },
+    
+    /**
      * Find the differences between the two objects and recurse into their sub objects.
      */
     findDiffs: function (/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
@@ -110,6 +164,7 @@ var jdd = {
                     jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                         config2, jdd.generatePath(config2),
                         'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
+                    jdd.addChildAsMissingLeft(data1[key], config1, data2, config2, key)
                 } else {
                     config2.currentPath.push(key);
 
@@ -136,6 +191,11 @@ var jdd = {
                     jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                         config2, jdd.generatePath(config2, key),
                         'Missing property <code>' + key + '</code> from the object on the left side', jdd.MISSING));
+                    config2.currentPath.push('/');
+                    config2.currentPath.push(key);
+                    jdd.addChildAsMissingRight(data1, config1, data2[key], config2, key)
+                    config2.currentPath.pop();
+                    config2.currentPath.pop();
                 }
             }
         }

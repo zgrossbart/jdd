@@ -41,7 +41,7 @@ QUnit.test('Object compare tests', function (assert) {
     // This test makes sure there wasn't a parsing error
     assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
 
-    assert.ok(jdd.diffs.length === 20, 'Checking for the correct number of differences');
+    assert.ok(jdd.diffs.length === 31, 'Checking for the correct number of differences');
 
     var typeCount = 0;
     var eqCount = 0;
@@ -58,7 +58,7 @@ QUnit.test('Object compare tests', function (assert) {
     });
 
     assert.ok(eqCount === 4, 'Checking unequal values');
-    assert.ok(missingCount === 11, 'Checking missing values');
+    assert.ok(missingCount === 22, 'Checking missing values');
     assert.ok(typeCount === 5, 'Checking incorrect types');
 
     $('#textarealeft').val('');
