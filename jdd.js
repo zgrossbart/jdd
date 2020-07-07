@@ -46,6 +46,7 @@ function forEach(array, callback, scope) {
     }
 }
 
+
 /**
  * The jdd object handles all of the functions for the main page.  It finds the diffs and manages
  * the interactions of displaying them.
@@ -72,6 +73,7 @@ var jdd = {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                 config2, jdd.generatePath(config2),
                                 'Missing property <code>' + key + '</code> from the object on the left (inherited)', jdd.MISSING));
+                jdd.addChildAsMissingLeft(arrayVal, config1, data2, config2, key)
                 config1.currentPath.pop();
             });
         }
@@ -99,6 +101,7 @@ var jdd = {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                                 config2, jdd.generatePath(config2),
                                 'Missing property <code>' + key + '</code> from the object on the right (inherited)', jdd.MISSING));
+                jdd.addChildAsMissingRight(data1, config1, arrayVal, config2, key)
                 config2.currentPath.pop();
             });
         }
@@ -109,7 +112,7 @@ var jdd = {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
                             config2, jdd.generatePath(config2),
                             'Missing property <code>' + key + '</code> from the object on the right (inherited)', jdd.MISSING));
-                jdd.addChildAsMissingRight(data1[key], config1, data2, config2, key)
+                jdd.addChildAsMissingRight(data1, config1, data2[key], config2, key)
                 config2.currentPath.pop();
             }
             config2.currentPath.pop();
@@ -274,6 +277,9 @@ var jdd = {
                 jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1, '[' + index + ']'),
                     config2, jdd.generatePath(config2),
                     'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
+                config1.currentPath.push('/[' + index + ']');
+                jdd.addChildAsMissingLeft(arrayVal, config1, val2, config2, '[' + index + ']');
+                config1.currentPath.pop();
             } else {
                 config1.currentPath.push('/[' + index + ']');
                 config2.currentPath.push('/[' + index + ']');

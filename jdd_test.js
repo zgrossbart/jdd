@@ -101,7 +101,7 @@ QUnit.test('Array compare tests', function (assert) {
     // This test makes sure there wasn't a parsing error
     assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
 
-    assert.ok(jdd.diffs.length === 7, 'Checking for the correct number of differences');
+    assert.ok(jdd.diffs.length === 14, 'Checking for the correct number of differences');
 
     var eqCount = 0;
     var missingCount = 0;
@@ -116,7 +116,7 @@ QUnit.test('Array compare tests', function (assert) {
     });
 
     assert.ok(eqCount === 6, 'Checking unequal values');
-    assert.ok(missingCount === 1, 'Checking missing values');
+    assert.ok(missingCount === 8, 'Checking missing values');
 
     $('#textarealeft').val('');
     $('#textarearight').val('');
