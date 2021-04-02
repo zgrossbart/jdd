@@ -20,3 +20,39 @@ You can also run JSONDiff in a Docker container if you want to run it in your da
 docker build -t jdd:v1 .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1
 ```
+
+## Is JSONDiff Secure?
+
+You might notice that [http://www.jsondiff.com](http://www.jsondiff.com) doesn't run with HTTPS and ask, is JSONDiff secure?  The short answer is yes, but you shouldn't take my word for it.  
+
+JSONDiff does all of the comparing in the browser.  It never sends any of your JSON data anywhere and you can run a little experiment to prove it.  
+
+Open the developer tools in your browser and select the Network tab.  You'll see all of the requests your browser sends.  It looks like this:
+
+![Network tools image](network_traffic.png)
+
+Now do a JSON compare with some sample data and watch the requests.  There will be no new requests.  That shows that we don't send your data anywhere.
+
+### What data does JSONDiff load?
+
+JSONDiff loads the following files when it first starts up:
+
+| File | Description |
+| --- | --- |
+| `index.html` | The main index page for the site |
+| `reset.css` | The reset CSS file |
+| `throbber.css` | A CSS loading icon |
+| `jdd.css` | The CSS file for JSONDiff |
+| `jquery.min.js` | jQuery library used in the JSONDiff UI |
+| `jsl.format.js` and `jsl.parser.js` | The JSON formatter and parser that JSONDiff uses when doing a compare |
+| `jdd.js` | The code that runs JSONDiff |
+| `analytics.js` | Google Analytics that we use to see how many people are using JSONDiff.com |
+| `favicon.ico` | The JSONDiff icon that shows up in the tab of your browser |
+
+### Why don't you use HTTPS?
+
+The short answer is that we don't need to.  HTTPS protects the traffic being sent between your browser and a server so nobody in the middle can see it.  JSONDiff doesn't send any data so there's nothing to protect.
+
+### That still doesn't feel secure enough
+
+If that still doesn't feel secure enough you have some other options.  It's very easy to host JSONDiff for yourself.  You can either run in a JSON container, or run on any web server that supports PHP.  You can even skip the PHP part if you don't want to support loading JSON automatically.  Just drop the JSONDiff files in your web server directory and you're done.
