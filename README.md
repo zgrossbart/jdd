@@ -21,6 +21,23 @@ docker build -t jdd:v1 .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1
 ```
 
+## Load my JSON data from the Internet
+
+JSONDiff also supports two query paramaters so you can load your JSON data from the Internet instead of having to enter it into the UI.  
+
+| Parameter | Description |
+| --- | --- |
+| `left` | An URL to the file to compare on the left side of the diff |
+| `right` | An URL to the file to compare on the right side of the diff |
+
+These parameters work like this:
+
+```
+http://jsondiff.com/?left=http://jsondiff.com/one.json&right=http://jsondiff.com/two.json
+```
+
+Each parameter must be a full URL and must be publicly accessible over the Internet.
+
 ## Is JSONDiff Secure?
 
 You might notice that [http://www.jsondiff.com](http://www.jsondiff.com) doesn't run with HTTPS and ask, is JSONDiff secure?  The short answer is yes, but you shouldn't take my word for it.  
@@ -52,6 +69,10 @@ JSONDiff loads the following files when it first starts up:
 ### Why don't you use HTTPS?
 
 The short answer is that we don't need to.  HTTPS protects the traffic being sent between your browser and a server so nobody in the middle can see it.  JSONDiff doesn't send any data so there's nothing to protect.
+
+### What data does JSONDiff send back over the Internet?
+
+It sends nothing.  It just loads the open source files it needs to run and never sends any of the JSON data it is comparing anywhere.
 
 ### That still doesn't feel secure enough
 
