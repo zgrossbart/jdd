@@ -60,14 +60,15 @@ var jdd = {
     TYPE: 'type',
     MISSING: 'missing',
     diffs: [],
+	SEPARATOR: '/',
     requestCount: 0,
 
     /**
      * Find the differences between the two objects and recurse into their sub objects.
      */
     findDiffs: function (/*Object*/ config1, /*Object*/ data1, /*Object*/ config2, /*Object*/ data2) {
-        config1.currentPath.push('/');
-        config2.currentPath.push('/');
+        config1.currentPath.push(jdd.SEPARATOR);
+        config2.currentPath.push(jdd.SEPARATOR);
 
         var key;
         // no un-used vars
@@ -84,7 +85,7 @@ var jdd = {
                     // val = data1[key];
                     if (!data1.hasOwnProperty(key)) {
                         jdd.diffs.push(jdd.generateDiff(config1, jdd.generatePath(config1),
-                            config2, jdd.generatePath(config2, '/' + key),
+                            config2, jdd.generatePath(config2, jdd.SEPARATOR + key),
                             'The right side of this object has more items than the left side', jdd.MISSING));
                     }
                 }
@@ -100,8 +101,7 @@ var jdd = {
                 // no un-used vars
                 // val = data1[key];
 
-                config1.currentPath.push(key);
-
+                config1.currentPath.push(key.replace(jdd.SEPARATOR, '#'));
                 if (!data2.hasOwnProperty(key)) {
                     /*
                      * This means that the first data has a property which
@@ -111,7 +111,7 @@ var jdd = {
                         config2, jdd.generatePath(config2),
                         'Missing property <code>' + key + '</code> from the object on the right side', jdd.MISSING));
                 } else {
-                    config2.currentPath.push(key);
+                    config2.currentPath.push(key.replace(jdd.SEPARATOR, '#'));
 
                     jdd.diffVal(data1[key], config1, data2[key], config2);
                     config2.currentPath.pop();
@@ -215,8 +215,8 @@ var jdd = {
                     config2, jdd.generatePath(config2),
                     'Missing element <code>' + index + '</code> from the array on the right side', jdd.MISSING));
             } else {
-                config1.currentPath.push('/[' + index + ']');
-                config2.currentPath.push('/[' + index + ']');
+                config1.currentPath.push(jdd.SEPARATOR + '[' + index + ']');
+                config2.currentPath.push(jdd.SEPARATOR + '[' + index + ']');
 
                 if (getType(val2) === 'array') {
                     /*
@@ -262,7 +262,7 @@ var jdd = {
         }
 
         jdd.startObject(config);
-        config.currentPath.push('/');
+        config.currentPath.push(jdd.SEPARATOR);
 
         var props = jdd.getSortedProperties(data);
 
@@ -273,7 +273,7 @@ var jdd = {
          */
         props.forEach(function (key) {
             config.out += jdd.newLine(config) + jdd.getTabs(config.indent) + '"' + jdd.unescapeString(key) + '": ';
-            config.currentPath.push(key);
+            config.currentPath.push(key.replace(jdd.SEPARATOR, '#'));
             config.paths.push({
                 path: jdd.generatePath(config),
                 line: config.line
@@ -305,7 +305,7 @@ var jdd = {
                 line: config.line
             });
 
-            config.currentPath.push('/[' + index + ']');
+            config.currentPath.push(jdd.SEPARATOR + '[' + index + ']');
             jdd.formatVal(arrayVal, config);
             config.currentPath.pop();
         });
@@ -413,7 +413,7 @@ var jdd = {
                     line: config.line
                 });
 
-                config.currentPath.push('/[' + index + ']');
+                config.currentPath.push(jdd.SEPARATOR + '[' + index + ']');
                 jdd.formatVal(arrayVal, config);
                 config.currentPath.pop();
             });
@@ -470,11 +470,11 @@ var jdd = {
         });
 
         if (prop) {
-            s += '/' + prop;
+            s += jdd.SEPARATOR + prop.replace(jdd.SEPARATOR, '#');
         }
 
         if (s.length === 0) {
-            return '/';
+            return jdd.SEPARATOR;
         } else {
             return s;
         }
@@ -511,11 +511,11 @@ var jdd = {
      * Generate the diff and verify that it matches a JSON path
      */
     generateDiff: function (config1, path1, config2, path2, /*String*/ msg, type) {
-        if (path1 !== '/' && path1.charAt(path1.length - 1) === '/') {
+        if (path1 !== jdd.SEPARATOR && path1.charAt(path1.length - 1) === jdd.SEPARATOR) {
             path1 = path1.substring(0, path1.length - 1);
         }
 
-        if (path2 !== '/' && path2.charAt(path2.length - 1) === '/') {
+        if (path2 !== jdd.SEPARATOR && path2.charAt(path2.length - 1) === jdd.SEPARATOR) {
             path2 = path2.substring(0, path2.length - 1);
         }
         var pathObj1 = config1.paths.find(function (path) {

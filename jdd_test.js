@@ -255,6 +255,38 @@ QUnit.test('Escaped quotes test', function (assert) {
     jdd.setupNewDiff();
 });
 
+QUnit.test('Slashes in keys test', function (assert) {
+	try {
+	    $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".vscode/": true,"foo": "bar"}}');
+	    $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".slash/": true,"foo": "bar"}}');
+
+	    jdd.compare();
+	    assert.ok(jdd.diffs[0].type === jdd.MISSING, 'Checking correct type');
+
+	    $('#textarealeft').val('');
+	    $('#textarearight').val('');
+	    jdd.setupNewDiff();
+	} catch (err) {
+		console.error(err)
+	}
+});
+
+QUnit.test('Slashes in values test', function (assert) {
+	try {
+	    $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".vscode/","foo": "bar"}}');
+	    $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".slash/","foo": "bar"}}');
+
+	    jdd.compare();
+	    assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking correct type');
+
+	    $('#textarealeft').val('');
+	    $('#textarearight').val('');
+	    jdd.setupNewDiff();
+	} catch (err) {
+		console.error(err)
+	}
+});
+
 
 QUnit.done(function () {
     $('div.initContainer').hide();
