@@ -1,0 +1,11 @@
+FROM alpine:3.15 as jdd-build
+ 
+RUN apk add --no-cache git tzdata nginx php7-fpm php7-curl php7-json
+RUN git clone https://github.com/zgrossbart/jdd.git && mkdir -p /var/www/html && cp -r jdd/* /var/www/html/ && chmod -R 755 /var/www/html && chown -R nginx:nginx /var/www/html && rm -f /etc/nginx/http.d/*
+ADD nginx.conf /etc/nginx/
+RUN apk del --no-cache git
+ADD entrypoint.sh /
+
+FROM scratch
+COPY --from=jdd-build / /
+ENTRYPOINT ["/entrypoint.sh"]
