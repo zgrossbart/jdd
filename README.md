@@ -24,7 +24,7 @@ docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1
 There is also an alternative Docker container, available as Docker.alpine, based on alpine that includes left/right support, if you want that. To build:
 
 ```
-docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
+docker build --tag=jdd:v1-alpine --file=Dockerfile .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 ```
 
