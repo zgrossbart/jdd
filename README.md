@@ -21,6 +21,13 @@ docker build -t jdd:v1 .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1
 ```
 
+There is also an alternative Docker container, available as Docker.alpine, based on alpine that includes left/right support, if you want that. To build:
+
+```
+docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
+docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
+```
+
 ## Load my JSON data from the Internet
 
 JSONDiff also supports two query paramaters so you can load your JSON data from the Internet instead of having to enter it into the UI.  
