@@ -17,13 +17,6 @@ Run the built-in unit tests:  [http://www.jsondiff.com/index-test.html](http://w
 You can also run JSONDiff in a Docker container if you want to run it in your data center or just on your laptop.  First [install Docker](https://docs.docker.com/get-docker/) and then open a terminal the run the following commands:
 
 ```
-docker build -t jdd:v1 .
-docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1
-```
-
-There is also an alternative Docker container, available as Docker.alpine, based on alpine that includes left/right support, if you want that. To build:
-
-```
 docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 ```
