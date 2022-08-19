@@ -60,7 +60,7 @@ var jdd = {
     TYPE: 'type',
     MISSING: 'missing',
     diffs: [],
-	SEPARATOR: '/',
+    SEPARATOR: '/',
     requestCount: 0,
 
     /**
