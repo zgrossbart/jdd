@@ -72,7 +72,7 @@ It sends nothing.  It just loads the open source files it needs to run and never
 
 ### Why does JSONDiff use HTTPS?
 
-Given the fact we don't send any data over the Internet you might as why we're using HTTPS.  We don't have any data to encrypt.  
+Given the fact we don't send any data over the Internet you might ask why we're using HTTPS.  We don't have any data to encrypt.  
 
 HTTPS provides encryption of the data, but it also provides verification of the identity of the site.  HTTPS guarantees that we are who we say we are and you aren't getting a man in the middle attack where a different site is pretending to be JSONDiff.com.
 
