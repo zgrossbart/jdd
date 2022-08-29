@@ -66,13 +66,15 @@ JSONDiff loads the following files when it first starts up:
 | `analytics.js` | Google Analytics that we use to see how many people are using JSONDiff.com |
 | `favicon.ico` | The JSONDiff icon that shows up in the tab of your browser |
 
-### Why don't you use HTTPS?
-
-The short answer is that we don't need to.  HTTPS protects the traffic being sent between your browser and a server so nobody in the middle can see it.  JSONDiff doesn't send any data so there's nothing to protect.
-
 ### What data does JSONDiff send back over the Internet?
 
 It sends nothing.  It just loads the open source files it needs to run and never sends any of the JSON data it is comparing anywhere.
+
+### Why does JSONDiff use HTTPS?
+
+Given the fact we don't send any data over the Internet you might as why we're using HTTPS.  We don't have any data to encrypt.  
+
+HTTPS provides encryption of the data, but it also provides verification of the identity of the site.  HTTPS guarantees that we are who we say we are and you aren't getting a man in the middle attack where a different site is pretending to be JSONDiff.com.
 
 ### That still doesn't feel secure enough
 
