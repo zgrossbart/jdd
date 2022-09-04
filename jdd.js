@@ -18,11 +18,11 @@
 'use strict';
 
 // utilites
-// 
+//
 /**
  * Fixing typeof
  * takes value and returns type of value
- * @param  value 
+ * @param  value
  * return typeof value
  */
 function getType(value) {
@@ -35,10 +35,10 @@ function getType(value) {
 /**
  * Iterate over array of objects and call given callback for each item in the array
  * Optionally may take this as scope
- * 
- * @param array 
- * @param callback 
- * @param optional scope 
+ *
+ * @param array
+ * @param callback
+ * @param optional scope
  */
 function forEach(array, callback, scope) {
     for (var idx = 0; idx < array.length; idx++) {
@@ -435,16 +435,16 @@ var jdd = {
     },
 
     /**
-     * When we parse the JSON string we end up removing the escape strings when we parse it 
-     * into objects.  This results in invalid JSON if we insert those strings back into the 
-     * generated JSON.  We also need to look out for characters that change the line count 
-     * like new lines and carriage returns.  
-     * 
-     * This function puts those escaped values back when we generate the JSON output for the 
+     * When we parse the JSON string we end up removing the escape strings when we parse it
+     * into objects.  This results in invalid JSON if we insert those strings back into the
+     * generated JSON.  We also need to look out for characters that change the line count
+     * like new lines and carriage returns.
+     *
+     * This function puts those escaped values back when we generate the JSON output for the
      * well known escape strings in JSON.  It handles properties and values.
      *
-     * This function does not handle unicode escapes.  Unicode escapes are optional in JSON 
-     * and the JSON output is still valid with a unicode character in it.  
+     * This function does not handle unicode escapes.  Unicode escapes are optional in JSON
+     * and the JSON output is still valid with a unicode character in it.
      */
     unescapeString: function (val) {
         if (val) {
@@ -583,31 +583,42 @@ var jdd = {
      */
     formatPRETags: function () {
         forEach($('pre'), function (pre) {
-            var codeBlock = $('<pre class="codeBlock"></pre>');
-            var lineNumbers = $('<div class="gutter"></div>');
-            codeBlock.append(lineNumbers);
+            var lineNumbers = '<div class="gutter">'
+            var codeLines = '<div>'
 
-            var codeLines = $('<div></div>');
-            codeBlock.append(codeLines);
+            // This is used to encode text as fast as possible
+            var lineDiv = document.createElement('div')
+            var lineText = document.createTextNode('')
+            lineDiv.appendChild(lineText)
 
             var addLine = function (line, index) {
-                var div = $('<div class="codeLine line' + (index + 1) + '"></div>');
-                lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
+              lineNumbers += '<span class="line-number">' + (index + 1) + ".</span>";
 
-                var span = $('<span class="code"></span');
-                span.text(line);
-                div.append(span);
+              lineText.nodeValue = line
 
-                codeLines.append(div);
+              codeLines +=
+                '<div class="codeLine line' +
+                (index + 1) +
+                '"><span class="code">' +
+                lineDiv.innerHTML +
+                "</span></div>";
             };
 
             var lines = $(pre).text().split('\n');
             lines.forEach(addLine);
 
-            codeBlock.addClass($(pre).attr('class'));
-            codeBlock.attr('id', $(pre).attr('id'));
+            // Combine it all together
+            codeLines += '</div>'
+            lineNumbers += '</div>'
 
-            $(pre).replaceWith(codeBlock);
+            var codeBlockElement = $(
+              '<pre class="codeBlock">' + lineNumbers + codeLines + "</pre>"
+            );
+
+            codeBlockElement.addClass($(pre).attr('class'));
+            codeBlockElement.attr('id', $(pre).attr('id'));
+
+            $(pre).replaceWith(codeBlockElement);
         });
     },
 
@@ -758,18 +769,32 @@ var jdd = {
     processDiffs: function () {
         var left = [];
         var right = [];
+
+        // Cache the lines for fast lookup
+        var leftLineLookup = {}
+        var rightLineLookup = {}
+
+        // We can use the index to save lookup up the parents class
+        $('pre.left span.code').each(function(index) {
+            leftLineLookup[index + 1] = $(this)
+        })
+
+        $('pre.right span.code').each(function(index) {
+            rightLineLookup[index + 1] = $(this)
+        })
+
         jdd.diffs.forEach(function (diff) {
-            $('pre.left div.line' + diff.path1.line + ' span.code').addClass(diff.type).addClass('diff');
+            leftLineLookup[diff.path1.line].addClass(diff.type).addClass('diff');
             if (left.indexOf(diff.path1.line) === -1) {
-                $('pre.left div.line' + diff.path1.line + ' span.code').click(function () {
+                leftLineLookup[diff.path1.line].click(function () {
                     jdd.handleDiffClick(diff.path1.line, jdd.LEFT);
                 });
                 left.push(diff.path1.line);
             }
 
-            $('pre.right div.line' + diff.path2.line + ' span.code').addClass(diff.type).addClass('diff');
+            rightLineLookup[diff.path2.line].addClass(diff.type).addClass('diff');
             if (right.indexOf(diff.path2.line) === -1) {
-                $('pre.right div.line' + diff.path2.line + ' span.code').click(function () {
+                rightLineLookup[diff.path2.line].click(function () {
                     jdd.handleDiffClick(diff.path2.line, jdd.RIGHT);
                 });
                 right.push(diff.path2.line);
@@ -1006,7 +1031,6 @@ var jdd = {
         }
 
         $('div.initContainer').hide();
-        $('div.diffcontainer').show();
 
         jdd.diffs = [];
 
@@ -1030,6 +1054,8 @@ var jdd = {
         jdd.diffVal(left, config, right, config2);
         jdd.processDiffs();
         jdd.generateReport();
+
+        $('div.diffcontainer').show();
 
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
