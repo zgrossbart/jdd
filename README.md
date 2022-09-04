@@ -33,7 +33,7 @@ JSONDiff also supports two query paramaters so you can load your JSON data from 
 These parameters work like this:
 
 ```
-http://jsondiff.com/?left=http://jsondiff.com/one.json&right=http://jsondiff.com/two.json
+https://jsondiff.com/?left=https://jsondiff.com/one.json&right=https://jsondiff.com/two.json
 ```
 
 Each parameter must be a full URL and must be publicly accessible over the Internet.
