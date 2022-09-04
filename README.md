@@ -42,11 +42,11 @@ Each parameter must be a full URL and must be publicly accessible over the Inter
 
 JSONDiff does all of the comparing and rendering right in your browser.  That means it's limited by the browser your running (Chrome is normally the fastest), how fast your computer is, and how much memory you have.  However, it can handle a very large file.
 
-We have two sample files from the Pokemon Go API describing the Pokemon Charmander: `charmander_left.json` and `charmander_right.json`.  Each of these files are over 240 kb and almost 13,000 lines when formatted.  You can load and try to compare them with a single URL:
+We have two sample files from the Pokemon Go API describing the Pokemon Charmander: `charmander_left.json` and `charmander_right.json`.  Each of these files are over 240 kb and almost 13,000 lines when formatted.  You can load and compare them with a single URL:
 
 [https://jsondiff.com/?left=https://jsondiff.com/charmander_left.json&right=https://jsondiff.com/charmander_right.json](https://jsondiff.com/?left=https://jsondiff.com/charmander_left.json&right=https://jsondiff.com/charmander_right.json)
 
-Thanks to some recent performance improvements from @Pluckerpluck you can now compare the two in just a few seconds.  Click the URL above and try it out for yourself.
+Thanks to some recent performance improvements from @github/Pluckerpluck you can now compare the two in just a few seconds.  Click the URL above and try it out for yourself.
 
 ## Is JSONDiff Secure?
 
