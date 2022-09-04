@@ -46,7 +46,7 @@ We have two sample files from the Pokemon Go API describing the Pokemon Charmand
 
 [https://jsondiff.com/?left=https://jsondiff.com/charmander_left.json&right=https://jsondiff.com/charmander_right.json](https://jsondiff.com/?left=https://jsondiff.com/charmander_left.json&right=https://jsondiff.com/charmander_right.json)
 
-Thanks to some recent performance improvements from [@Pluckerpluck] (https://www.github.com/Pluckerpluck) you can now compare the two in just a few seconds.  Click the URL above and try it out for yourself.
+Thanks to some recent performance improvements from [@Pluckerpluck](https://www.github.com/Pluckerpluck) you can now compare the two in just a few seconds.  Click the URL above and try it out for yourself.
 
 ## Is JSONDiff Secure?
 
