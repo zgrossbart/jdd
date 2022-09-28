@@ -89,3 +89,7 @@ HTTPS provides encryption of the data, but it also provides verification of the 
 ### That still doesn't feel secure enough
 
 If that still doesn't feel secure enough you have some other options.  It's very easy to host JSONDiff for yourself.  You can either run in a Docker container, or run on any web server that supports PHP.  You can even skip the PHP part if you don't want to support loading JSON automatically.  Just drop the JSONDiff files in your web server directory and you're done.
+
+## Monitoring
+
+JSONDiff has a separate monitoring page.  You can see the current status at the [JSONDiff Upptime page](https://zgrossbart.github.io/jdd-upptime/).
