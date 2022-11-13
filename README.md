@@ -21,6 +21,8 @@ docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 ```
 
+Now go to [localhost:8080](http://localhost:8080) to access your locally running version of JSONDiff.
+
 ## Load my JSON data from the Internet
 
 JSONDiff also supports two query paramaters so you can load your JSON data from the Internet instead of having to enter it into the UI.  
