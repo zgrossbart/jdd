@@ -14,14 +14,27 @@ Run the built-in unit tests:  [http://www.jsondiff.com/index-test.html](http://w
 
 ## Run JSONDiff in a Docker container
 
-You can also run JSONDiff in a Docker container if you want to run it in your data center or just on your laptop.  First [install Docker](https://docs.docker.com/get-docker/) and then open a terminal the run the following commands:
+You can also run JSONDiff in a Docker container if you want to run it in your data center or just on your laptop.  First [install Docker](https://docs.docker.com/get-docker/) and then open a terminal the run the following command:
+
+```
+docker run -d --name jdd --rm -p 8080:80 zgrossbart/jsondiff
+```
+
+Now go to [localhost:8080](http://localhost:8080) to access your locally running version of JSONDiff.
+
+You can stop the container with this command:
+
+```
+docker stop jdd
+```
+
+You can also build the Docker file locally and run it with these commands:
 
 ```
 docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 ```
 
-Now go to [localhost:8080](http://localhost:8080) to access your locally running version of JSONDiff.
 
 ## Load my JSON data from the Internet
 
