@@ -1,6 +1,6 @@
 <?php
 
-$url = filter_var($_POST['url'], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
+$url = filter_var($_POST['url']);
 
 if (!$url || !preg_match("/^https?:/i", $url)) {
     echo '{ "result": "Invalid URL. Please check your URL and try again.", "error": true }';
