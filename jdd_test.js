@@ -287,6 +287,30 @@ QUnit.test('Slashes in values test', function (assert) {
 	}
 });
 
+QUnit.test('Proxy test', function (assert) {
+	try {
+	    var done = assert.async();
+
+	    $.post('proxy.php',
+	        {
+	            'url': 'https://jsondiff.com/one.json'
+	        }, function (responseObj) {
+	            if (responseObj.error) {
+	                console.err(responseObj.error);
+					assert.ok(false, 'Failed to load proxy file');
+	            } else {
+	                assert.ok(true, 'Loaded proxy file');
+					var obj = JSON.parse(responseObj.content);
+					assert.ok(obj['Aidan Gillen']['string'] === 'some string', 'Completed parsing and received correct values.');
+	            }
+				
+				done();
+	        }, 'json');
+	} catch (err) {
+		console.error(err)
+	}
+});
+
 
 QUnit.done(function () {
     $('div.initContainer').hide();
