@@ -76,7 +76,7 @@ JSONDiff doesn't load or store any data as any part of operation.  As a result i
 
 JSONDiff has no possibility for SQL injection or other database injection attacks because it has no data stores.
 
-The `proxy.php` service will load data from other sites, but that service has no special access and can only load data that is already publicly available on the Internet.  This service will load data encryped with SSL if the location of that data is specified to use SSL.
+The `proxy.php` service will load data from other sites, but that service has no special access and can only load data that is already publicly available on the Internet.  This service will load data encrypted with SSL if the location of that data is specified to use SSL.
 
 All data served by the `proxy.php` file is encrypted with SSL.
 
@@ -94,7 +94,7 @@ JSONDiff uses a protected main branch and requires pull requests when merging co
 JSONDiff has only three external dependencies and doesn't use any code scanning for those threats.
 
 #### Threats
-1. JSONDiff doesn't provide an [SBOM](https://en.wikipedia.org/wiki/Software_supply_chain) file.  This risk is mitaged by the very small number of dependencies used by JSONDiff.
+1. JSONDiff doesn't provide an [SBOM](https://en.wikipedia.org/wiki/Software_supply_chain) file.  This risk is mitigated by the very small number of dependencies used by JSONDiff.
 2. Google AdSense and Google Analytics could introduce malicious code.  There's no good mitigation for this threat.  JSONDiff just trusts those two Google projects.  Google has their own process for threat modeling for those projects, but they must be loaded live and communicate back to Google for proper functionality.
 
 ### Client-side threats
