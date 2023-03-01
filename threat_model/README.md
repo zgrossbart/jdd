@@ -57,3 +57,23 @@ These tests cover the basic functionality of the JSONDiff tool, the functionalit
 ### Monitoring
 
 JSONDiff is monitored with the [JSONDiff Upptime project](https://zgrossbart.github.io/jdd-upptime/).  This project provides periodic monitoring of the deployment at JSONDiff.com.  When errors are detected an issue is generated and the site administrators are notified via email.
+
+## Threats
+
+JSONDiff is a static application with no data storage.  That means large threats areas don't apply to the application.
+
+### Threats to data
+
+JSONDiff doesn't load or store any data as any part of operation.  As a result it doesn't supply encryption in transit or encryption at rest because there's no data to encrypt.
+
+The `proxy.php` service will load data from other sites, but that service has no special access and can only load data that is already publicly available on the Internet.  This service will load data encryped with SSL if the location of that data is specified to use SSL.
+
+All data served by the `proxy.php` file is encrypted with SSL.
+
+### Coding threats
+
+JSONDiff uses a protected main branch and requires pull requests when merging code.  Those pull requests do not require multiple reviewers since there is only one committer on the project.
+
+**Potential threat** - The code for JSONDiff is not peer reviewed before merging into the main branch.  This threat is mitigated by making all source code for JSONDiff open source and available for inspection by any third-party.
+
+**Potential threat** - JSONDiff doesn't contain any static code analysis as part of the build process.  This threat is mitigated by the manual use of 
