@@ -583,36 +583,36 @@ var jdd = {
      */
     formatPRETags: function () {
         forEach($('pre'), function (pre) {
-            var lineNumbers = '<div class="gutter">'
-            var codeLines = '<div>'
+            var lineNumbers = '<div class="gutter">';
+            var codeLines = '<div>';
 
             // This is used to encode text as fast as possible
-            var lineDiv = document.createElement('div')
-            var lineText = document.createTextNode('')
-            lineDiv.appendChild(lineText)
+            var lineDiv = document.createElement('div');
+            var lineText = document.createTextNode('');
+            lineDiv.appendChild(lineText);
 
             var addLine = function (line, index) {
-              lineNumbers += '<span class="line-number">' + (index + 1) + ".</span>";
+              lineNumbers += '<span class="line-number">' + (index + 1) + '.</span>';
 
-              lineText.nodeValue = line
+              lineText.nodeValue = line;
 
               codeLines +=
                 '<div class="codeLine line' +
                 (index + 1) +
                 '"><span class="code">' +
                 lineDiv.innerHTML +
-                "</span></div>";
+                '</span></div>';
             };
 
             var lines = $(pre).text().split('\n');
             lines.forEach(addLine);
 
             // Combine it all together
-            codeLines += '</div>'
-            lineNumbers += '</div>'
+            codeLines += '</div>';
+            lineNumbers += '</div>';
 
             var codeBlockElement = $(
-              '<pre class="codeBlock">' + lineNumbers + codeLines + "</pre>"
+              '<pre class="codeBlock">' + lineNumbers + codeLines + '</pre>'
             );
 
             codeBlockElement.addClass($(pre).attr('class'));
@@ -771,17 +771,17 @@ var jdd = {
         var right = [];
 
         // Cache the lines for fast lookup
-        var leftLineLookup = {}
-        var rightLineLookup = {}
+        var leftLineLookup = {};
+        var rightLineLookup = {};
 
         // We can use the index to save lookup up the parents class
         $('pre.left span.code').each(function(index) {
-            leftLineLookup[index + 1] = $(this)
-        })
+            leftLineLookup[index + 1] = $(this);
+        });
 
         $('pre.right span.code').each(function(index) {
-            rightLineLookup[index + 1] = $(this)
-        })
+            rightLineLookup[index + 1] = $(this);
+        });
 
         jdd.diffs.forEach(function (diff) {
             leftLineLookup[diff.path1.line].addClass(diff.type).addClass('diff');

@@ -21,7 +21,7 @@
   "jquery": true,
   "devel": true,
   "globals": {
-      "iac": false
+      "$": false
   },
   "predef": [ "_","JSON", "jsl", "jdd", "QUnit" ],
   "maxparams": 14,
