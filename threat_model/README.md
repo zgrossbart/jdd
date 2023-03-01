@@ -10,6 +10,14 @@ More information about what data JSONDiff loads while performing differences is 
 
 ![JSONDiff architecture image](images/jsondiff_arch.png)
 
+JSON diff loads two JSON files, parses them using a custom parser, and compares the results.  The differences are then loaded in the current page and displayed.  Users may navigate through the differences to view them.
+
+There are three ways to provide files for JSON diff to compare:
+
+1. Copy and paste the contents of the file into the text area in the browser
+2. Use the file browser to select a file from the local file system
+3. Profile an URL to the file using the `left` and `right` URL parameters.
+
 ### `proxy.php`
 
 JSONDiff is almost entirely a browser-based application and can be run with a simple HTTP file server or from a local file system.  The one exception is the `proxy.php` file.
@@ -66,6 +74,8 @@ JSONDiff is a static application with no data storage.  That means large threats
 
 JSONDiff doesn't load or store any data as any part of operation.  As a result it doesn't supply encryption in transit or encryption at rest because there's no data to encrypt.
 
+JSONDiff has no possibility for SQL injection or other database injection attacks because it has no data stores.
+
 The `proxy.php` service will load data from other sites, but that service has no special access and can only load data that is already publicly available on the Internet.  This service will load data encryped with SSL if the location of that data is specified to use SSL.
 
 All data served by the `proxy.php` file is encrypted with SSL.
@@ -74,6 +84,39 @@ All data served by the `proxy.php` file is encrypted with SSL.
 
 JSONDiff uses a protected main branch and requires pull requests when merging code.  Those pull requests do not require multiple reviewers since there is only one committer on the project.
 
-**Potential threat** - The code for JSONDiff is not peer reviewed before merging into the main branch.  This threat is mitigated by making all source code for JSONDiff open source and available for inspection by any third-party.
+#### Threats
 
-**Potential threat** - JSONDiff doesn't contain any static code analysis as part of the build process.  This threat is mitigated by the manual use of 
+1. The code for JSONDiff is not peer reviewed before merging into the main branch.  This threat is mitigated by making all source code for JSONDiff open source and available for inspection by any third-party.
+2. JSONDiff doesn't contain any static code analysis as part of the build process.  This threat is mitigated by the manual use of [JSHint](https://jshint.com/).
+
+### Third-party threats
+
+JSONDiff has only three external dependencies and doesn't use any code scanning for those threats.
+
+#### Threats
+1. JSONDiff doesn't provide an [SBOM](https://en.wikipedia.org/wiki/Software_supply_chain) file.  This risk is mitaged by the very small number of dependencies used by JSONDiff.
+2. Google AdSense and Google Analytics could introduce malicious code.  There's no good mitigation for this threat.  JSONDiff just trusts those two Google projects.  Google has their own process for threat modeling for those projects, but they must be loaded live and communicate back to Google for proper functionality.
+
+### Client-side threats
+
+JSONDiff is a client-side application and must consider client threats.  Most client-side threats are not applicable given then very limited functionality of JSONDiff.
+
+#### CSRF and CSS attacks
+
+JSONDiff does not have any forms or submit any data, but it still has some potential vulnerability to [CSRF and CSS attacks](https://owasp.org/www-community/attacks/csrf).  The main vector for those threats comes from the `proxy.php` file which can load potentially malicious files.  Those files can be loaded via an URL and someone could be tricked into accessing that URL.
+
+JSONDiff mitigates this threat by ensuring that no files loaded from the `proxy.php` mechanism are ever executed.  These files are only ever parsed using a custom JSON parser.  
+
+This can be verified with the following URL:
+
+```
+https://jsondiff.com/?left=https://jsondiff.com/evil.js&right=https://jsondiff.com/evil.json
+```
+
+### Stability, outages, and BCDR
+
+JSONDiff uses functional tests to ensure stability.  High availability is provided by the service provider Media Temple.  
+
+The business continuity and datacenter recovery plan for JSONDiff is very simple.  If a major outage occurs the service can be restored on any HTTP server that supports static files.
+
+The [JDDUpptime](https://github.com/zgrossbart/jdd-upptime) project monitors JSONDiff.com for outages.
