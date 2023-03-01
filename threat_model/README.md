@@ -89,6 +89,12 @@ JSONDiff uses a protected main branch and requires pull requests when merging co
 1. The code for JSONDiff is not peer reviewed before merging into the main branch.  This threat is mitigated by making all source code for JSONDiff open source and available for inspection by any third-party.
 2. JSONDiff doesn't contain any static code analysis as part of the build process.  This threat is mitigated by the manual use of [JSHint](https://jshint.com/).
 
+### Separation of duties
+
+JSONDiff is accepts pull requests from the general public with a single committer.  This model doesn't allow separation of duties.  A single person owns the whole process of code creation, review, testing, and deployment.
+
+This threat is mitigated by having the entire project as open source.  All code and processes may be reviewed by all third parties.
+
 ### Third-party threats
 
 JSONDiff has only three external dependencies and doesn't use any code scanning for those threats.
@@ -120,3 +126,27 @@ JSONDiff uses functional tests to ensure stability.  High availability is provid
 The business continuity and datacenter recovery plan for JSONDiff is very simple.  If a major outage occurs the service can be restored on any HTTP server that supports static files.
 
 The [JDDUpptime](https://github.com/zgrossbart/jdd-upptime) project monitors JSONDiff.com for outages.
+
+### Deployment
+
+JSONDiff deploys through sFTP to a file server.
+
+#### Threats
+
+1. If a malicious actor had the credentials they could attempt to access the sFTP site and upload malicious code to JSONDiff.com.  This threat is mitigated by IP address source verification.  All sFTP connections are verified by IP source address.  All sFTP connections from a new source address require manual approval before the connection is granted.
+2. The sFTP user uses separate credentials from the main account and has only limited access.  The sFTP user can not approve any new source addresses.
+
+### PII
+
+JSONDiff doesn't store any personal or identifying information since it doesn't store any data.  Comparing JSON data with personal or identifying information is safe because the data is never sent to any other sources and never leaves the browser memory.
+
+### Credential management
+
+JSONDiff.com has no credentials to manage.  There are no upgraded privileges and no way to log into the application.
+
+The deployment uses two sets of credentials:
+
+1. sFTP credential
+2. Main account credential
+
+The sFTP credentials are addressed above in the deployment section.  The main account credentials are managed by the single main account owner.  If those credentials are compromised then the service provider (Media Temple) will alert the main account holder to do account recovery.  This process is protected by [multi-factor authentication](https://en.wikipedia.org/wiki/Multi-factor_authentication).
