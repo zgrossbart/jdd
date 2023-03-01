@@ -150,3 +150,8 @@ The deployment uses two sets of credentials:
 2. Main account credential
 
 The sFTP credentials are addressed above in the deployment section.  The main account credentials are managed by the single main account owner.  If those credentials are compromised then the service provider (Media Temple) will alert the main account holder to do account recovery.  This process is protected by [multi-factor authentication](https://en.wikipedia.org/wiki/Multi-factor_authentication).
+
+### Operating Systems
+
+JSONDiff.com doesn't contain any operating system deployments.  It doesn't rely on any containers, pods, or virtual machines.  As such it has no system level package scanning since it has not system level package dependencies.
+
