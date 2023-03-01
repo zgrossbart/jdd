@@ -24,6 +24,20 @@ This will cause the `proxy.php` service to load the two files specified with the
 
 ### Dependencies
 
+JSONDiff has the following external dependencies:
+
+#### Runtime
+
+* [jQuery](https://jquery.com/) (loaded from the Google APIs CDN to improve performance)
+* Google Analytics
+* [Google AdSense](https://adsense.google.com/)
+
+#### Test time
+
+* [qUnit](https://qunitjs.com/)
+
+All of these dependencies are currently hard-coded.  There is no build process for JSONDiff.
+
 ### Deployment
 
 JSONDiff can be deployed to any HTTP server with the ability to serve static files.  It can also be hosted in any container.  A server capable of running PHP is also required if you want to support the extra functionality of the `proxy.php` file.
@@ -36,6 +50,10 @@ JSONDiff also provides two sample Docker files (one for Ubuntu and one for Alpin
 
 ### Testing
 
-JSONDiff has a full set of functional tests provided by 
+JSONDiff has a full set of functional tests powered by the [qUnit](https://qunitjs.com/) framework.  These tests can be accessed and run on the [index-test.html](https://www.jsondiff.com/index-test.html) page.  Accessing this page will execute a live set of tests every time the page is loaded.
+
+These tests cover the basic functionality of the JSONDiff tool, the functionality of the `proxy.php` service, and other edge cases.  Whenever a bug is found and fixed in JSONDiff a corresponding test case is added.
 
 ### Monitoring
+
+JSONDiff is monitored with the [JSONDiff Upptime project](https://zgrossbart.github.io/jdd-upptime/).  This project provides periodic monitoring of the deployment at JSONDiff.com.  When errors are detected an issue is generated and the site administrators are notified via email.
