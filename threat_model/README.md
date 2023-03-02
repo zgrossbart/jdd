@@ -156,7 +156,7 @@ JSONDiff deploys through sFTP to a file server.
 1. If a malicious actor had the credentials they could attempt to access the sFTP site and upload malicious code to JSONDiff.com. This threat is mitigated by IP address source verification. All sFTP connections are verified by IP source address. All sFTP connections from a new source address require manual approval before the connection is granted.
 2. The sFTP user uses separate credentials from the main account and has only limited access. The sFTP user can not approve any new source addresses.
 
-### PII
+### Personal Identifiable Information
 
 JSONDiff doesn't store any personal or identifying information since it doesn't store any data. Comparing JSON data with personal or identifying information is safe because the data is never sent to any other sources and never leaves the browser memory.
 
