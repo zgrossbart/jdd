@@ -95,6 +95,10 @@ JSONDiff loads the following files when it first starts up:
 
 It sends nothing.  It just loads the open source files it needs to run and never sends any of the JSON data it is comparing anywhere.
 
+### All the security details
+
+This readme file just gives the high level details of the security of JSONDiff.  Check out our [threat model](threat_model) for all of the details about the security of JSONDiff.
+
 ### Why does JSONDiff use HTTPS?
 
 Given the fact we don't send any data over the Internet you might ask why we're using HTTPS.  We don't have any data to encrypt.  
