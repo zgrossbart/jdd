@@ -855,10 +855,10 @@ var jdd = {
     },
 
     setupNewDiff: function () {
-        $('div.initContainer').show();
-        $('div.diffcontainer').hide();
-        $('div.diffcontainer pre').text('');
-        $('ul.toolbar').text('');
+        document.querySelector('.initContainer').style.display = 'block';
+        document.querySelector('.diffcontainer').style.display = 'none';
+        document.querySelectorAll('.diffcontainer pre').forEach(elem=>elem.replaceChildren());
+        document.querySelector('.toolbar').replaceChildren();
     },
 
     /**
