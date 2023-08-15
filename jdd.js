@@ -865,18 +865,18 @@ var jdd = {
      * Generate the report section with the diff
      */
     generateReport: function () {
-        var report = $('#report');
+        var report = document.getElementById('report');
 
-        report.text('');
+        report.replaceChildren();
 
-        var newDiff = $('<button>Perform a new diff</button>');
-        report.append(newDiff);
-        newDiff.click(function () {
+        report.insertAdjacentHTML('beforeend', '<button>Perform a new diff</button>');
+        // TODO: add a class/id name to button and use that to select and add event
+        report.querySelector('button').addEventListener('click', function () {
             jdd.setupNewDiff();
         });
 
         if (jdd.diffs.length === 0) {
-            report.append('<span>The two files were semantically  identical.</span>');
+            report.insertAdjacentHTML('beforeend', '<span>The two files were semantically  identical.</span>');
             return;
         }
 
@@ -893,81 +893,103 @@ var jdd = {
             }
         });
 
-        var title = $('<div class="reportTitle"></div>');
-        if (jdd.diffs.length === 1) {
-            title.text('Found ' + (jdd.diffs.length) + ' difference');
-        } else {
-            title.text('Found ' + (jdd.diffs.length) + ' differences');
+        var title = '<div class="reportTitle">Found ' + jdd.diffs.length + ' difference';
+        if (jdd.diffs.length > 1) {
+            title += 's';
         }
+        title += '</div>';
 
-        report.prepend(title);
-
-        var filterBlock = $('<span class="filterBlock">Show:</span>');
+        report.insertAdjacentHTML('afterbegin', title);
+        // TODO: Start
+        var filterBlock = '<span class="filterBlock">Show:';
 
         /*
          * The missing checkbox
          */
         if (missingCount > 0) {
-            var missing = $('<label><input id="showMissing" type="checkbox" name="checkbox" value="value" checked="true"></label>');
+            var missing = '<label><input id="showMissing" type="checkbox" name="checkbox" value="value" checked="true">' + missingCount;
             if (missingCount === 1) {
-                missing.append(missingCount + ' missing property');
+                missing += ' missing property';
             } else {
-                missing.append(missingCount + ' missing properties');
+                missing += ' missing properties';
             }
-            missing.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.missing').addClass('missing_off').removeClass('missing');
-                } else {
-                    $('span.code.diff.missing_off').addClass('missing').removeClass('missing_off');
-                }
-            });
-            filterBlock.append(missing);
+            filterBlock += missing + '</label>';
         }
 
         /*
          * The types checkbox
          */
         if (typeCount > 0) {
-            var types = $('<label><input id="showTypes" type="checkbox" name="checkbox" value="value" checked="true"></label>');
-            if (typeCount === 1) {
-                types.append(typeCount + ' incorrect type');
-            } else {
-                types.append(typeCount + ' incorrect types');
+            var types = '<label><input id="showTypes" type="checkbox" name="checkbox" value="value" checked="true">' + typeCount + ' incorrect type';
+            if (typeCount > 1) {
+                types += 's';
             }
-
-            types.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.type').addClass('type_off').removeClass('type');
-                } else {
-                    $('span.code.diff.type_off').addClass('type').removeClass('type_off');
-                }
-            });
-            filterBlock.append(types);
+            filterBlock += types + '</label>';
         }
 
         /*
          * The equals checkbox
          */
         if (eqCount > 0) {
-            var eq = $('<label><input id="showEq" type="checkbox" name="checkbox" value="value" checked="true"></label>');
-            if (eqCount === 1) {
-                eq.append(eqCount + ' unequal value');
-            } else {
-                eq.append(eqCount + ' unequal values');
+            var eq = '<label><input id="showEq" type="checkbox" name="checkbox" value="value" checked="true">' + eqCount + ' unequal value';
+            if (eqCount > 1) {
+                eq += 's';
             }
-            eq.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.eq').addClass('eq_off').removeClass('eq');
-                } else {
-                    $('span.code.diff.eq_off').addClass('eq').removeClass('eq_off');
-                }
-            });
-            filterBlock.append(eq);
+            filterBlock += eq + '</label>';
         }
+        filterBlock += '</span>'
+        report.insertAdjacentHTML('beforeend', filterBlock);
 
-        report.append(filterBlock);
-
-
+        // The missing checkbox event
+        if (missingCount > 0) {
+            document.querySelector('#showMissing').addEventListener('change', function(e){
+                if (!e.target.checked) {
+                    document.querySelectorAll('span.code.diff.missing').forEach(element => {
+                        element.classList.toggle('missing_off');
+                        element.classList.toggle('missing')
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.missing_off').forEach(element => {
+                        element.classList.toggle('missing');
+                        element.classList.toggle('missing_off')
+                    });
+                }    
+            });
+        }
+        
+        // The types checkbox event
+        if (typeCount > 0) {
+            document.querySelector('#showTypes').addEventListener('change', function(e){
+                if (!e.target.checked) {
+                    document.querySelectorAll('span.code.diff.type').forEach(element => {
+                        element.classList.toggle('type_off');
+                        element.classList.toggle('type')
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.type_off').forEach(element => {
+                        element.classList.toggle('type');
+                        element.classList.toggle('type_off')
+                    });
+                }    
+            });
+        }
+        
+        // The equals checkbox event
+        if (eqCount > 0) {
+            document.querySelector('#showEq').addEventListener('change', function(e){
+                if (!e.target.checked) {
+                    document.querySelectorAll('span.code.diff.eq').forEach(element => {
+                        element.classList.toggle('eq_off');
+                        element.classList.toggle('eq')
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.eq_off').forEach(element => {
+                        element.classList.toggle('eq');
+                        element.classList.toggle('eq_off')
+                    });
+                }    
+            });
+        }
     },
 
     /**
