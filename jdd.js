@@ -844,9 +844,9 @@ var jdd = {
         reader.onload = (function () {
             return function (e) {
                 if (side === jdd.LEFT) {
-                    $('#textarealeft').val(e.target.result);
+                    document.getElementById('textarealeft').value = e.target.result;
                 } else {
-                    $('#textarearight').val(e.target.result);
+                    document.getElementById('textarearight').value = e.target.result;
                 }
             };
         })(files[0]);
