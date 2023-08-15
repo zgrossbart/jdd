@@ -982,27 +982,36 @@ var jdd = {
             return;
         }
 
-        $('body').addClass('progress');
-        $('#compare').prop('disabled', true);
+        document.body.classList.add('progress');
+        document.getElementById('compare').disabled = true;
 
         var loadUrl = function (id, errId) {
-            if ($('#' + id).val().trim().substring(0, 4).toLowerCase() === 'http') {
+            if (document.getElementById(id).value.trim().substring(0, 4).toLowerCase() === 'http') {
                 jdd.requestCount++;
-                $.post('proxy.php',
-                    {
-                        'url': $('#' + id).val().trim()
-                    }, function (responseObj) {
-                        if (responseObj.error) {
-                            $('#' + errId).text(responseObj.result).show();
-                            $('#' + id).addClass('error');
-                            $('body').removeClass('progress');
-                            $('#compare').prop('disabled', false);
-                        } else {
-                            $('#' + id).val(responseObj.content);
-                            jdd.requestCount--;
-                            jdd.compare();
-                        }
-                    }, 'json');
+                // TODO: test this
+                fetch('https://jsondiff.com/proxy.php', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'url': document.getElementById(id).value.trim()
+                    }),
+                  })
+                    .then(response=>response.json())
+                    .then(function (responseObj) {
+                    if (responseObj.error) {
+                        document.getElementById(errId).textContent = responseObj.result;
+                        document.getElementById(errId).style.display = '';
+                        document.getElementById(id).classList.add('error');
+                        document.body.classList.remove('progress');
+                        document.getElementById('compare').disabled = false;
+                    } else {
+                        document.getElementById(id).value = responseObj.content;
+                        jdd.requestCount--;
+                        jdd.compare();
+                    }
+                });
                 return true;
             } else {
                 return false;
@@ -1021,30 +1030,32 @@ var jdd = {
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
          */
-        var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
-        var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
+        var leftValid = jdd.validateInput(document.getElementById('textarealeft').value, jdd.LEFT);
+        var rightValid = jdd.validateInput(document.getElementById('textarearight').value, jdd.RIGHT);
 
         if (!leftValid || !rightValid) {
-            $('body').removeClass('progress');
-            $('#compare').prop('disabled', false);
+            document.body.classList.remove('progress');
+            document.getElementById('#compare').disabled = false;
             return;
         }
 
-        $('div.initContainer').hide();
+        document.querySelector('.initContainer').style.display='none';
+        // TODO: Remove this
+        // $('div.initContainer').hide();
 
         jdd.diffs = [];
 
-        var left = JSON.parse($('#textarealeft').val());
-        var right = JSON.parse($('#textarearight').val());
+        var left = JSON.parse(document.getElementById('textarealeft').value);
+        var right = JSON.parse(document.getElementById('textarearight').value);
 
 
         var config = jdd.createConfig();
         jdd.formatAndDecorate(config, left);
-        $('#out').text(config.out);
+        document.getElementById('out').textContent = config.out;
 
         var config2 = jdd.createConfig();
         jdd.formatAndDecorate(config2, right);
-        $('#out2').text(config2.out);
+        document.getElementById('out2').textContent = config2.out;
 
         jdd.formatPRETags();
 
@@ -1055,7 +1066,9 @@ var jdd = {
         jdd.processDiffs();
         jdd.generateReport();
 
-        $('div.diffcontainer').show();
+        document.querySelector('.diffcontainer').style.display = 'block';
+        // TODO: Remove this
+        // $('div.diffcontainer').show();
 
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
@@ -1065,19 +1078,20 @@ var jdd = {
             jdd.updateButtonStyles();
         }
 
-        $('body').removeClass('progress');
-        $('#compare').prop('disabled', false);
-
+        document.body.classList.remove('progress');
+        document.getElementById('compare').disabled = false;
         /*
          * We want to switch the toolbar bar between fixed and absolute position when you
          * scroll so you can get the maximum number of toolbar items.
          */
-        var toolbarTop = $('#toolbar').offset().top - 15;
-        $(window).scroll(function () {
-            if (toolbarTop < $(window).scrollTop()) {
-                $('#toolbar').css('position', 'fixed').css('top', '10px');
+        var toolbarTop = document.getElementById('toolbar').getBoundingClientRect().top - 15;
+        window.addEventListener('scroll', function() {
+            if (toolbarTop < ((document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop)) {
+                document.getElementById('toolbar').style.position='fixed';
+                document.getElementById('toolbar').style.top='10px';
             } else {
-                $('#toolbar').css('position', 'absolute').css('top', '');
+                document.getElementById('toolbar').style.position='absolute';
+                document.getElementById('toolbar').style.top='';
             }
         });
 
