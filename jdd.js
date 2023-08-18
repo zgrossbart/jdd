@@ -815,21 +815,25 @@ var jdd = {
             jsl.parser.parse(json);
 
             if (side === jdd.LEFT) {
-                $('#errorLeft').text('').hide();
-                $('#textarealeft').removeClass('error');
+                document.getElementById('errorLeft').replaceChildren();
+                document.getElementById('errorLeft').style.display='none';
+                document.getElementById('textarealeft').classList.remove('error');
             } else {
-                $('#errorRight').text('').hide();
-                $('#textarearight').removeClass('error');
+                document.getElementById('errorRight').replaceChildren();
+                document.getElementById('errorRight').style.display='none';
+                document.getElementById('textarearight').classList.remove('error');
             }
 
             return true;
         } catch (parseException) {
             if (side === jdd.LEFT) {
-                $('#errorLeft').text(parseException.message).show();
-                $('#textarealeft').addClass('error');
+                document.getElementById('errorLeft').textContent = parseException.message;
+                document.getElementById('errorLeft').style.display='block';
+                document.getElementById('textarealeft').classList.add('error');
             } else {
-                $('#errorRight').text(parseException.message).show();
-                $('#textarearight').addClass('error');
+                document.getElementById('errorRight').textContent = parseException.message;
+                document.getElementById('errorRight').style.display='block';
+                document.getElementById('textarearight').classList.add('error');
             }
             return false;
         }
