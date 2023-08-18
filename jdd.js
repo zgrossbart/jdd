@@ -743,12 +743,13 @@ var jdd = {
      */
     showDiffDetails: function (diffs) {
         diffs.forEach(function (diff) {
-            var li = $('<li></li>');
-            li.html(diff.msg);
-            $('ul.toolbar').append(li);
+            var li = '<li>' + diff.msg + '</li>';
+            document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', li);
 
-            li.click(function () {
-                jdd.scrollToDiff(diff);
+            document.querySelectorAll('ul.toolbar li').forEach(function(li){
+                li.addEventListener('click', function(){
+                    jdd.scrollToDiff(diff); 
+                })
             });
 
         });
