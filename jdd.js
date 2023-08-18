@@ -719,15 +719,15 @@ var jdd = {
     },
 
     updateButtonStyles: function () {
-        $('#prevButton').removeClass('disabled');
-        $('#nextButton').removeClass('disabled');
+        document.getElementById('prevButton').classList.remove('disabled');
+        document.getElementById('nextButton').classList.remove('disabled');
 
-        $('#prevNextLabel').text((jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length));
+        document.getElementById('prevNextLabel').textContent = (jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length);
 
         if (jdd.currentDiff === 1) {
-            $('#prevButton').addClass('disabled');
+            document.getElementById('prevButton').classList.add('disabled');
         } else if (jdd.currentDiff === jdd.diffs.length - 1) {
-            $('#nextButton').addClass('disabled');
+            document.getElementById('nextButton').classList.add('disabled');
         }
     },
 
