@@ -775,26 +775,26 @@ var jdd = {
         var rightLineLookup = {};
 
         // We can use the index to save lookup up the parents class
-        $('pre.left span.code').each(function(index) {
-            leftLineLookup[index + 1] = $(this);
+        document.querySelectorAll('pre.left span.code').forEach(function(val, index) {
+            leftLineLookup[index + 1] = val;
         });
 
-        $('pre.right span.code').each(function(index) {
-            rightLineLookup[index + 1] = $(this);
+        document.querySelectorAll('pre.right span.code').forEach(function(val, index) {
+            rightLineLookup[index + 1] = val;
         });
 
         jdd.diffs.forEach(function (diff) {
-            leftLineLookup[diff.path1.line].addClass(diff.type).addClass('diff');
+            leftLineLookup[diff.path1.line].classList.add(diff.type, 'diff');
             if (left.indexOf(diff.path1.line) === -1) {
-                leftLineLookup[diff.path1.line].click(function () {
+                leftLineLookup[diff.path1.line].addEventListener('click', function () {
                     jdd.handleDiffClick(diff.path1.line, jdd.LEFT);
                 });
                 left.push(diff.path1.line);
             }
 
-            rightLineLookup[diff.path2.line].addClass(diff.type).addClass('diff');
+            rightLineLookup[diff.path2.line].classList.add(diff.type, 'diff');
             if (right.indexOf(diff.path2.line) === -1) {
-                rightLineLookup[diff.path2.line].click(function () {
+                rightLineLookup[diff.path2.line].addEventListener('click', function () {
                     jdd.handleDiffClick(diff.path2.line, jdd.RIGHT);
                 });
                 right.push(diff.path2.line);
