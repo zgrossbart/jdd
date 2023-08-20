@@ -654,12 +654,18 @@ var jdd = {
             }
         });
 
-        $('pre.left span.code').removeClass('selected');
-        $('pre.right span.code').removeClass('selected');
-        $('ul.toolbar').text('');
+        document.querySelectorAll('pre.left span.code').forEach(function(val) {
+            val.classList.remove('selected');
+        });
+
+        document.querySelectorAll('pre.right span.code').forEach(function(val) {
+            val.classList.remove('selected');
+        });
+
+        document.querySelector('ul.toolbar').replaceChildren();
         diffs.forEach(function (diff) {
-            $('pre.left div.line' + diff.path1.line + ' span.code').addClass('selected');
-            $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
+            document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').classList.add('selected');
+            document.querySelector('pre.right div.line' + diff.path2.line + ' span.code').classList.add('selected');
         });
 
         if (side === jdd.LEFT || side === jdd.RIGHT) {
@@ -674,25 +680,26 @@ var jdd = {
             });
         }
 
-        var buttons = $('<div id="buttons"><div>');
-        var prev = $('<a href="#" title="Previous difference" id="prevButton">&lt;</a>');
-        prev.addClass('disabled');
-        prev.click(function (e) {
+        var buttons = '<div id="buttons">';
+        var prev = '<a href="#" title="Previous difference" id="prevButton" class="disabled">&lt;</a>'
+        buttons += prev;
+        buttons += '<span id="prevNextLabel"></span>';
+        var next = '<a href="#" title="Next difference" id="nextButton">&gt;</a>';
+        buttons += next;
+        buttons += '<div>';
+
+        document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', buttons);
+
+        document.getElementById('prevButton').addEventListener('click', function (e) {
             e.preventDefault();
             jdd.highlightPrevDiff();
         });
-        buttons.append(prev);
 
-        buttons.append('<span id="prevNextLabel"></span>');
-
-        var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
-        next.click(function (e) {
+        document.getElementById('nextButton').addEventListener('click', function (e) {
             e.preventDefault();
             jdd.highlightNextDiff();
         });
-        buttons.append(next);
 
-        $('ul.toolbar').append(buttons);
         jdd.updateButtonStyles();
 
         jdd.showDiffDetails(diffs);
@@ -759,6 +766,7 @@ var jdd = {
      * Scroll the specified diff to be visible
      */
     scrollToDiff: function (diff) {
+        // TODO: Change
         $('html, body').animate({
             scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
         }, 0);
