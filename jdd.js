@@ -582,7 +582,7 @@ var jdd = {
      * Format the output pre tags.
      */
     formatPRETags: function () {
-        forEach($('pre'), function (pre) {
+        document.querySelectorAll('pre').forEach(function(pre) {
             var lineNumbers = '<div class="gutter">';
             var codeLines = '<div>';
 
@@ -604,24 +604,19 @@ var jdd = {
                 '</span></div>';
             };
 
-            var lines = $(pre).text().split('\n');
+            var lines = pre.textContent.split('\n');
             lines.forEach(addLine);
 
             // Combine it all together
             codeLines += '</div>';
             lineNumbers += '</div>';
 
-            var codeBlockElement = $(
-              '<pre class="codeBlock">' + lineNumbers + codeLines + '</pre>'
-            );
-
-            codeBlockElement.addClass($(pre).attr('class'));
-            codeBlockElement.attr('id', $(pre).attr('id'));
-
-            $(pre).replaceWith(codeBlockElement);
+            var codeBlockElement = '<pre id="'+ pre.id +'" class="codeBlock ' + pre.classList.toString() + '">' + lineNumbers + codeLines + '</pre>';
+            pre.outerHTML = codeBlockElement;
         });
     },
 
+    // TODO: Not being used anywhere
     /**
      * Format the text edits which handle the JSON input
      */
