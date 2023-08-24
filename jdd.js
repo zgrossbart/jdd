@@ -744,16 +744,13 @@ var jdd = {
      * Show the details of the specified diff
      */
     showDiffDetails: function (diffs) {
-        diffs.forEach(function (diff) {
+        diffs.forEach(function (diff, index) {
             var li = '<li>' + diff.msg + '</li>';
             document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', li);
 
-            document.querySelectorAll('ul.toolbar li').forEach(function(li){
-                li.addEventListener('click', function(){
-                    jdd.scrollToDiff(diff); 
-                })
+            document.querySelectorAll('ul.toolbar li')[index].addEventListener('click', function(){
+                jdd.scrollToDiff(diff); 
             });
-
         });
     },
 
@@ -761,10 +758,12 @@ var jdd = {
      * Scroll the specified diff to be visible
      */
     scrollToDiff: function (diff) {
-        // TODO: Change
-        $('html, body').animate({
-            scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
-        }, 0);
+        const elementOffsetTop= document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').getBoundingClientRect().top + window.scrollY - document.documentElement.clientTop
+        window.scrollTo({
+            'behavior': 'smooth',
+            'left': 0,
+            'top': elementOffsetTop
+          });
     },
 
     /**
@@ -908,7 +907,7 @@ var jdd = {
         title += '</div>';
 
         report.insertAdjacentHTML('afterbegin', title);
-        // TODO: Start
+
         var filterBlock = '<span class="filterBlock">Show:';
 
         /*
@@ -1018,7 +1017,7 @@ var jdd = {
         var loadUrl = function (id, errId) {
             if (document.getElementById(id).value.trim().substring(0, 4).toLowerCase() === 'http') {
                 jdd.requestCount++;
-                // TODO: test this
+
                 fetch('https://jsondiff.com/proxy.php', {
                     method: 'POST',
                     headers: {
@@ -1070,8 +1069,6 @@ var jdd = {
         }
 
         document.querySelector('.initContainer').style.display='none';
-        // TODO: Remove this
-        // $('div.initContainer').hide();
 
         jdd.diffs = [];
 
@@ -1097,8 +1094,6 @@ var jdd = {
         jdd.generateReport();
 
         document.querySelector('.diffcontainer').style.display = 'block';
-        // TODO: Remove this
-        // $('div.diffcontainer').show();
 
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
