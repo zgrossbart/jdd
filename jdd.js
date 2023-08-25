@@ -578,44 +578,6 @@ var jdd = {
         };
     },
 
-    /**
-     * Format the output pre tags.
-     */
-    formatPRETags: function () {
-        document.querySelectorAll('pre').forEach(function(pre) {
-            var lineNumbers = '<div class="gutter">';
-            var codeLines = '<div>';
-
-            // This is used to encode text as fast as possible
-            var lineDiv = document.createElement('div');
-            var lineText = document.createTextNode('');
-            lineDiv.appendChild(lineText);
-
-            var addLine = function (line, index) {
-              lineNumbers += '<span class="line-number">' + (index + 1) + '.</span>';
-
-              lineText.nodeValue = line;
-
-              codeLines +=
-                '<div class="codeLine line' +
-                (index + 1) +
-                '"><span class="code">' +
-                lineDiv.innerHTML +
-                '</span></div>';
-            };
-
-            var lines = pre.textContent.split('\n');
-            lines.forEach(addLine);
-
-            // Combine it all together
-            codeLines += '</div>';
-            lineNumbers += '</div>';
-
-            var codeBlockElement = '<pre id="'+ pre.id +'" class="codeBlock ' + pre.classList.toString() + '">' + lineNumbers + codeLines + '</pre>';
-            pre.outerHTML = codeBlockElement;
-        });
-    },
-
     // TODO: Not being used anywhere
     /**
      * Format the text edits which handle the JSON input
