@@ -1061,10 +1061,13 @@ var jdd = {
          */
         var leftValid = jdd.validateInput(document.getElementById('textarealeft').value, jdd.LEFT);
         var rightValid = jdd.validateInput(document.getElementById('textarearight').value, jdd.RIGHT);
+        var compareElement = document.getElementById('#compare');
 
         if (!leftValid || !rightValid) {
-            document.body.classList.remove('progress');
-            document.getElementById('#compare').disabled = false;
+            document.body.classList.remove('progress');    
+            if(compareElement){
+                compareElement.disabled = false;
+            }
             return;
         }
 
