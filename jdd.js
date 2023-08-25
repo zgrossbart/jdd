@@ -676,7 +676,7 @@ var jdd = {
         }
 
         var buttons = '<div id="buttons">';
-        var prev = '<a href="#" title="Previous difference" id="prevButton" class="disabled">&lt;</a>'
+        var prev = '<a href="#" title="Previous difference" id="prevButton" class="disabled">&lt;</a>';
         buttons += prev;
         buttons += '<span id="prevNextLabel"></span>';
         var next = '<a href="#" title="Next difference" id="nextButton">&gt;</a>';
@@ -685,13 +685,13 @@ var jdd = {
 
         document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', buttons);
 
-        document.getElementById('prevButton').addEventListener('click', function (e) {
-            e.preventDefault();
+        document.getElementById('prevButton').addEventListener('click', function (event) {
+            event.preventDefault();
             jdd.highlightPrevDiff();
         });
 
-        document.getElementById('nextButton').addEventListener('click', function (e) {
-            e.preventDefault();
+        document.getElementById('nextButton').addEventListener('click', function (event) {
+            event.preventDefault();
             jdd.highlightNextDiff();
         });
 
@@ -758,7 +758,7 @@ var jdd = {
      * Scroll the specified diff to be visible
      */
     scrollToDiff: function (diff) {
-        const elementOffsetTop= document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').getBoundingClientRect().top + window.scrollY - document.documentElement.clientTop
+        var elementOffsetTop= document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').getBoundingClientRect().top + window.scrollY - document.documentElement.clientTop;
         window.scrollTo({
             'behavior': 'smooth',
             'left': 0,
@@ -849,11 +849,11 @@ var jdd = {
         var reader = new FileReader();
 
         reader.onload = (function () {
-            return function (e) {
+            return function (event) {
                 if (side === jdd.LEFT) {
-                    document.getElementById('textarealeft').value = e.target.result;
+                    document.getElementById('textarealeft').value = event.target.result;
                 } else {
-                    document.getElementById('textarearight').value = e.target.result;
+                    document.getElementById('textarearight').value = event.target.result;
                 }
             };
         })(files[0]);
@@ -864,7 +864,9 @@ var jdd = {
     setupNewDiff: function () {
         document.querySelector('.initContainer').style.display = 'block';
         document.querySelector('.diffcontainer').style.display = 'none';
-        document.querySelectorAll('.diffcontainer pre').forEach(elem=>elem.replaceChildren());
+        document.querySelectorAll('.diffcontainer pre').forEach(function (elem) {
+            elem.replaceChildren();
+        });
         document.querySelector('.toolbar').replaceChildren();
     },
 
@@ -944,21 +946,21 @@ var jdd = {
             }
             filterBlock += eq + '</label>';
         }
-        filterBlock += '</span>'
+        filterBlock += '</span>';
         report.insertAdjacentHTML('beforeend', filterBlock);
 
         // The missing checkbox event
         if (missingCount > 0) {
-            document.querySelector('#showMissing').addEventListener('change', function(e){
-                if (!e.target.checked) {
-                    document.querySelectorAll('span.code.diff.missing').forEach(element => {
+            document.querySelector('#showMissing').addEventListener('change', function (event) {
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.missing').forEach(function (element) {
                         element.classList.toggle('missing_off');
-                        element.classList.toggle('missing')
+                        element.classList.toggle('missing');
                     });
                 } else {
-                    document.querySelectorAll('span.code.diff.missing_off').forEach(element => {
+                    document.querySelectorAll('span.code.diff.missing_off').forEach(function (element) {
                         element.classList.toggle('missing');
-                        element.classList.toggle('missing_off')
+                        element.classList.toggle('missing_off');
                     });
                 }    
             });
@@ -966,16 +968,16 @@ var jdd = {
         
         // The types checkbox event
         if (typeCount > 0) {
-            document.querySelector('#showTypes').addEventListener('change', function(e){
-                if (!e.target.checked) {
-                    document.querySelectorAll('span.code.diff.type').forEach(element => {
+            document.querySelector('#showTypes').addEventListener('change', function (event) {
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.type').forEach(function (element) {
                         element.classList.toggle('type_off');
-                        element.classList.toggle('type')
+                        element.classList.toggle('type');
                     });
                 } else {
-                    document.querySelectorAll('span.code.diff.type_off').forEach(element => {
+                    document.querySelectorAll('span.code.diff.type_off').forEach(function (element) {
                         element.classList.toggle('type');
-                        element.classList.toggle('type_off')
+                        element.classList.toggle('type_off');
                     });
                 }    
             });
@@ -983,16 +985,16 @@ var jdd = {
         
         // The equals checkbox event
         if (eqCount > 0) {
-            document.querySelector('#showEq').addEventListener('change', function(e){
-                if (!e.target.checked) {
-                    document.querySelectorAll('span.code.diff.eq').forEach(element => {
+            document.querySelector('#showEq').addEventListener('change', function(event){
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.eq').forEach(function (element) {
                         element.classList.toggle('eq_off');
-                        element.classList.toggle('eq')
+                        element.classList.toggle('eq');
                     });
                 } else {
-                    document.querySelectorAll('span.code.diff.eq_off').forEach(element => {
+                    document.querySelectorAll('span.code.diff.eq_off').forEach(function (element) {
                         element.classList.toggle('eq');
-                        element.classList.toggle('eq_off')
+                        element.classList.toggle('eq_off');
                     });
                 }    
             });
@@ -1021,13 +1023,15 @@ var jdd = {
                 fetch('https://jsondiff.com/proxy.php', {
                     method: 'POST',
                     headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: new URLSearchParams({
                         'url': document.getElementById(id).value.trim()
-                    }),
+                    })
                   })
-                    .then(response=>response.json())
+                    .then(function (response) {
+                        return response.json();
+                    })
                     .then(function (responseObj) {
                     if (responseObj.error) {
                         document.getElementById(errId).textContent = responseObj.result;
@@ -1145,7 +1149,7 @@ var jdd = {
 
 
 
-document.addEventListener("DOMContentLoaded", function() {        
+document.addEventListener('DOMContentLoaded', function() {        
     document.getElementById('compare').addEventListener('click', function () {
         jdd.compare();
     });
@@ -1163,8 +1167,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-    document.getElementById('sample').addEventListener('click',function (e) {
-        e.preventDefault();
+    document.getElementById('sample').addEventListener('click',function (event) {
+        event.preventDefault();
         jdd.loadSampleData();
     });
 
