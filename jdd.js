@@ -578,50 +578,7 @@ var jdd = {
         };
     },
 
-    /**
-     * Format the output pre tags.
-     */
-    formatPRETags: function () {
-        forEach($('pre'), function (pre) {
-            var lineNumbers = '<div class="gutter">';
-            var codeLines = '<div>';
-
-            // This is used to encode text as fast as possible
-            var lineDiv = document.createElement('div');
-            var lineText = document.createTextNode('');
-            lineDiv.appendChild(lineText);
-
-            var addLine = function (line, index) {
-              lineNumbers += '<span class="line-number">' + (index + 1) + '.</span>';
-
-              lineText.nodeValue = line;
-
-              codeLines +=
-                '<div class="codeLine line' +
-                (index + 1) +
-                '"><span class="code">' +
-                lineDiv.innerHTML +
-                '</span></div>';
-            };
-
-            var lines = $(pre).text().split('\n');
-            lines.forEach(addLine);
-
-            // Combine it all together
-            codeLines += '</div>';
-            lineNumbers += '</div>';
-
-            var codeBlockElement = $(
-              '<pre class="codeBlock">' + lineNumbers + codeLines + '</pre>'
-            );
-
-            codeBlockElement.addClass($(pre).attr('class'));
-            codeBlockElement.attr('id', $(pre).attr('id'));
-
-            $(pre).replaceWith(codeBlockElement);
-        });
-    },
-
+    // TODO: Not being used anywhere
     /**
      * Format the text edits which handle the JSON input
      */
@@ -654,12 +611,18 @@ var jdd = {
             }
         });
 
-        $('pre.left span.code').removeClass('selected');
-        $('pre.right span.code').removeClass('selected');
-        $('ul.toolbar').text('');
+        document.querySelectorAll('pre.left span.code').forEach(function(val) {
+            val.classList.remove('selected');
+        });
+
+        document.querySelectorAll('pre.right span.code').forEach(function(val) {
+            val.classList.remove('selected');
+        });
+
+        document.querySelector('ul.toolbar').replaceChildren();
         diffs.forEach(function (diff) {
-            $('pre.left div.line' + diff.path1.line + ' span.code').addClass('selected');
-            $('pre.right div.line' + diff.path2.line + ' span.code').addClass('selected');
+            document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').classList.add('selected');
+            document.querySelector('pre.right div.line' + diff.path2.line + ' span.code').classList.add('selected');
         });
 
         if (side === jdd.LEFT || side === jdd.RIGHT) {
@@ -674,25 +637,26 @@ var jdd = {
             });
         }
 
-        var buttons = $('<div id="buttons"><div>');
-        var prev = $('<a href="#" title="Previous difference" id="prevButton">&lt;</a>');
-        prev.addClass('disabled');
-        prev.click(function (e) {
-            e.preventDefault();
+        var buttons = '<div id="buttons">';
+        var prev = '<a href="#" title="Previous difference" id="prevButton" class="disabled">&lt;</a>';
+        buttons += prev;
+        buttons += '<span id="prevNextLabel"></span>';
+        var next = '<a href="#" title="Next difference" id="nextButton">&gt;</a>';
+        buttons += next;
+        buttons += '<div>';
+
+        document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', buttons);
+
+        document.getElementById('prevButton').addEventListener('click', function (event) {
+            event.preventDefault();
             jdd.highlightPrevDiff();
         });
-        buttons.append(prev);
 
-        buttons.append('<span id="prevNextLabel"></span>');
-
-        var next = $('<a href="#" title="Next difference" id="nextButton">&gt;</a>');
-        next.click(function (e) {
-            e.preventDefault();
+        document.getElementById('nextButton').addEventListener('click', function (event) {
+            event.preventDefault();
             jdd.highlightNextDiff();
         });
-        buttons.append(next);
 
-        $('ul.toolbar').append(buttons);
         jdd.updateButtonStyles();
 
         jdd.showDiffDetails(diffs);
@@ -719,15 +683,15 @@ var jdd = {
     },
 
     updateButtonStyles: function () {
-        $('#prevButton').removeClass('disabled');
-        $('#nextButton').removeClass('disabled');
+        document.getElementById('prevButton').classList.remove('disabled');
+        document.getElementById('nextButton').classList.remove('disabled');
 
-        $('#prevNextLabel').text((jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length));
+        document.getElementById('prevNextLabel').textContent = (jdd.currentDiff + 1) + ' of ' + (jdd.diffs.length);
 
         if (jdd.currentDiff === 1) {
-            $('#prevButton').addClass('disabled');
+            document.getElementById('prevButton').classList.add('disabled');
         } else if (jdd.currentDiff === jdd.diffs.length - 1) {
-            $('#nextButton').addClass('disabled');
+            document.getElementById('nextButton').classList.add('disabled');
         }
     },
 
@@ -742,15 +706,13 @@ var jdd = {
      * Show the details of the specified diff
      */
     showDiffDetails: function (diffs) {
-        diffs.forEach(function (diff) {
-            var li = $('<li></li>');
-            li.html(diff.msg);
-            $('ul.toolbar').append(li);
+        diffs.forEach(function (diff, index) {
+            var li = '<li>' + diff.msg + '</li>';
+            document.querySelector('ul.toolbar').insertAdjacentHTML('beforeend', li);
 
-            li.click(function () {
-                jdd.scrollToDiff(diff);
+            document.querySelectorAll('ul.toolbar li')[index].addEventListener('click', function(){
+                jdd.scrollToDiff(diff); 
             });
-
         });
     },
 
@@ -758,9 +720,12 @@ var jdd = {
      * Scroll the specified diff to be visible
      */
     scrollToDiff: function (diff) {
-        $('html, body').animate({
-            scrollTop: $('pre.left div.line' + diff.path1.line + ' span.code').offset().top
-        }, 0);
+        var elementOffsetTop= document.querySelector('pre.left div.line' + diff.path1.line + ' span.code').getBoundingClientRect().top + window.scrollY - document.documentElement.clientTop;
+        window.scrollTo({
+            'behavior': 'smooth',
+            'left': 0,
+            'top': elementOffsetTop
+          });
     },
 
     /**
@@ -775,26 +740,26 @@ var jdd = {
         var rightLineLookup = {};
 
         // We can use the index to save lookup up the parents class
-        $('pre.left span.code').each(function(index) {
-            leftLineLookup[index + 1] = $(this);
+        document.querySelectorAll('pre.left span.code').forEach(function(val, index) {
+            leftLineLookup[index + 1] = val;
         });
 
-        $('pre.right span.code').each(function(index) {
-            rightLineLookup[index + 1] = $(this);
+        document.querySelectorAll('pre.right span.code').forEach(function(val, index) {
+            rightLineLookup[index + 1] = val;
         });
 
         jdd.diffs.forEach(function (diff) {
-            leftLineLookup[diff.path1.line].addClass(diff.type).addClass('diff');
+            leftLineLookup[diff.path1.line].classList.add(diff.type, 'diff');
             if (left.indexOf(diff.path1.line) === -1) {
-                leftLineLookup[diff.path1.line].click(function () {
+                leftLineLookup[diff.path1.line].addEventListener('click', function () {
                     jdd.handleDiffClick(diff.path1.line, jdd.LEFT);
                 });
                 left.push(diff.path1.line);
             }
 
-            rightLineLookup[diff.path2.line].addClass(diff.type).addClass('diff');
+            rightLineLookup[diff.path2.line].classList.add(diff.type, 'diff');
             if (right.indexOf(diff.path2.line) === -1) {
-                rightLineLookup[diff.path2.line].click(function () {
+                rightLineLookup[diff.path2.line].addEventListener('click', function () {
                     jdd.handleDiffClick(diff.path2.line, jdd.RIGHT);
                 });
                 right.push(diff.path2.line);
@@ -815,21 +780,25 @@ var jdd = {
             jsl.parser.parse(json);
 
             if (side === jdd.LEFT) {
-                $('#errorLeft').text('').hide();
-                $('#textarealeft').removeClass('error');
+                document.getElementById('errorLeft').replaceChildren();
+                document.getElementById('errorLeft').style.display='none';
+                document.getElementById('textarealeft').classList.remove('error');
             } else {
-                $('#errorRight').text('').hide();
-                $('#textarearight').removeClass('error');
+                document.getElementById('errorRight').replaceChildren();
+                document.getElementById('errorRight').style.display='none';
+                document.getElementById('textarearight').classList.remove('error');
             }
 
             return true;
         } catch (parseException) {
             if (side === jdd.LEFT) {
-                $('#errorLeft').text(parseException.message).show();
-                $('#textarealeft').addClass('error');
+                document.getElementById('errorLeft').textContent = parseException.message;
+                document.getElementById('errorLeft').style.display='block';
+                document.getElementById('textarealeft').classList.add('error');
             } else {
-                $('#errorRight').text(parseException.message).show();
-                $('#textarearight').addClass('error');
+                document.getElementById('errorRight').textContent = parseException.message;
+                document.getElementById('errorRight').style.display='block';
+                document.getElementById('textarearight').classList.add('error');
             }
             return false;
         }
@@ -842,11 +811,11 @@ var jdd = {
         var reader = new FileReader();
 
         reader.onload = (function () {
-            return function (e) {
+            return function (event) {
                 if (side === jdd.LEFT) {
-                    $('#textarealeft').val(e.target.result);
+                    document.getElementById('textarealeft').value = event.target.result;
                 } else {
-                    $('#textarearight').val(e.target.result);
+                    document.getElementById('textarearight').value = event.target.result;
                 }
             };
         })(files[0]);
@@ -855,28 +824,30 @@ var jdd = {
     },
 
     setupNewDiff: function () {
-        $('div.initContainer').show();
-        $('div.diffcontainer').hide();
-        $('div.diffcontainer pre').text('');
-        $('ul.toolbar').text('');
+        document.querySelector('.initContainer').style.display = 'block';
+        document.querySelector('.diffcontainer').style.display = 'none';
+        document.querySelectorAll('.diffcontainer pre').forEach(function (elem) {
+            elem.replaceChildren();
+        });
+        document.querySelector('.toolbar').replaceChildren();
     },
 
     /**
      * Generate the report section with the diff
      */
     generateReport: function () {
-        var report = $('#report');
+        var report = document.getElementById('report');
 
-        report.text('');
+        report.replaceChildren();
 
-        var newDiff = $('<button>Perform a new diff</button>');
-        report.append(newDiff);
-        newDiff.click(function () {
+        report.insertAdjacentHTML('beforeend', '<button>Perform a new diff</button>');
+        // TODO: add a class/id name to button and use that to select and add event
+        report.querySelector('button').addEventListener('click', function () {
             jdd.setupNewDiff();
         });
 
         if (jdd.diffs.length === 0) {
-            report.append('<span>The two files were semantically  identical.</span>');
+            report.insertAdjacentHTML('beforeend', '<span>The two files were semantically  identical.</span>');
             return;
         }
 
@@ -893,81 +864,103 @@ var jdd = {
             }
         });
 
-        var title = $('<div class="reportTitle"></div>');
-        if (jdd.diffs.length === 1) {
-            title.text('Found ' + (jdd.diffs.length) + ' difference');
-        } else {
-            title.text('Found ' + (jdd.diffs.length) + ' differences');
+        var title = '<div class="reportTitle">Found ' + jdd.diffs.length + ' difference';
+        if (jdd.diffs.length > 1) {
+            title += 's';
         }
+        title += '</div>';
 
-        report.prepend(title);
+        report.insertAdjacentHTML('afterbegin', title);
 
-        var filterBlock = $('<span class="filterBlock">Show:</span>');
+        var filterBlock = '<span class="filterBlock">Show:';
 
         /*
          * The missing checkbox
          */
         if (missingCount > 0) {
-            var missing = $('<label><input id="showMissing" type="checkbox" name="checkbox" value="value" checked="true"></label>');
+            var missing = '<label><input id="showMissing" type="checkbox" name="checkbox" value="value" checked="true">' + missingCount;
             if (missingCount === 1) {
-                missing.append(missingCount + ' missing property');
+                missing += ' missing property';
             } else {
-                missing.append(missingCount + ' missing properties');
+                missing += ' missing properties';
             }
-            missing.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.missing').addClass('missing_off').removeClass('missing');
-                } else {
-                    $('span.code.diff.missing_off').addClass('missing').removeClass('missing_off');
-                }
-            });
-            filterBlock.append(missing);
+            filterBlock += missing + '</label>';
         }
 
         /*
          * The types checkbox
          */
         if (typeCount > 0) {
-            var types = $('<label><input id="showTypes" type="checkbox" name="checkbox" value="value" checked="true"></label>');
-            if (typeCount === 1) {
-                types.append(typeCount + ' incorrect type');
-            } else {
-                types.append(typeCount + ' incorrect types');
+            var types = '<label><input id="showTypes" type="checkbox" name="checkbox" value="value" checked="true">' + typeCount + ' incorrect type';
+            if (typeCount > 1) {
+                types += 's';
             }
-
-            types.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.type').addClass('type_off').removeClass('type');
-                } else {
-                    $('span.code.diff.type_off').addClass('type').removeClass('type_off');
-                }
-            });
-            filterBlock.append(types);
+            filterBlock += types + '</label>';
         }
 
         /*
          * The equals checkbox
          */
         if (eqCount > 0) {
-            var eq = $('<label><input id="showEq" type="checkbox" name="checkbox" value="value" checked="true"></label>');
-            if (eqCount === 1) {
-                eq.append(eqCount + ' unequal value');
-            } else {
-                eq.append(eqCount + ' unequal values');
+            var eq = '<label><input id="showEq" type="checkbox" name="checkbox" value="value" checked="true">' + eqCount + ' unequal value';
+            if (eqCount > 1) {
+                eq += 's';
             }
-            eq.children('input').click(function () {
-                if (!$(this).prop('checked')) {
-                    $('span.code.diff.eq').addClass('eq_off').removeClass('eq');
-                } else {
-                    $('span.code.diff.eq_off').addClass('eq').removeClass('eq_off');
-                }
-            });
-            filterBlock.append(eq);
+            filterBlock += eq + '</label>';
         }
+        filterBlock += '</span>';
+        report.insertAdjacentHTML('beforeend', filterBlock);
 
-        report.append(filterBlock);
-
-
+        // The missing checkbox event
+        if (missingCount > 0) {
+            document.querySelector('#showMissing').addEventListener('change', function (event) {
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.missing').forEach(function (element) {
+                        element.classList.toggle('missing_off');
+                        element.classList.toggle('missing');
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.missing_off').forEach(function (element) {
+                        element.classList.toggle('missing');
+                        element.classList.toggle('missing_off');
+                    });
+                }    
+            });
+        }
+        
+        // The types checkbox event
+        if (typeCount > 0) {
+            document.querySelector('#showTypes').addEventListener('change', function (event) {
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.type').forEach(function (element) {
+                        element.classList.toggle('type_off');
+                        element.classList.toggle('type');
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.type_off').forEach(function (element) {
+                        element.classList.toggle('type');
+                        element.classList.toggle('type_off');
+                    });
+                }    
+            });
+        }
+        
+        // The equals checkbox event
+        if (eqCount > 0) {
+            document.querySelector('#showEq').addEventListener('change', function(event){
+                if (!event.target.checked) {
+                    document.querySelectorAll('span.code.diff.eq').forEach(function (element) {
+                        element.classList.toggle('eq_off');
+                        element.classList.toggle('eq');
+                    });
+                } else {
+                    document.querySelectorAll('span.code.diff.eq_off').forEach(function (element) {
+                        element.classList.toggle('eq');
+                        element.classList.toggle('eq_off');
+                    });
+                }    
+            });
+        }
     },
 
     /**
@@ -982,27 +975,38 @@ var jdd = {
             return;
         }
 
-        $('body').addClass('progress');
-        $('#compare').prop('disabled', true);
+        document.body.classList.add('progress');
+        document.getElementById('compare').disabled = true;
 
         var loadUrl = function (id, errId) {
-            if ($('#' + id).val().trim().substring(0, 4).toLowerCase() === 'http') {
+            if (document.getElementById(id).value.trim().substring(0, 4).toLowerCase() === 'http') {
                 jdd.requestCount++;
-                $.post('proxy.php',
-                    {
-                        'url': $('#' + id).val().trim()
-                    }, function (responseObj) {
-                        if (responseObj.error) {
-                            $('#' + errId).text(responseObj.result).show();
-                            $('#' + id).addClass('error');
-                            $('body').removeClass('progress');
-                            $('#compare').prop('disabled', false);
-                        } else {
-                            $('#' + id).val(responseObj.content);
-                            jdd.requestCount--;
-                            jdd.compare();
-                        }
-                    }, 'json');
+
+                fetch('https://jsondiff.com/proxy.php', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'url': document.getElementById(id).value.trim()
+                    })
+                  })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (responseObj) {
+                    if (responseObj.error) {
+                        document.getElementById(errId).textContent = responseObj.result;
+                        document.getElementById(errId).style.display = '';
+                        document.getElementById(id).classList.add('error');
+                        document.body.classList.remove('progress');
+                        document.getElementById('compare').disabled = false;
+                    } else {
+                        document.getElementById(id).value = responseObj.content;
+                        jdd.requestCount--;
+                        jdd.compare();
+                    }
+                });
                 return true;
             } else {
                 return false;
@@ -1021,30 +1025,33 @@ var jdd = {
          * We'll start by running the text through JSONlint since it gives
          * much better error messages.
          */
-        var leftValid = jdd.validateInput($('#textarealeft').val(), jdd.LEFT);
-        var rightValid = jdd.validateInput($('#textarearight').val(), jdd.RIGHT);
+        var leftValid = jdd.validateInput(document.getElementById('textarealeft').value, jdd.LEFT);
+        var rightValid = jdd.validateInput(document.getElementById('textarearight').value, jdd.RIGHT);
+        var compareElement = document.getElementById('#compare');
 
         if (!leftValid || !rightValid) {
-            $('body').removeClass('progress');
-            $('#compare').prop('disabled', false);
+            document.body.classList.remove('progress');    
+            if(compareElement){
+                compareElement.disabled = false;
+            }
             return;
         }
 
-        $('div.initContainer').hide();
+        document.querySelector('.initContainer').style.display='none';
 
         jdd.diffs = [];
 
-        var left = JSON.parse($('#textarealeft').val());
-        var right = JSON.parse($('#textarearight').val());
+        var left = JSON.parse(document.getElementById('textarealeft').value);
+        var right = JSON.parse(document.getElementById('textarearight').value);
 
 
         var config = jdd.createConfig();
         jdd.formatAndDecorate(config, left);
-        $('#out').text(config.out);
+        document.getElementById('out').textContent = config.out;
 
         var config2 = jdd.createConfig();
         jdd.formatAndDecorate(config2, right);
-        $('#out2').text(config2.out);
+        document.getElementById('out2').textContent = config2.out;
 
         jdd.formatPRETags();
 
@@ -1055,7 +1062,7 @@ var jdd = {
         jdd.processDiffs();
         jdd.generateReport();
 
-        $('div.diffcontainer').show();
+        document.querySelector('.diffcontainer').style.display = 'block';
 
         //console.log('diffs: ' + JSON.stringify(jdd.diffs));
 
@@ -1065,19 +1072,20 @@ var jdd = {
             jdd.updateButtonStyles();
         }
 
-        $('body').removeClass('progress');
-        $('#compare').prop('disabled', false);
-
+        document.body.classList.remove('progress');
+        document.getElementById('compare').disabled = false;
         /*
          * We want to switch the toolbar bar between fixed and absolute position when you
          * scroll so you can get the maximum number of toolbar items.
          */
-        var toolbarTop = $('#toolbar').offset().top - 15;
-        $(window).scroll(function () {
-            if (toolbarTop < $(window).scrollTop()) {
-                $('#toolbar').css('position', 'fixed').css('top', '10px');
+        var toolbarTop = document.getElementById('toolbar').getBoundingClientRect().top - 15;
+        window.addEventListener('scroll', function() {
+            if (toolbarTop < ((document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop)) {
+                document.getElementById('toolbar').style.position='fixed';
+                document.getElementById('toolbar').style.top='10px';
             } else {
-                $('#toolbar').css('position', 'absolute').css('top', '');
+                document.getElementById('toolbar').style.position='absolute';
+                document.getElementById('toolbar').style.top='';
             }
         });
 
@@ -1087,10 +1095,10 @@ var jdd = {
      * Load in the sample data
      */
     loadSampleData: function () {
-        $('#textarealeft').val('{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}');
+        document.getElementById('textarealeft').value='{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}';
         /*$('#textarealeft').val('[{  "OBJ_ID": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "b3067a77-875b-4208-9ee3-39128adeb654",  "lastLogon": "0",  "sAMAccountName": "ksmith",  "userPrincipalName": "ksmith@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Kate Smith,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"},{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]');
         $('#textarearight').val('{"foo":[{  "OBJ_ID": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com",  "userAccountControl": "512",  "objectGUID": "c3f7dae9-9b4f-4d55-a1ec-bf9ef45061c3",  "lastLogon": "130766915788304915",  "sAMAccountName": "tswan",  "userPrincipalName": "tswan@cloudaddc.qalab.cam.novell.com",  "distinguishedName": "CN=Timothy Swan,OU=Users,OU=Willow,DC=cloudaddc,DC=qalab,DC=cam,DC=novell,DC=com"}]}');*/
-        $('#textarearight').val('{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}');
+        document.getElementById('textarearight').value='{"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}';
     },
 
     getParameterByName: function (name) {
@@ -1103,17 +1111,17 @@ var jdd = {
 
 
 
-jQuery(document).ready(function () {
-    $('#compare').click(function () {
+document.addEventListener('DOMContentLoaded', function() {        
+    document.getElementById('compare').addEventListener('click', function () {
         jdd.compare();
     });
 
     if (jdd.getParameterByName('left')) {
-        $('#textarealeft').val(jdd.getParameterByName('left'));
+        document.getElementById('textarealeft').value=jdd.getParameterByName('left');
     }
 
     if (jdd.getParameterByName('right')) {
-        $('#textarearight').val(jdd.getParameterByName('right'));
+        document.getElementById('textarearight').value=jdd.getParameterByName('right');
     }
 
     if (jdd.getParameterByName('left') && jdd.getParameterByName('right')) {
@@ -1121,12 +1129,12 @@ jQuery(document).ready(function () {
     }
 
 
-    $('#sample').click(function (e) {
-        e.preventDefault();
+    document.getElementById('sample').addEventListener('click',function (event) {
+        event.preventDefault();
         jdd.loadSampleData();
     });
 
-    $(document).keydown(function (event) {
+    document.addEventListener('keydown', function (event) {
         if (event.keyCode === 78 || event.keyCode === 39) {
             /*
              * The N key or right arrow key
