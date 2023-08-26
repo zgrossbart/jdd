@@ -577,26 +577,42 @@ var jdd = {
             line: 1
         };
     },
-
-    // TODO: Not being used anywhere
+	
     /**
-     * Format the text edits which handle the JSON input
+     * Format the output pre tags.
      */
-    formatTextAreas: function () {
-        forEach($('textarea'), function (textarea) {
-            var codeBlock = $('<div class="codeBlock"></div>');
-            var lineNumbers = $('<div class="gutter"></div>');
-            codeBlock.append(lineNumbers);
+    formatPRETags: function () {
+        document.querySelectorAll('pre').forEach(function(pre) {
+            var lineNumbers = '<div class="gutter">';
+            var codeLines = '<div>';
+
+            // This is used to encode text as fast as possible
+            var lineDiv = document.createElement('div');
+            var lineText = document.createTextNode('');
+            lineDiv.appendChild(lineText);
 
             var addLine = function (line, index) {
-                lineNumbers.append($('<span class="line-number">' + (index + 1) + '.</span>'));
+              lineNumbers += '<span class="line-number">' + (index + 1) + '.</span>';
+
+              lineText.nodeValue = line;
+
+              codeLines +=
+                '<div class="codeLine line' +
+                (index + 1) +
+                '"><span class="code">' +
+                lineDiv.innerHTML +
+                '</span></div>';
             };
 
-            var lines = $(textarea).val().split('\n');
+            var lines = pre.textContent.split('\n');
             lines.forEach(addLine);
 
-            $(textarea).replaceWith(codeBlock);
-            codeBlock.append(textarea);
+            // Combine it all together
+            codeLines += '</div>';
+            lineNumbers += '</div>';
+
+            var codeBlockElement = '<pre id="'+ pre.id +'" class="codeBlock ' + pre.classList.toString() + '">' + lineNumbers + codeLines + '</pre>';
+            pre.outerHTML = codeBlockElement;
         });
     },
 
