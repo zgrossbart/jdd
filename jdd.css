@@ -254,6 +254,7 @@ pre.error {
     border-radius: 4px;
     padding: 1em;
     display: none;
+	text-wrap: wrap;
 }
 
 span.filterBlock {

@@ -1013,7 +1013,7 @@ var jdd = {
                     .then(function (responseObj) {
                     if (responseObj.error) {
                         document.getElementById(errId).textContent = responseObj.result;
-                        document.getElementById(errId).style.display = '';
+                        document.getElementById(errId).style.display = 'block';
                         document.getElementById(id).classList.add('error');
                         document.body.classList.remove('progress');
                         document.getElementById('compare').disabled = false;
@@ -1024,7 +1024,29 @@ var jdd = {
                     }
                 });
                 return true;
-            } else {
+            } else if (document.getElementById(id).value.trim().substring(0, 5).toLowerCase() === 'data:') {
+				var val = document.getElementById(id).value.trim();
+				if (val.length < 14 || val.substring(5,12) !== 'base64,') {
+                    document.getElementById(errId).textContent = 'The value was not properly base64 encoded';
+                    document.getElementById(errId).style.display = 'block';
+                    document.getElementById(id).classList.add('error');
+                    document.body.classList.remove('progress');
+                    document.getElementById('compare').disabled = false;
+					return true;
+				} else {
+					try {
+						document.getElementById(id).value = atob(val.substring(12));
+					} catch(err) {
+	                    document.getElementById(errId).textContent = err;
+	                    document.getElementById(errId).style.display = 'block';
+	                    document.getElementById(id).classList.add('error');
+	                    document.body.classList.remove('progress');
+	                    document.getElementById('compare').disabled = false;
+						return true;
+					}
+					
+				}
+			} else {
                 return false;
             }
         };

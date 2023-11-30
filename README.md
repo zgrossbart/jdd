@@ -53,6 +53,23 @@ https://jsondiff.com/?left=https://jsondiff.com/one.json&right=https://jsondiff.
 
 Each parameter must be a full URL and must be publicly accessible over the Internet.
 
+## Load my JSON data in the URL
+
+JSONDiff can use the two query parameters to load data embedded in the URL.  
+
+| Parameter | Description |
+| --- | --- |
+| `left` | A [base64 data URL](https://developer.mozilla.org/en-US/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the left side of the diff |
+| `right` | A [base64 data URL](https://developer.mozilla.org/en-US/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the right side of the diff |
+
+These parameters work like this:
+
+```
+https://jsondiff.com/?left=data:base64,eyJmb28iOiAxfQ==&right=data:base64,eyJmb28iOiAyfQ==
+```
+
+You can encode JSON data using these parameters to easily send or save two documents to compare.
+
 ## How large a file can JSONDiff handle?
 
 JSONDiff does all of the comparing and rendering right in your browser.  That means it's limited by the browser your running (Chrome is normally the fastest), how fast your computer is, and how much memory you have.  However, it can handle a very large file.

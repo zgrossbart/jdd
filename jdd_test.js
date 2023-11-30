@@ -267,7 +267,7 @@ QUnit.test('Slashes in keys test', function (assert) {
 	    $('#textarearight').val('');
 	    jdd.setupNewDiff();
 	} catch (err) {
-		console.error(err)
+		console.error(err);
 	}
 });
 
@@ -283,7 +283,7 @@ QUnit.test('Slashes in values test', function (assert) {
 	    $('#textarearight').val('');
 	    jdd.setupNewDiff();
 	} catch (err) {
-		console.error(err)
+		console.error(err);
 	}
 });
 
@@ -301,13 +301,50 @@ QUnit.test('Proxy test', function (assert) {
 	            } else {
 	                assert.ok(true, 'Loaded proxy file');
 					var obj = JSON.parse(responseObj.content);
-					assert.ok(obj['Aidan Gillen']['string'] === 'some string', 'Completed parsing and received correct values.');
+					assert.ok(obj['Aidan Gillen'].string === 'some string', 'Completed parsing and received correct values.');
 	            }
 				
 				done();
 	        }, 'json');
 	} catch (err) {
-		console.error(err)
+		console.error(err);
+	}
+});
+
+/** 
+ * This test tests the base64 decoding functionality of using data URLs.
+ */
+QUnit.test('Base64 test', function (assert) {
+	try {
+	    $('#textarealeft').val('data:base64,eyJmb28iOiAxfQ==');
+	    $('#textarearight').val('data:base64,eyJmb28iOiAyfQ==');
+
+	    jdd.compare();
+	    // This test makes sure there wasn't a parsing error
+	    assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
+	    assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences');
+
+	    var typeCount = 0;
+	    var eqCount = 0;
+	    var missingCount = 0;
+
+	    jdd.diffs.forEach(function (diff) {
+	        if (diff.type === jdd.EQUALITY) {
+	            eqCount++;
+	        } else if (diff.type === jdd.MISSING) {
+	            missingCount++;
+	        } else if (diff.type === jdd.TYPE) {
+	            typeCount++;
+	        }
+	    });
+
+	    assert.ok(eqCount === 1, 'Checking unequal values');
+
+	    $('#textarealeft').val('');
+	    $('#textarearight').val('');
+	    jdd.setupNewDiff();
+	} catch (err) {
+		console.error(err);
 	}
 });
 
