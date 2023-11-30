@@ -247,8 +247,8 @@ QUnit.test('Escaped quotes test', function (assert) {
 
     jdd.compare();
     assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking correct type');
-	assert.ok($('pre.right div.line2 span').text().trim() === '"link": "<a href=\\\"http://googlex.com/\\\">Google</a>"', 'Checking escaped quotes');
-	assert.ok($('pre.left div.line2 span').text().trim() === '"link": "<a href=\\\"http://google.com/\\\">Google</a>"', 'Checking escaped quotes');
+    assert.ok($('pre.right div.line2 span').text().trim() === '"link": "<a href=\\\"http://googlex.com/\\\">Google</a>"', 'Checking escaped quotes');
+    assert.ok($('pre.left div.line2 span').text().trim() === '"link": "<a href=\\\"http://google.com/\\\">Google</a>"', 'Checking escaped quotes');
 
     $('#textarealeft').val('');
     $('#textarearight').val('');
@@ -256,96 +256,96 @@ QUnit.test('Escaped quotes test', function (assert) {
 });
 
 QUnit.test('Slashes in keys test', function (assert) {
-	try {
-	    $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".vscode/": true,"foo": "bar"}}');
-	    $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".slash/": true,"foo": "bar"}}');
+    try {
+        $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".vscode/": true,"foo": "bar"}}');
+        $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {".slash/": true,"foo": "bar"}}');
 
-	    jdd.compare();
-	    assert.ok(jdd.diffs[0].type === jdd.MISSING, 'Checking correct type');
+        jdd.compare();
+        assert.ok(jdd.diffs[0].type === jdd.MISSING, 'Checking correct type');
 
-	    $('#textarealeft').val('');
-	    $('#textarearight').val('');
-	    jdd.setupNewDiff();
-	} catch (err) {
-		console.error(err);
-	}
+        $('#textarealeft').val('');
+        $('#textarearight').val('');
+        jdd.setupNewDiff();
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 QUnit.test('Slashes in values test', function (assert) {
-	try {
-	    $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".vscode/","foo": "bar"}}');
-	    $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".slash/","foo": "bar"}}');
+    try {
+        $('#textarealeft').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".vscode/","foo": "bar"}}');
+        $('#textarearight').val('{"editor.detectIndentation": false,"editor.tabSize": 2,"files.exclude": {"bas":".slash/","foo": "bar"}}');
 
-	    jdd.compare();
-	    assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking correct type');
+        jdd.compare();
+        assert.ok(jdd.diffs[0].type === jdd.EQUALITY, 'Checking correct type');
 
-	    $('#textarealeft').val('');
-	    $('#textarearight').val('');
-	    jdd.setupNewDiff();
-	} catch (err) {
-		console.error(err);
-	}
+        $('#textarealeft').val('');
+        $('#textarearight').val('');
+        jdd.setupNewDiff();
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 QUnit.test('Proxy test', function (assert) {
-	try {
-	    var done = assert.async();
+    try {
+        var done = assert.async();
 
-	    $.post('proxy.php',
-	        {
-	            'url': 'https://jsondiff.com/one.json'
-	        }, function (responseObj) {
-	            if (responseObj.error) {
-	                console.err(responseObj.error);
-					assert.ok(false, 'Failed to load proxy file');
-	            } else {
-	                assert.ok(true, 'Loaded proxy file');
-					var obj = JSON.parse(responseObj.content);
-					assert.ok(obj['Aidan Gillen'].string === 'some string', 'Completed parsing and received correct values.');
-	            }
-				
-				done();
-	        }, 'json');
-	} catch (err) {
-		console.error(err);
-	}
+        $.post('proxy.php',
+            {
+                'url': 'https://jsondiff.com/one.json'
+            }, function (responseObj) {
+                if (responseObj.error) {
+                    console.err(responseObj.error);
+                    assert.ok(false, 'Failed to load proxy file');
+                } else {
+                    assert.ok(true, 'Loaded proxy file');
+                    var obj = JSON.parse(responseObj.content);
+                    assert.ok(obj['Aidan Gillen'].string === 'some string', 'Completed parsing and received correct values.');
+                }
+                
+                done();
+            }, 'json');
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
  * This test tests the base64 decoding functionality of using data URLs.
  */
 QUnit.test('Base64 test', function (assert) {
-	try {
-	    $('#textarealeft').val('data:base64,eyJmb28iOiAxfQ==');
-	    $('#textarearight').val('data:base64,eyJmb28iOiAyfQ==');
+    try {
+        $('#textarealeft').val('data:base64,eyJmb28iOiAxfQ==');
+        $('#textarearight').val('data:base64,eyJmb28iOiAyfQ==');
 
-	    jdd.compare();
-	    // This test makes sure there wasn't a parsing error
-	    assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
-	    assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences');
+        jdd.compare();
+        // This test makes sure there wasn't a parsing error
+        assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
+        assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences');
 
-	    var typeCount = 0;
-	    var eqCount = 0;
-	    var missingCount = 0;
+        var typeCount = 0;
+        var eqCount = 0;
+        var missingCount = 0;
 
-	    jdd.diffs.forEach(function (diff) {
-	        if (diff.type === jdd.EQUALITY) {
-	            eqCount++;
-	        } else if (diff.type === jdd.MISSING) {
-	            missingCount++;
-	        } else if (diff.type === jdd.TYPE) {
-	            typeCount++;
-	        }
-	    });
+        jdd.diffs.forEach(function (diff) {
+            if (diff.type === jdd.EQUALITY) {
+                eqCount++;
+            } else if (diff.type === jdd.MISSING) {
+                missingCount++;
+            } else if (diff.type === jdd.TYPE) {
+                typeCount++;
+            }
+        });
 
-	    assert.ok(eqCount === 1, 'Checking unequal values');
+        assert.ok(eqCount === 1, 'Checking unequal values');
 
-	    $('#textarealeft').val('');
-	    $('#textarearight').val('');
-	    jdd.setupNewDiff();
-	} catch (err) {
-		console.error(err);
-	}
+        $('#textarealeft').val('');
+        $('#textarearight').val('');
+        jdd.setupNewDiff();
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 
