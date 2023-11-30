@@ -348,6 +348,80 @@ QUnit.test('Base64 test', function (assert) {
     }
 });
 
+/** 
+ * This test tests the base64 decoding functionality of using data URLs.
+ */
+QUnit.test('Base64 test - JSON mimetype', function (assert) {
+    try {
+        $('#textarealeft').val('data:application/json;base64,eyJmb28iOiAxfQ==');
+        $('#textarearight').val('data:application/json;base64,eyJmb28iOiAyfQ==');
+
+        jdd.compare();
+        // This test makes sure there wasn't a parsing error
+        assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
+        assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences');
+
+        var typeCount = 0;
+        var eqCount = 0;
+        var missingCount = 0;
+
+        jdd.diffs.forEach(function (diff) {
+            if (diff.type === jdd.EQUALITY) {
+                eqCount++;
+            } else if (diff.type === jdd.MISSING) {
+                missingCount++;
+            } else if (diff.type === jdd.TYPE) {
+                typeCount++;
+            }
+        });
+
+        assert.ok(eqCount === 1, 'Checking unequal values');
+
+        $('#textarealeft').val('');
+        $('#textarearight').val('');
+        jdd.setupNewDiff();
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+/** 
+ * This test tests the base64 decoding functionality of using data URLs.
+ */
+QUnit.test('Base64 test - plain text mimetype', function (assert) {
+    try {
+        $('#textarealeft').val('data:text/plain;base64,eyJmb28iOiAxfQ==');
+        $('#textarearight').val('data:text/plain;base64,eyJmb28iOiAyfQ==');
+
+        jdd.compare();
+        // This test makes sure there wasn't a parsing error
+        assert.ok(jdd.diffs.length > 0, 'Checking for parsing errors');
+        assert.ok(jdd.diffs.length === 1, 'Checking for the correct number of differences');
+
+        var typeCount = 0;
+        var eqCount = 0;
+        var missingCount = 0;
+
+        jdd.diffs.forEach(function (diff) {
+            if (diff.type === jdd.EQUALITY) {
+                eqCount++;
+            } else if (diff.type === jdd.MISSING) {
+                missingCount++;
+            } else if (diff.type === jdd.TYPE) {
+                typeCount++;
+            }
+        });
+
+        assert.ok(eqCount === 1, 'Checking unequal values');
+
+        $('#textarealeft').val('');
+        $('#textarearight').val('');
+        jdd.setupNewDiff();
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 
 QUnit.done(function () {
     $('div.initContainer').hide();

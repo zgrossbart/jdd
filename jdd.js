@@ -1025,26 +1025,49 @@ var jdd = {
                 });
                 return true;
             } else if (document.getElementById(id).value.trim().substring(0, 5).toLowerCase() === 'data:') {
+                /*
+                 * This section handles data urls.  This feature allows the user to encode their
+                 * JSON as an URL parameter and pass it directly to JSONDiff.
+                 */
                 var val = document.getElementById(id).value.trim();
-                if (val.length < 14 || val.substring(5,12) !== 'base64,') {
-                    document.getElementById(errId).textContent = 'The value was not properly base64 encoded';
+                try {
+                    if (val.length >= 14 && val.substring(5,12) === 'base64,') {
+                        /*
+                         * This means the URL didn't specify a mimetype like this:
+                         * data:base64,eyJmb28iOiAxfQ==
+                         */
+                        document.getElementById(id).value = atob(val.substring(12));
+                        return true;
+                    } else if (val.length >= 14 && val.substring(5,29) === 'application/json;base64,') {
+                        /*
+                         * This means the URL specified the JSON mimetype like this
+                         * data:application/json;base64,eyJmb28iOiAxfQ==
+                         */
+                        document.getElementById(id).value = atob(val.substring(29));
+                    } else if (val.length >= 14 && val.substring(5,23) === 'text/plain;base64,') {
+                        /*
+                         * This means the URL specified the plain text mimetype like this
+                         * data:text/plain;base64,eyJmb28iOiAxfQ==
+                         */
+                        document.getElementById(id).value = atob(val.substring(23));
+                    } else {
+                        /*
+                         * This means they either didn't encode the value properly or specified a mimetype
+                         * that we don't support.
+                         */
+                        document.getElementById(errId).textContent = 'The value was not properly base64 encoded or has an unsupported mimetype';
+                        document.getElementById(errId).style.display = 'block';
+                        document.getElementById(id).classList.add('error');
+                        document.body.classList.remove('progress');
+                        document.getElementById('compare').disabled = false;
+                    }
+                } catch(err) {
+                    document.getElementById(errId).textContent = err;
                     document.getElementById(errId).style.display = 'block';
                     document.getElementById(id).classList.add('error');
                     document.body.classList.remove('progress');
                     document.getElementById('compare').disabled = false;
                     return true;
-                } else {
-                    try {
-                        document.getElementById(id).value = atob(val.substring(12));
-                    } catch(err) {
-                        document.getElementById(errId).textContent = err;
-                        document.getElementById(errId).style.display = 'block';
-                        document.getElementById(id).classList.add('error');
-                        document.body.classList.remove('progress');
-                        document.getElementById('compare').disabled = false;
-                        return true;
-                    }
-                    
                 }
             } else {
                 return false;
