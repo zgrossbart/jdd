@@ -70,6 +70,8 @@ https://jsondiff.com/?left=data:base64,eyJmb28iOiAxfQ==&right=data:base64,eyJmb2
 
 You can encode JSON data using these parameters to easily send or save two documents to compare.
 
+There are various tools you can use to base64 a JSON file including the command line and websites.
+
 ## How large a file can JSONDiff handle?
 
 JSONDiff does all of the comparing and rendering right in your browser.  That means it's limited by the browser your running (Chrome is normally the fastest), how fast your computer is, and how much memory you have.  However, it can handle a very large file.
