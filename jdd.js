@@ -993,6 +993,7 @@ var jdd = {
 
         document.body.classList.add('progress');
         document.getElementById('compare').disabled = true;
+        jdd.diffs = [];
 
         var loadUrl = function (id, errId) {
             if (document.getElementById(id).value.trim().substring(0, 4).toLowerCase() === 'http') {
@@ -1037,19 +1038,21 @@ var jdd = {
                          * data:base64,eyJmb28iOiAxfQ==
                          */
                         document.getElementById(id).value = atob(val.substring(12));
-                        return true;
+                        return false;
                     } else if (val.length >= 14 && val.substring(5,29) === 'application/json;base64,') {
                         /*
                          * This means the URL specified the JSON mimetype like this
                          * data:application/json;base64,eyJmb28iOiAxfQ==
                          */
                         document.getElementById(id).value = atob(val.substring(29));
+                        return false;
                     } else if (val.length >= 14 && val.substring(5,23) === 'text/plain;base64,') {
                         /*
                          * This means the URL specified the plain text mimetype like this
                          * data:text/plain;base64,eyJmb28iOiAxfQ==
                          */
                         document.getElementById(id).value = atob(val.substring(23));
+                        return false;
                     } else {
                         /*
                          * This means they either didn't encode the value properly or specified a mimetype
@@ -1099,8 +1102,6 @@ var jdd = {
         }
 
         document.querySelector('.initContainer').style.display='none';
-
-        jdd.diffs = [];
 
         var left = JSON.parse(document.getElementById('textarealeft').value);
         var right = JSON.parse(document.getElementById('textarearight').value);
