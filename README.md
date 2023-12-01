@@ -100,15 +100,19 @@ JSONDiff loads the following files when it first starts up:
 
 | File | Description |
 | --- | --- |
-| `index.html` | The main index page for the site |
+| `jsondiff.com` | The main index page for the site |
+| `adsbygoogle.js` | We load ads from Google |
 | `reset.css` | The reset CSS file |
 | `throbber.css` | A CSS loading icon |
 | `jdd.css` | The CSS file for JSONDiff |
-| `jquery.min.js` | jQuery library used in the JSONDiff UI |
 | `jsl.format.js` and `jsl.parser.js` | The JSON formatter and parser that JSONDiff uses when doing a compare |
 | `jdd.js` | The code that runs JSONDiff |
 | `analytics.js` | Google Analytics that we use to see how many people are using JSONDiff.com |
+| `collect` | Google analytics loads these scripts for analytic data |
+| `js` | This is [gtag](https://developers.google.com/tag-platform/gtagjs) support for analytics |
 | `favicon.ico` | The JSONDiff icon that shows up in the tab of your browser |
+
+JSONDiff will never load any more files.  
 
 ### What data does JSONDiff send back over the Internet?
 
