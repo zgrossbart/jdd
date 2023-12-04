@@ -59,8 +59,8 @@ JSONDiff can use the two query parameters to load data embedded in the URL.
 
 | Parameter | Description |
 | --- | --- |
-| `left` | A [base64 data URL](https://developer.mozilla.org/en-US/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the left side of the diff |
-| `right` | A [base64 data URL](https://developer.mozilla.org/en-US/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the right side of the diff |
+| `left` | A [base64 data URL](https://developer.mozilla.org/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the left side of the diff |
+| `right` | A [base64 data URL](https://developer.mozilla.org/docs/web/http/basics_of_http/data_urls) that contains the JSON to be compared on the right side of the diff |
 
 These parameters work like this:
 
@@ -71,6 +71,14 @@ https://jsondiff.com/?left=data:base64,eyJmb28iOiAxfQ==&right=data:base64,eyJmb2
 You can encode JSON data using these parameters to easily send or save two documents to compare.
 
 There are various tools you can use to base64 a JSON file including the command line and websites.
+
+## Load my JSON data via URL hash
+
+JSONDiff also accepts the query parameters to be passed as [hash properties](https://developer.mozilla.org/docs/web/api/URL/hash) like this:
+
+```
+https://jsondiff.com/#left=data:base64,eyJmb28iOiAxfQ==&right=data:base64,eyJmb28iOiAyfQ==
+```
 
 ## How large a file can JSONDiff handle?
 
