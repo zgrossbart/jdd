@@ -1164,10 +1164,8 @@ var jdd = {
     },
 
     getParameterByName: function (name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-            results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        var params = new URLSearchParams(!!window.location.hash ? window.location.hash.substring(1) : window.location.search);
+        return params.has(name) ? params.get(name) : '';
     }
 };
 
