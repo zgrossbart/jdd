@@ -80,6 +80,8 @@ JSONDiff also accepts the query parameters to be passed as [hash properties](htt
 https://jsondiff.com/#left=data:base64,eyJmb28iOiAxfQ==&right=data:base64,eyJmb28iOiAyfQ==
 ```
 
+This option works well for larger JSON files which are too large for the previous method using URL parameters.
+
 ## How large a file can JSONDiff handle?
 
 JSONDiff does all of the comparing and rendering right in your browser.  That means it's limited by the browser your running (Chrome is normally the fastest), how fast your computer is, and how much memory you have.  However, it can handle a very large file.
