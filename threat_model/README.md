@@ -40,7 +40,6 @@ JSONDiff has the following external dependencies:
 
 #### Runtime
 
-* [jQuery](https://jquery.com/) (loaded from the Google APIs CDN to improve performance)
 * [Google Analytics](https://analytics.google.com/analytics/web/)
 * [Google AdSense](https://adsense.google.com/)
 
@@ -79,7 +78,6 @@ JSONDiff is a static application with no data storage. That means large threat a
 When using JSONDiff you're trusting three parties:
 
 * [Zack Grossbart](https://github.com/zgrossbart) - Zack manages the code and the deployments of JSONDiff. All source code and processes are open source and can be inspected by anyone.
-* [jQuery](https://jquery.com/) - A small open source JavaScript library.
 * [Google AdSense](https://adsense.google.com/) - The ad service made available by Google.
 
 ### Threats to data
