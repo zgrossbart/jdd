@@ -37,9 +37,9 @@ docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 
 ## Run JSONDiff as an offline browser extension
 
-[@gangadharjannu](https://www.github.com/gangadharjannu) has build the browser extension which works entirely offline.
+[@gangadharjannu](https://www.github.com/gangadharjannu) has built a JSONDiff browser extension which works entirely offline.
 
-You can also install JSONDiff as a browser extension and try to run on your laptop whether you are connected to internet or not.
+You can install JSONDiff as a Chrome or Firefox browser extension and try to run on your laptop whether you are connected to internet or not.
 
 Just like jsondiff.com, this browser extension does not collect any data and provides strict privacy as this is developed to work offline.
 
