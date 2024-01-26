@@ -35,6 +35,26 @@ docker build --tag=jdd:v1-alpine --file=Dockerfile.alpine .
 docker run -i --name jdd -p 127.0.0.1:8080:80/tcp jdd:v1-alpine
 ```
 
+## Run JSONDiff as an offline browser extension
+
+[@gangadharjannu](https://www.github.com/gangadharjannu) has build the browser extension which works entirely offline.
+
+You can also install JSONDiff as a browser extension and try to run on your laptop whether you are connected to internet or not.
+
+Just like jsondiff.com, this browser extension does not collect any data and provides strict privacy as this is developed to work offline.
+
+> **Your data stays in your browser and never leaves your system**.
+
+#### Browser extension links
+
+Repository: [https://github.com/gangadharjannu/json-diff](https://github.com/gangadharjannu/json-diff)
+
+To download the extension, visit below links on your respective browsers
+
+Google Chrome: [https://chrome.google.com/webstore/detail/json-diff/dmndidoancoefdoobhbmjgignfimpmpj](https://chrome.google.com/webstore/detail/json-diff/dmndidoancoefdoobhbmjgignfimpmpj)
+
+Mozilla Firefox: [https://addons.mozilla.org/en-US/firefox/addon/json-diff](https://addons.mozilla.org/en-US/firefox/addon/json-diff)
+
 
 ## Load my JSON data from the Internet
 
