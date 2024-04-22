@@ -1091,7 +1091,7 @@ var jdd = {
          */
         var leftValid = jdd.validateInput(document.getElementById('textarealeft').value, jdd.LEFT);
         var rightValid = jdd.validateInput(document.getElementById('textarearight').value, jdd.RIGHT);
-        var compareElement = document.getElementById('#compare');
+        var compareElement = document.getElementById('compare');
 
         if (!leftValid || !rightValid) {
             document.body.classList.remove('progress');    
